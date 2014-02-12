@@ -4,7 +4,8 @@
   "description": "A new website for the Whale MakerSpace",
   "main": "web.js",
   "dependencies": {
-    "express": "~3.4.8"
+    "express": "~3.4.8",
+    "jade": "~1.1.5"
   },
   "devDependencies": {},
   "scripts": {
