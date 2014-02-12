@@ -1,0 +1,23 @@
+{
+  "name": "Whale",
+  "version": "0.0.0",
+  "description": "A new website for the Whale MakerSpace",
+  "main": "web.js",
+  "dependencies": {
+    "express": "~3.4.8"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bawjensen/WHALE.git"
+  },
+  "author": "Bryan Jensen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bawjensen/WHALE/issues"
+  },
+  "homepage": "https://github.com/bawjensen/WHALE"
+}
