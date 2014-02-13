@@ -1,18 +1,26 @@
-var express = require("express");
-var Firebase = require("firebase");
+var express = require("express"),
+	Firebase = require("firebase"),
+	logfmt = require("logfmt");
+
+var routeMap = new Object();
+routeMap[''] = 'main';
+routeMap['printing'] = 'selling';
+routeMap['members'] = 'members';
+routeMap['projects'] = 'projects';
 
 var app = express();
 
-var routeMap = new Object();
-routeMap['/'] = 'main'
-routeMap['/printing'] = 'selling'
-routeMap['/members'] = 'members'
-routeMap['/projects'] = 'projects'
+app.configure(function() {
+	app.use(logfmt.requestLogger());
+	app.use('/static', express.static(__dirname + '/static'));
+});
 
+app.get('/', function(req, res) {
+	res.render('main.jade');
+});
 
 app.get('/:route', function(req, res) {
-	console.log('Serving ' + req.params.route + '.jade');
-	res.render(routeMap['/' + req.params.route] + '.jade');
+	res.render(routeMap[req.params.route] + '.jade');
 });
 
 
