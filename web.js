@@ -10,16 +10,15 @@ routeMap['/members'] = 'members'
 routeMap['/projects'] = 'projects'
 
 
-for (var key in routeMap) {
-	app.get(key, function(req, res) {
-	  res.render(routeMap[key] + '.jade');
-	});
-}
+app.get('/:route', function(req, res) {
+	console.log('Serving ' + req.params.route + '.jade');
+	res.render(routeMap['/' + req.params.route] + '.jade');
+});
 
 
 var port = 7500;
 if (process.argv[2] != 'undefined') port = process.argv[2];
 
 app.listen(port, function() {
-  console.log("Listening on " + port);
+	console.log("Listening on " + port);
 });
