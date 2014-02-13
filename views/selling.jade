@@ -9,4 +9,8 @@ html
 
 
 	script(type='text/javascript').
-		var firebase = new Firebase();
+		var firebase = new Firebase('https://whalesite.firebaseio.com/');
+
+		$('body').click(function(){ // replace with 'place ordr' button
+			firebase.set("hello world!");
+		});
