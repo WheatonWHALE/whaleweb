@@ -7,10 +7,11 @@ html
 			|Hell yeah you are!
 
 
+		block script
+		script(type='text/javascript').
+			var ordersQueue = new Firebase('https://whalesite.firebaseio.com/');
 
-	script(type='text/javascript').
-		var firebase = new Firebase('https://whalesite.firebaseio.com/');
-
-		$('body').click(function(){ // replace with 'place ordr' button
-			firebase.set("hello world!");
-		});
+			$('body').click(function(){ // replace with 'place order' button
+				ordersQueue.set('hello world!');
+				alert('added to firebase');
+			});
