@@ -4,7 +4,7 @@ var app = express();
 
 
 app.get('/', function(req, res) {
-  res.render( 'selling.jade');
+  res.render('selling.jade');
 });
 
 
