@@ -2,3 +2,11 @@ extend skeleton
 
 block body-contents
 	|selling
+	
+	script(type='text/javascript').
+		var ordersQueue = new Firebase('https://whalesite.firebaseio.com/');
+
+		$('body').click(function(){ // replace with 'place order' button
+			ordersQueue.set('hello world!');
+			alert('added to firebase');
+		});
