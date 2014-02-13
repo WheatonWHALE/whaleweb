@@ -21,6 +21,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/:route', function(req, res) {
+	console.log('Request at: ' + req.params.route);
 	res.render(routeMap[req.params.route] + '.jade');
 });
 
