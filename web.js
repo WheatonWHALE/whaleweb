@@ -13,6 +13,7 @@ var app = express();
 app.configure(function() {
 	app.use(logfmt.requestLogger());
 	app.use('/static', express.static(__dirname + '/static'));
+    app.use('/images', express.static(__dirname + '/images'));
 });
 
 app.get('/', function(req, res) {
