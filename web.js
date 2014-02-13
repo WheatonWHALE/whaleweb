@@ -8,8 +8,8 @@ app.get('/', function(req, res) {
 });
 
 
-var port = process.argv[2] || 7500;
-// var port = 80; // Have to be sudo to run on 80
+var port = 7500;
+if (process.argv[2] != 'undefined') port = process.argv[2];
 
 app.listen(port, function() {
   console.log("Listening on " + port);
