@@ -1,0 +1,49 @@
+// ====================== LESS Classes ================================
+
+.display-flex {
+  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  display: -ms-flexbox;      /* TWEENER - IE 10 */
+  display: -webkit-flex;     /* NEW - Chrome */
+  display: flex; 
+}
+
+// ====================== LESS Variables ==============================
+
+// ====================== General Styling =============================
+
+body, html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  img#background {
+    position: absolute;
+    z-index: -2;
+    top: -10px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    -webkit-filter: blur(7px);
+  }
+
+  img#logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 50%;
+    width: auto;
+  }
+
+  #sidebar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 20%;
+    background-color: #FFFFFF;
+    opacity: 0.75;
+  }
+}
