@@ -1,0 +1,15 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title #{title}
+		link(rel='stylesheet', type='text/css', href='/static/style.css')
+		script(type='text/javascript', src='https://cdn.firebase.com/v0/firebase.js')
+		script(type='text/javascript', src='static/jquery-1.10.2.js')
+		script(type='text/javascript', src='static/scripts_overall.js')
+		block scripts
+	body
+		.sidebar
+			|Info goes here
+		.content
+			|Derp! I'm a whale!

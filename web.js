@@ -3,10 +3,18 @@ var Firebase = require("firebase");
 
 var app = express();
 
+var routeMap = new Object();
+routeMap['/'] = 'main'
+routeMap['/printing'] = 'selling'
+routeMap['/members'] = 'members'
+routeMap['/projects'] = 'projects'
 
-app.get('/', function(req, res) {
-  res.render('selling.jade');
-});
+
+for (var key in routeMap) {
+	app.get(key, function(req, res) {
+	  res.render(routeMap[key] + '.jade');
+	});
+}
 
 
 var port = 7500;
