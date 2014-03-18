@@ -17,10 +17,14 @@
 
 // ====================== General Styling =============================
 
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,900);
+
 body, html {
   height: 100%;
   width: 100%;
   overflow: hidden;
+
+  font-family: Roboto, sans-serif;
 }
 
 body {
@@ -51,8 +55,7 @@ body {
     left: 0px;
     height: 100vh;
     width: 20%;
-    background-color: #FFFFFF;
-    opacity: 0.5;
+    background-color: rgba(255, 255, 255, 0.5); // Used rgba for opacity control
 
     ul {
       display: block;
@@ -68,7 +71,7 @@ body {
 
       a {
         text-decoration: none;
-        color: #0000AA;
+        color: #FFA500;
 
         li {
           display: block;
@@ -80,7 +83,8 @@ body {
         }
 
         li:hover {
-          background-color: #CCCCCC;
+          background-color: rgba(200, 200, 200, 1.0);
+          color: orange;
 
         }
       }
