@@ -7,6 +7,7 @@ routeMap[''] = 'main';
 routeMap['printing'] = 'selling';
 routeMap['members'] = 'members';
 routeMap['projects'] = 'projects';
+routeMap['makerspaces'] = 'generalinfo';
 
 var app = express();
 

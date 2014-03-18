@@ -48,5 +48,30 @@ body {
     width: 20%;
     background-color: #FFFFFF;
     opacity: 0.5;
+
+    ul {
+      display: block;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      @top-spacing: 40px;
+
+      height: calc(~"100% - "@top-spacing);
+      margin-top: @top-spacing;
+
+      text-align: center;
+
+      a {
+        text-decoration: none;
+        color: #0000AA;
+
+        li {
+          display: block;
+          padding: 7% 0;
+          margin: 5% 0;
+          font-size: 20px;
+        }
+      }
+    }
   }
 }
