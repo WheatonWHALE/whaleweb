@@ -27,6 +27,7 @@ app.configure(function() {
 	app.use('/css', express.static(__dirname + '/css'));
 	app.use('/js', express.static(__dirname + '/js'));
     app.use('/images', express.static(__dirname + '/images'));
+    app.use('/static', express.static(__dirname + '/static'));
 });
 
 var port = 7500;
