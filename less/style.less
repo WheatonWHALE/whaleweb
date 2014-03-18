@@ -1,3 +1,8 @@
+// ====================== CSS3 Animation Keyframes ====================
+
+// @keyframes {
+// }
+
 // ====================== LESS Classes ================================
 
 .display-flex {
@@ -26,7 +31,7 @@ body {
     min-width: calc(~"100% + 20px");
     min-height: calc(~"100% + 20px");
 
-    background:transparent url('../images/main_background.jpg') center center no-repeat;
+    background: transparent url('../images/main_background.jpg') center center no-repeat;
     background-size: cover;
 
     -webkit-filter: blur(7px);
@@ -54,8 +59,8 @@ body {
       margin: 0;
       padding: 0;
       width: 100%;
-      @top-spacing: 40px;
 
+      @top-spacing: 40px;
       height: calc(~"100% - "@top-spacing);
       margin-top: @top-spacing;
 
@@ -70,6 +75,13 @@ body {
           padding: 7% 0;
           margin: 5% 0;
           font-size: 20px;
+
+          transition-duration: .3s;
+        }
+
+        li:hover {
+          background-color: #CCCCCC;
+
         }
       }
     }
