@@ -29,7 +29,7 @@ app.configure(function() {
 });
 
 var port = 7500;
-if (process.argv[2] != 'undefined') port = process.argv[2];
+if (process.argv[2] != 'undefined' || process.argv[2] != undefined) port = process.argv[2];
 
 app.listen(port, function() {
 	console.log("Listening on " + port);
