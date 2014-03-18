@@ -21,7 +21,10 @@ app.get('/:route', function(req, res) {
 
 app.configure(function() {
 	app.use(logfmt.requestLogger());
-	app.use('/static', express.static(__dirname + '/static'));
+
+	// Static serving files from specific folders
+	app.use('/css', express.static(__dirname + '/css'));
+	app.use('/js', express.static(__dirname + '/js'));
     app.use('/images', express.static(__dirname + '/images'));
 });
 

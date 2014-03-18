@@ -19,13 +19,16 @@ body, html {
 }
 
 body {
-  img#background {
+  #background {
     position: absolute;
-    z-index: -2;
-    top: -10px;
-    left: -10px;
-    width: calc(100% + 20px);
-    height: calc(100% + 20px);
+    z-index: -1;
+
+    min-width: calc(~"100% + 20px");
+    min-height: calc(~"100% + 20px");
+
+    background:transparent url('../images/main_background.jpg') center center no-repeat;
+    background-size: cover;
+
     -webkit-filter: blur(7px);
   }
 

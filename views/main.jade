@@ -4,12 +4,14 @@ html
 		meta(charset='utf-8')
 		title Wh.A.Le
 		link(rel='shortcut icon' href='/images/favicon.ico')
-		link(rel='stylesheet', type='text/css', href='/static/style.css')
+		link(rel='stylesheet', type='text/css', href='/css/style.css')
+		link(rel='stylesheet', type='text/css', href='/css/normalize.css')
 		script(type='text/javascript', src='https://cdn.firebase.com/v0/firebase.js')
-		script(type='text/javascript', src='static/jquery-1.10.2.js')
-		script(type='text/javascript', src='static/script.js')
+		script(type='text/javascript', src='js/jquery-1.10.2.js')
+		script(type='text/javascript', src='js/script.js')
 
 	body
-		img#background(src='images/main_background.jpg')
+		#background
+		//- img#background(src='images/main_background.jpg')
 		img#logo(src='images/whale_logo_small.png')
 		#sidebar
