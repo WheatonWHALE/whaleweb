@@ -24,32 +24,32 @@ $(function() {
 		}).responseText;
 
 		var lastID = 0;
-
 		compsRef.on('child_added', function (snapshot) {
 			var entry = snapshot.val();
 
-			// console.dir(entry.Entrants);
-			var copy = template;
+			var scalar = $(githubEntrantTemplate).css('width') / entry.maxVal;
+
+			var copy = $(template);
 
 			$.each(entry.Entrants, function() {
 				if (this.name == '') {
 					return;
 				}
 
-				console.dir(this);
-				// console.dir(this.name);
+				var subcopy = githubEntrantTemplate;
 
-				copy = copy.replace(/\{id\}/, lastID++);
-				copy = copy.replace(/\{name\}/, this.name);
+				subcopy = subcopy.replace(/\{id\}/, lastID++);
+				subcopy = subcopy.replace(/\{name\}/, this.name);
+				subcopy = subcopy.replace(/\{score\}/, this.max);
 
-				console.dir(copy);
+				subcopy = $(subcopy);
 
-				$('#competition-container').append($(copy));
-				// copy = copy.replace(/\{current\}/, this.name);
-				// if (typeof(this) == typeof(Object)) {
-					// console.dir(this);
-				// }
-				// console.dir(this);
+
+				subcopy.find('.bar').css('width', this.current * scalar);
+
+				copy.append(subcopy);
+
+				$('#competition-container').append(copy);
 			});
 		});
 	}
