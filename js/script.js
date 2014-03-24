@@ -18,6 +18,11 @@ $(function() {
 			async: 		false
 		}).responseText;
 
+		var githubEntrantTemplate= $.ajax({ // Yay! - isn't this ugly?
+			url: 		'http://' + window.location.host + '/static/templates/gh_entrant.html',
+			async: 		false
+		}).responseText;
+
 		var lastID = 0;
 
 		compsRef.on('child_added', function (snapshot) {
