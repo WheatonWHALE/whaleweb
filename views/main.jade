@@ -1,31 +1,20 @@
-doctype html
-html
-	head
-		meta(charset='utf-8')
-		title Wh.A.Le
-		link(rel='shortcut icon' href='/images/favicon.ico')
-		link(rel='stylesheet', type='text/css', href='/css/normalize.css')
-		link(rel='stylesheet', type='text/css', href='/static/webfont_icons/flaticon.css')
-		link(rel='stylesheet', type='text/css', href='/css/style.css')
-		script(type='text/javascript', src='https://cdn.firebase.com/v0/firebase.js')
-		script(type='text/javascript', src='js/jquery-1.10.2.js')
-		script(type='text/javascript', src='js/script.js')
+extends skeleton_basic
 
-	body
-		#background
-		//- img#background(src='images/main_background.jpg')
-		img#logo(src='images/whale_logo_small.png')
-		a.iconlinks#twitter(href='https://twitter.com/W_H_A_L_E' class='flaticon-social38')
-		a.iconlinks#facebook(href='https://www.facebook.com/whalelab' class='flaticon-facebook29')
-		#sidebar
-			ul
-				a(href='/projects')
-					li Whale Projects
-				a(href='/competitions')
-					li Competitions
-				a(href='/printing')
-					li 3D Prints For Sale
-				a(href='/makerspaces')
-					li About Makerspaces
-				a(href='/members')
-					li About the Members
+block body
+	#background
+	//- img#background(src='images/main_background.jpg')
+	img#logo(src='images/whale_logo_small.png')
+	a.iconlinks#twitter(href='https://twitter.com/W_H_A_L_E' class='flaticon-social38')
+	a.iconlinks#facebook(href='https://www.facebook.com/whalelab' class='flaticon-facebook29')
+	#sidebar
+		ul
+			a(href='/projects')
+				li Whale Projects
+			a(href='/competitions')
+				li Competitions
+			a(href='/printing')
+				li 3D Prints For Sale
+			a(href='/makerspaces')
+				li About Makerspaces
+			a(href='/members')
+				li About the Members
