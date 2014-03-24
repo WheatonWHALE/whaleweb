@@ -8,6 +8,7 @@ routeMap['printing'] = 'selling';
 routeMap['members'] = 'members';
 routeMap['projects'] = 'projects';
 routeMap['makerspaces'] = 'generalinfo';
+routeMap['competitions'] = 'compete';
 
 var app = express();
 
