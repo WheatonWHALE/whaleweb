@@ -13,17 +13,34 @@ $(function() {
 	if ($('.competition').length) {
 		var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
 
+		var template = $.ajax({ // Yay! - isn't this ugly?
+			url: 		'http://' + window.location.host + '/static/templates/competition.html',
+			async: 		false
+		}).responseText;
+
+		var lastID = 0;
+
 		compsRef.on('child_added', function (snapshot) {
 			var entry = snapshot.val();
-			var template = $.get(window.location.host + '/static/templates/competition.html');
 
 			// console.dir(entry.Entrants);
+			var copy = template;
 
 			$.each(entry.Entrants, function() {
-				// console.dir(this.name);
-				if (this.name != '') {
-					console.log(this.name);
+				if (this.name == '') {
+					return;
 				}
+
+				console.dir(this);
+				// console.dir(this.name);
+
+				copy = copy.replace(/\{id\}/, lastID++);
+				copy = copy.replace(/\{name\}/, this.name);
+
+				console.dir(copy);
+
+				$('#competition-container').append($(copy));
+				// copy = copy.replace(/\{current\}/, this.name);
 				// if (typeof(this) == typeof(Object)) {
 					// console.dir(this);
 				// }
