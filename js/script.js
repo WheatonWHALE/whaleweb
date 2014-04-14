@@ -12,9 +12,6 @@ $(function() {
 
 	if ($('#competition-container').length) { // Test for "competitions" page
 
-		console.log(dust);
-		// var competitionCompiled = dust.compile("<div class="competition"><div class="title"></div></div>");
-
 		var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
 
 		// var template = $.ajax({ // Manual ajax call, so I can set async to false
@@ -31,32 +28,20 @@ $(function() {
 		compsRef.on('child_added', function (snapshot) {
 
 			var entry = snapshot.val();
+			var entrants = Array();
 
 			$.each(entry.Entrants, function() {
 				if (this.name == '') {
 					return;
 				}
 
-				console.log("derp");
+				entrants.push(this);
+			});
 
+			console.log(entrants);
 
-				// var entrantTemplateCopy = githubEntrantTemplate;
-
-				// entrantTemplateCopy.find('id')
-
-
-				// entrantTemplateCopy = $(entrantTemplateCopy);
-
-				dust.render("competition", {name: "Bryan"}, function(err, out) {
-					console.log(out);
-				});
-
-
-				// entrantTemplateCopy.find('.bar').css('width', this.current * scalar);
-
-				// templateCopy.append(entrantTemplateCopy);
-
-				// $('#competition-container').append(templateCopy);
+			dust.render("competition", {title: snapshot.name(), entrants: entrants}, function(err, out) {
+				$("#competition-container").append(out);
 			});
 		});
 	}
