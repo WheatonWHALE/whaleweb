@@ -5,12 +5,16 @@
 
 // ====================== LESS Classes ================================
 
-.display-flex {
-  display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
-  display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
-  display: -ms-flexbox;      /* TWEENER - IE 10 */
-  display: -webkit-flex;     /* NEW - Chrome */
-  display: flex; 
+.cf {
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+
+  &:after {
+    clear: both;
+  }
 }
 
 // ====================== LESS Variables ==============================
@@ -124,6 +128,9 @@ body {
   }
 
   footer {
+    @footer-height: 40px;
+    height: @footer-height;
+    line-height: @footer-height;
     width: 100%;
     text-align: center;
   }
@@ -134,21 +141,15 @@ body {
     min-height: 90vh;
     width: 100%;
 
-    .display-flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    align-items: center;
-    align-content: space-around;
-
     .competition {
-      @comp-width: 260px;
+      @comp-width: 360px;
 
       width: @comp-width;
       height: @comp-width * 1.618; // Golden ratio
       margin: 20px;
       padding: 20px;
       overflow: hidden;
-      background-color: yellow;
+      box-shadow: 0px 0px 10px 5px #BEBEBE;
 
       .title {
         width: 100%;
@@ -157,16 +158,16 @@ body {
       }
 
       .entrant {
-        .display-flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        .cf;
 
         .name {
           font-size: 30px;
+          float: left;
         }
 
         .score {
           font-size: 40px;
+          float: right;
         }
 
         .bar {
