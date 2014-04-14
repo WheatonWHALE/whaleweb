@@ -10,46 +10,53 @@ function centerLogo() {
 $(function() {
 	centerLogo();
 
-	if ($('.competition').length) {
+	if ($('#competition-container').length) { // Test for "competitions" page
+
+		console.log(dust);
+		// var competitionCompiled = dust.compile("<div class="competition"><div class="title"></div></div>");
+
 		var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
 
-		var template = $.ajax({ // Yay! - isn't this ugly?
-			url: 		'http://' + window.location.host + '/static/templates/competition.html',
-			async: 		false
-		}).responseText;
+		// var template = $.ajax({ // Manual ajax call, so I can set async to false
+		// 	url: 		'http://' + window.location.host + '/static/templates/competition.html',
+		// 	async: 		false
+		// }).responseText;
 
-		var githubEntrantTemplate= $.ajax({ // Yay! - isn't this ugly?
-			url: 		'http://' + window.location.host + '/static/templates/gh_entrant.html',
-			async: 		false
-		}).responseText;
+		// var githubEntrantTemplate= $.ajax({ // Manual ajax call, so I can set async to false
+		// 	url: 		'http://' + window.location.host + '/static/templates/gh_entrant.html',
+		// 	async: 		false
+		// }).responseText;
 
 		var lastID = 0;
 		compsRef.on('child_added', function (snapshot) {
+
 			var entry = snapshot.val();
-
-			var scalar = $(githubEntrantTemplate).css('width') / entry.maxVal;
-
-			var copy = $(template);
 
 			$.each(entry.Entrants, function() {
 				if (this.name == '') {
 					return;
 				}
 
-				var subcopy = githubEntrantTemplate;
-
-				subcopy = subcopy.replace(/\{id\}/, lastID++);
-				subcopy = subcopy.replace(/\{name\}/, this.name);
-				subcopy = subcopy.replace(/\{score\}/, this.max);
-
-				subcopy = $(subcopy);
+				console.log("derp");
 
 
-				subcopy.find('.bar').css('width', this.current * scalar);
+				// var entrantTemplateCopy = githubEntrantTemplate;
 
-				copy.append(subcopy);
+				// entrantTemplateCopy.find('id')
 
-				$('#competition-container').append(copy);
+
+				// entrantTemplateCopy = $(entrantTemplateCopy);
+
+				dust.render("competition", {name: "Bryan"}, function(err, out) {
+					console.log(out);
+				});
+
+
+				// entrantTemplateCopy.find('.bar').css('width', this.current * scalar);
+
+				// templateCopy.append(entrantTemplateCopy);
+
+				// $('#competition-container').append(templateCopy);
 			});
 		});
 	}

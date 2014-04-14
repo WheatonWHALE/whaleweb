@@ -1,0 +1,2 @@
+!function(){function t(t,e){return t.write('<div class="competition"><div class="title">').reference(e.get(["title"],!1),e,"h").write("</div></div>")}return dust.register("competition",t),t}();
+;!function(){function e(e,r){return e.write('<div class="entrant" id="').reference(r.get(["id"],!1),r,"h").write('"><div class="name">').reference(r.get(["name"],!1),r,"h").write('</div><div class="score">').reference(r.get(["score"],!1),r,"h").write("</div></div>")}return dust.register("entrant",e),e}();
