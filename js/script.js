@@ -29,10 +29,6 @@ $(function() {
 			var entrants = Array();
 
 			$.each(entry.Entrants, function() {
-				if (this.name == '') {
-					return;
-				}
-
 				entrants.push(this);
 			});
 

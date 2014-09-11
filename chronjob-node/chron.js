@@ -9,6 +9,9 @@ var listOfPeople = Array(
 	{ id: 'rubinz', name: 'Zevi' }
 )
 
+var numTotal = listOfPeople.length;
+var numFinished = 0;
+
 // for (person in listOfPeople) {
 listOfPeople.forEach(function(person) {
 	request('https://github.com/' + person.id, function(err, resp, body) {
@@ -25,10 +28,22 @@ listOfPeople.forEach(function(person) {
 		myFirebaseRef.update({
 			current: currStreak,
 			max: maxStreak,
-			name: person.name
+			name: person.name,
+			id: person.id
 		});
 
 		console.log(person.name + ': ' + currStreak + ' / ' + maxStreak);
-	});
 
+		numFinished += 1;
+	});
 });
+
+function waitForFinish() {
+	console.log('Not finished yet, ' + numFinished + ' out of ' + numTotal);
+	if (numFinished < numTotal)
+		setTimeout(waitForFinish, 1000);
+	else
+		process.exit(1);
+}
+
+waitForFinish();
