@@ -1,3 +1,20 @@
+function sortByCurrentStreak(a, b) {
+	var aCurrent = parseInt(a.current);
+	var bCurrent = parseInt(b.current);
+
+	if (aCurrent == bCurrent) {
+		var aMax = parseInt(a.max);
+		var bMax = parseInt(b.max);
+
+		comparison = bMax - aMax;
+	}
+	else {
+		comparison = bCurrent - aCurrent;
+	}
+
+	return comparison;
+}
+
 function centerLogo() {
 	$('img#logo').load(function() {
 		$(this).css('margin-left', -1 * $(this).width() / 2);
@@ -14,15 +31,6 @@ $(function() {
 
 		var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
 
-		// var template = $.ajax({ // Manual ajax call, so I can set async to false
-		// 	url: 		'http://' + window.location.host + '/static/templates/competition.html',
-		// 	async: 		false
-		// }).responseText;
-
-		// var githubEntrantTemplate= $.ajax({ // Manual ajax call, so I can set async to false
-		// 	url: 		'http://' + window.location.host + '/static/templates/gh_entrant.html',
-		// 	async: 		false
-		// }).responseText;
 		compsRef.on('child_added', function (snapshot) {
 
 			var entry = snapshot.val();
@@ -32,7 +40,7 @@ $(function() {
 				entrants.push(this);
 			});
 
-			console.log(entrants);
+			entrants.sort(sortByCurrentStreak)
 
 			dust.render("competition", {title: snapshot.name(), entrants: entrants}, function(err, out) {
 				$("#competition-container").append(out);
