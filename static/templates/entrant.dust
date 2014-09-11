@@ -1,4 +1,0 @@
-<div class="entrant" id="{id}">
-	<div class="name">{name}</div>
-	<div class="score">{score}</div>
-</div>

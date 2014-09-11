@@ -1,7 +1,7 @@
 <div class="competition">
 	<div class="title">{title}</div>
 	{#entrants}
-	<div class="entrant">
+	<div class="entrant" id="{id}">
 		<div class="name">{name}</div>
 		<div class="score">{current}/{max}</div>
 	</div>{~n}
