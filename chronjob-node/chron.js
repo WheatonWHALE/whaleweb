@@ -2,22 +2,6 @@ var Firebase = require("firebase"),
 	cheerio = require("cheerio"),
 	request = require("request");
 
-// var app = express();
-
-// app.get('/', function(req, res) {
-// 	res.render('main.jade');
-// });
-
-// app.configure(function() {
-// 	app.use(logfmt.requestLogger());
-// });
-
-// var port = 9988;
-
-// app.listen(port, function() {
-// 	console.log("Listening on " + port);
-// });
-
 
 var listOfPeople = Array(
 	{ id: 'bawjensen', name: 'Bryan' },
