@@ -18,6 +18,7 @@ body #mainpage-container {
 }
 body #mainpage-container #background {
   position: absolute;
+  left: -10px;
   z-index: -1;
   min-width: calc(100% + 20px);
   min-height: calc(100% + 20px);
@@ -118,7 +119,11 @@ body #competition-container .competition .entrant .name {
   font-size: 30px;
   float: left;
 }
+body #competition-container .competition .entrant .name .user-id {
+  font-size: 20px;
+}
 body #competition-container .competition .entrant .score {
+  font-weight: 700;
   font-size: 40px;
   float: right;
 }
