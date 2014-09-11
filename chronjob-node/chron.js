@@ -6,6 +6,10 @@ var Firebase = require("firebase"),
 var listOfPeople = Array(
 	{ id: 'bawjensen', name: 'Bryan' },
 	{ id: 'dshelts', name: 'Drew' },
+	{ id: 'devindelfino', name: 'Devin' },
+	{ id: 'akuisara', name: 'Sara' },
+	{ id: 'tkicks', name: 'Tyler' },
+	{ id: 'tarmstro', name: 'Tom' },
 	{ id: 'rubinz', name: 'Zevi' }
 )
 
