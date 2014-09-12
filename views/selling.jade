@@ -1,16 +1,17 @@
-extends skeleton
+extends skeleton_general
 
 block scripts
 
-	script(type='text/javascript').
+	//- script(type='text/javascript').
 		
-		var ordersQueue = new Firebase('https://whalesite.firebaseio.com/');
+	//- 	var ordersQueue = new Firebase('https://whalesite.firebaseio.com/');
 
-		$('html, body').click(function(){ // replace with 'place order' button
-			ordersQueue.set('hello world!');
-			alert('added to firebase');
-		});
+	//- 	$('html, body').click(function(){ // replace with 'place order' button
+	//- 		ordersQueue.set('hello world!');
+	//- 		alert('added to firebase');
+	//- 	});
 	
 
-block body
-	|selling
+
+block contents
+	|This page is a lie!

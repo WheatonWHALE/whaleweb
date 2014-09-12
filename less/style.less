@@ -24,101 +24,7 @@
 @import url(http://fonts.googleapis.com/css?family=Roboto:400,700,900);
 
 body, html {
-  height: 100%;
-  width: 100%;
-
   font-family: Roboto, sans-serif;
-}
-
-body { // Styling for main.jade
-  #mainpage-container {
-  overflow: hidden;
-
-    #background {
-      position: absolute;
-      left: -10px; // To get rid of white edge on left side, created by blur
-      z-index: -1;
-
-      min-width: calc(~"100% + 20px");
-      min-height: calc(~"100% + 20px");
-
-      background: transparent url('../images/main_background.jpg') center center no-repeat;
-      background-size: cover;
-
-      -webkit-filter: blur(7px);
-    }
-
-    .iconlinks {
-      // color: #000044;
-      color: #FFFFFF;
-      position: absolute;
-      bottom: 15%;
-      font-size: 60px;
-      text-decoration: none;
-    }
-
-    @icon-spacing: 20%;
-
-    a#twitter {
-      right: @icon-spacing - 8;
-    }
-
-    a#facebook {
-      right: @icon-spacing;
-    }
-
-    img#logo {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      height: 50%;
-      width: auto;
-    }
-
-    #sidebar {
-      position: absolute;
-      top: 0px;
-      left: 0px;
-      height: 100vh;
-      width: 20%;
-      background-color: rgba(255, 255, 255, 0.3); // Used rgba for opacity control
-
-      ul {
-        display: block;
-        margin: 0;
-        padding: 0;
-        width: 100%;
-
-        @top-spacing: 40px;
-        height: calc(~"100% - "@top-spacing);
-        margin-top: @top-spacing;
-
-        text-align: center;
-
-        a {
-          text-decoration: none;
-          color: #FFA500;
-
-          li {
-            display: block;
-            padding: 7% 0;
-            margin: 5% 0;
-            
-            font-size: 23px;
-            font-weight: 700;
-
-            transition-duration: .3s;
-          }
-
-          li:hover {
-            background-color: rgba(200, 200, 200, 1.0);
-            color: orange;
-
-          }
-        }
-      }
-    }
-  }
 }
 
 body {
@@ -139,96 +45,208 @@ body {
   }
 }
 
-body {
-  #competition-background {
-    position: fixed;
-    top: 0;
+nav {
+  ul {
+    display: block;
+    width: 701px;
+    margin: 0 auto;
+    padding: 0;
 
-    left: -20px; // To get rid of white edge on left side, created by blur
+    li {
+      display: inline-block;
+
+      padding-right: 20px;
+    }
+  }
+}
+
+#mainpage-container {
+  .cf;
+
+  height: 100%;
+  width: 100%;
+
+  overflow: hidden;
+
+  #background {
+    position: absolute;
     z-index: -1;
 
-    min-width: calc(~"100% + 40px");
-    min-height: calc(~"100% + 40px");
+    min-width: 100%;
+    min-height: 100%;
 
-    background: transparent url('../images/main_background.jpg') center center auto auto no-repeat;
+    background: transparent url('../images/main_background.jpg') center center no-repeat;
     background-size: cover;
 
     -webkit-filter: blur(7px);
   }
 
-  #competition-container {
-    .cf;
+  .iconlinks {
+    // color: #000044;
+    color: #FFFFFF;
+    position: absolute;
+    bottom: 15%;
+    font-size: 60px;
+    text-decoration: none;
+  }
 
-    min-height: 90vh;
-    width: 100%;
+  @icon-spacing: 20%;
 
-    .competition {
-      @comp-width: 360px;
+  a#twitter {
+    right: @icon-spacing - 8;
+  }
 
-      background-color: white;
+  a#facebook {
+    right: @icon-spacing;
+  }
 
-      float: left;
+  img#logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 50%;
+    width: auto;
+  }
 
-      width: @comp-width;
-      height: @comp-width * 1.618; // Golden ratio
-      margin: 20px;
-      padding: 20px;
-      overflow: auto;
-      box-shadow: 0px 0px 10px 5px #BEBEBE;
+  #sidebar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100vh;
+    width: 20%;
+    background-color: rgba(255, 255, 255, 0.3); // Used rgba for opacity control
 
-      .title {
-        width: 100%;
-        text-align: center;
-        font-size: 40px;
-      }
+    ul {
+      display: block;
+      margin: 0;
+      padding: 0;
+      width: 100%;
 
-      .entrant {
-        .cf;
+      @top-spacing: 40px;
+      height: calc(~"100% - "@top-spacing);
+      margin-top: @top-spacing;
 
-        font-size: 20px;
-        color: #808080;
+      text-align: center;
 
-        .name {
-          font-size: 1em;
-          float: left;
+      a {
+        text-decoration: none;
+        color: #FFA500;
 
-          .user-id {
-            font-size: .66em;
-          }
-        }
-
-        .score {
+        li {
+          display: block;
+          padding: 7% 0;
+          margin: 5% 0;
+          
+          font-size: 23px;
           font-weight: 700;
-          font-size: 1.33em;
-          float: right;
+
+          transition-duration: .3s;
         }
 
-        .bar {
-          width: 100%;
-          height: 20px;
-          background-color: green;
+        li:hover {
+          background-color: rgba(200, 200, 200, 1.0);
+          color: orange;
         }
       }
-
-      .entrant.leader {
-        font-size: 30px;
-      }
-
-      .entrant.leader.first {
-        color: #FFD700;
-      }
-
-      .entrant.leader.second {
-        color: #C0C0C0;
-      }
-
-      .entrant.leader.third {
-        color: #CD7F32;
-      }
-    }
-
-    .competition.max {
-      float: right;
     }
   }
+}
+
+#competition-background {
+  position: fixed;
+  top: 0;
+
+  left: -20px; // To get rid of white edge on left side, created by blur
+  z-index: -1;
+
+  min-width: calc(~"100% + 40px");
+  min-height: calc(~"100% + 40px");
+
+  background: transparent url('../images/main_background.jpg') center center no-repeat;
+  background-size: cover;
+
+  -webkit-filter: blur(7px);
+}
+
+#competition-container {
+  .cf;
+
+  min-height: 90vh;
+  width: 100%;
+
+  .competition {
+    @comp-width: 360px;
+
+    background-color: white;
+
+    float: left;
+
+    width: @comp-width;
+    height: @comp-width * 1.618; // Golden ratio
+    margin: 20px;
+    padding: 20px;
+    overflow: auto;
+    // box-shadow: 0px 0px 10px 5px #BEBEBE; // Lighter box shadow (for white page)
+    box-shadow: 0px 0px 10px 5px #606060; // Darker box shadow (for background image)
+
+    .title {
+      width: 100%;
+      text-align: center;
+      font-size: 40px;
+    }
+
+    .entrant {
+      .cf;
+
+      font-size: 20px;
+      line-height: 1.5em;
+      color: #808080;
+
+      .name {
+        font-size: 1em;
+        float: left;
+
+        .user-id {
+          font-size: .66em;
+        }
+      }
+
+      .score {
+        font-weight: 700;
+        font-size: 1.33em;
+        float: right;
+      }
+
+      &.leader {
+        font-size: 30px;
+
+        &.first {
+          font-size: 33px;
+          color: #FFD700;
+        }
+
+        &.second {
+          font-size: 30px;
+          color: #C0C0C0;
+        }
+
+        &.third {
+          font-size: 27px;
+          color: #CD7F32;
+        }
+      }
+    }
+  }
+
+  .competition.max {
+    float: right;
+  }
+}
+
+img#logo-competition {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 50%;
+  width: auto;
 }
