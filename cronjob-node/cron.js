@@ -10,6 +10,7 @@ var listOfPeople = Array(
 	{ id: 'akuisara', name: 'Sara' },
 	{ id: 'tkicks', name: 'Tyler' },
 	{ id: 'tarmstro', name: 'Tom' },
+	{ id: 'lithiah', name: 'Lithia' },
 	{ id: 'rubinz', name: 'Zevi' }
 )
 
