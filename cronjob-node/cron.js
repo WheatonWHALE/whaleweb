@@ -13,8 +13,8 @@ var listOfPeople = Array(
 	{ id: 'lithiah', name: 'Lithia' },
 	{ id: 'iopaluch', name: 'Ian' },
 	{ id: 'omigayy', name: 'Yingying' },
-	{ id: 'omigayy', name: 'Yingying' },
-	{ id: 'zahrarikan', name: 'Zahra' }
+	{ id: 'zahrarikan', name: 'Zahra' },
+	{ id: 'rubinz', name: 'Zevi' }
 )
 
 var numTotal = listOfPeople.length;
