@@ -134,22 +134,46 @@ body {
     line-height: @footer-height;
     width: 100%;
     text-align: center;
+
+    clear: both;
   }
 }
 
 body {
+  #competition-background {
+    position: fixed;
+    top: 0;
+
+    left: -20px; // To get rid of white edge on left side, created by blur
+    z-index: -1;
+
+    min-width: calc(~"100% + 40px");
+    min-height: calc(~"100% + 40px");
+
+    background: transparent url('../images/main_background.jpg') center center auto auto no-repeat;
+    background-size: cover;
+
+    -webkit-filter: blur(7px);
+  }
+
   #competition-container {
+    .cf;
+
     min-height: 90vh;
     width: 100%;
 
     .competition {
       @comp-width: 360px;
 
+      background-color: white;
+
+      float: left;
+
       width: @comp-width;
       height: @comp-width * 1.618; // Golden ratio
       margin: 20px;
       padding: 20px;
-      overflow: hidden;
+      overflow: auto;
       box-shadow: 0px 0px 10px 5px #BEBEBE;
 
       .title {
@@ -161,18 +185,21 @@ body {
       .entrant {
         .cf;
 
+        font-size: 20px;
+        color: #808080;
+
         .name {
-          font-size: 30px;
+          font-size: 1em;
           float: left;
 
           .user-id {
-            font-size: 20px;
+            font-size: .66em;
           }
         }
 
         .score {
           font-weight: 700;
-          font-size: 40px;
+          font-size: 1.33em;
           float: right;
         }
 
@@ -182,6 +209,26 @@ body {
           background-color: green;
         }
       }
+
+      .entrant.leader {
+        font-size: 30px;
+      }
+
+      .entrant.leader.first {
+        color: #FFD700;
+      }
+
+      .entrant.leader.second {
+        color: #C0C0C0;
+      }
+
+      .entrant.leader.third {
+        color: #CD7F32;
+      }
+    }
+
+    .competition.max {
+      float: right;
     }
   }
 }

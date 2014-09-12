@@ -1,9 +1,9 @@
-<div class="competition">
+<div class="competition current">
 	<div class="title">{title}</div>
 	{#entrants}
 	<div class="entrant" id="{id}">
 		<div class="name">{name} <span class="user-id">({id})</span></div>
-		<div class="score">{current}/{max}</div>
+		<div class="score">{current} days</div>
 	</div>{~n}
 	{/entrants}
 </div>
