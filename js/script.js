@@ -49,11 +49,11 @@ $(function() {
 
 		var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
 
-		compsRef.on('child_added', function (snapshot) {
+		compsRef.on('child_added', function(snapshot) {
 
 			var entry = snapshot.val();
-			var entrants = Array();
 
+			var entrants = Array();
 			$.each(entry.Entrants, function() {
 				entrants.push(this);
 			});
@@ -73,10 +73,42 @@ $(function() {
 				markTopThree(out);
 				$("#competition-container").append(out);
 			});
+
+			snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
+				var changedEntrant = snapshot.val();
+
+
+				// console.log(changedEntrant.id);
+
+				$('.' + changedEntrant.id).each(function(index) {
+					var entrantElement = $(this);
+
+					if (entrantElement.parents('.competition.max').length)
+						entrantElement.find('.score').html(changedEntrant.max + ' days');
+					else
+						entrantElement.find('.score').html(changedEntrant.current + ' days');
+				});
+
+				// console.log($('.' + changedEntrant.id).length);
+				// console.log(snapshot.val());
+			});
 		});
 
-		compsRef.on('child_modified', function(snapshot) {
-			
+		// // var entrantsRef = new Firebase('https://whalesite.firebaseio.com/Competitions/Entrants/');
+		// var entrantsRef = new Firebase('https://whalesite.firebaseio.com/Competitions/');
+
+		// entrantsRef.on('child_changed', function(snapshot, prevChildName) {
+		// 	console.log(snapshot.val());
+		// 	console.log(prevChildName);
+		// 	// $('')
+		// });
+
+		// ================================================================================
+
+		$('#logo-competition').click(function() {
+			$.get('/refresh-competitions/', function() {
+				console.log('Update request sent!');
+			});
 		});
 	}
 });

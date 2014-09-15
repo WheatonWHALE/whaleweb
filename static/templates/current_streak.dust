@@ -1,7 +1,7 @@
 <div class="competition current">
 	<div class="title">{title}</div>
 	{#entrants}
-	<div class="entrant" id="{id}">
+	<div class="entrant {id}">
 		<a href="https://github.com/{id}" class="competition-link"><div class="name">{name} <span class="user-id">({id})</span></div></a>
 		<div class="score">{current} days</div>
 	</div>{~n}

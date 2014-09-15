@@ -1,6 +1,7 @@
 var express = require("express"),
 	Firebase = require("firebase"),
-	logfmt = require("logfmt");
+	logfmt = require("logfmt")
+	exec = require("child_process").exec;
 
 var routeMap = new Object();
 routeMap[''] = 'main';
@@ -14,6 +15,15 @@ var app = express();
 
 app.get('/', function(req, res) {
 	res.render('main.jade');
+});
+
+app.get('/refresh-competitions', function(req, res) {
+	var child = exec('node cronjob-node/cron.js',
+		function(error, stdout, stderr) {
+			console.log('Updated the competitions');
+	});
+
+	res.end('Success!');
 });
 
 app.get('/:route', function(req, res) {
