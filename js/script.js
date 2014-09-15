@@ -88,20 +88,8 @@ $(function() {
 					else
 						entrantElement.find('.score').html(changedEntrant.current + ' days');
 				});
-
-				// console.log($('.' + changedEntrant.id).length);
-				// console.log(snapshot.val());
 			});
 		});
-
-		// // var entrantsRef = new Firebase('https://whalesite.firebaseio.com/Competitions/Entrants/');
-		// var entrantsRef = new Firebase('https://whalesite.firebaseio.com/Competitions/');
-
-		// entrantsRef.on('child_changed', function(snapshot, prevChildName) {
-		// 	console.log(snapshot.val());
-		// 	console.log(prevChildName);
-		// 	// $('')
-		// });
 
 		// ================================================================================
 
