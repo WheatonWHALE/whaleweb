@@ -4,18 +4,22 @@ var Firebase = require("firebase"),
 
 
 var listOfPeople = Array(
+	{ id: 'akuisara', name: 'Sara' },
 	{ id: 'bawjensen', name: 'Bryan' },
 	{ id: 'dshelts', name: 'Drew' },
 	{ id: 'devindelfino', name: 'Devin' },
-	{ id: 'akuisara', name: 'Sara' },
+	{ id: 'evan1590', name: 'Evan' },
+	{ id: 'iopaluch', name: 'Ian' },
+	{ id: 'jge94', name: 'Jinnan' },
+	{ id: 'jmorneau', name: 'Julia' },
+	{ id: 'kimballan', name: '(?)' },
+	{ id: 'lithiah', name: 'Lithia' },
+	{ id: 'MichaelKristy', name: 'Michael(?)' },
+	{ id: 'omigayy', name: 'Yingying' },
+	{ id: 'rubinz', name: 'Zevi' },
 	{ id: 'tkicks', name: 'Tyler' },
 	{ id: 'tarmstro', name: 'Tom' },
-	{ id: 'lithiah', name: 'Lithia' },
-	{ id: 'iopaluch', name: 'Ian' },
-	{ id: 'omigayy', name: 'Yingying' },
-	{ id: 'zahrarikan', name: 'Zahra' },
-	{ id: 'evan1590', name: 'Evan' },
-	{ id: 'rubinz', name: 'Zevi' }
+	{ id: 'zahrarikan', name: 'Zahra' }
 )
 
 var numTotal = listOfPeople.length;
