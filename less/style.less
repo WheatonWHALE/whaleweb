@@ -104,8 +104,8 @@ nav {
     position: absolute;
     top: 50%;
     left: 50%;
-    height: 50%;
-    width: auto;
+    width: 25%;
+    height: auto;
   }
 
   #sidebar {
@@ -179,8 +179,6 @@ nav {
 
     background-color: white;
 
-    float: left;
-
     width: @comp-width;
     min-height: @comp-width * 1.618; // Golden ratio
     margin: 20px;
@@ -188,6 +186,16 @@ nav {
     overflow: auto;
     // box-shadow: 0px 0px 10px 5px #BEBEBE; // Lighter box shadow (for white page)
     box-shadow: 0px 0px 10px 5px #606060; // Darker box shadow (for background image)
+
+    &.current {
+      margin-left: 40px;
+      float: left;
+    }
+
+    &.max {
+      margin-right: 40px;
+      float: right;
+    }
 
     .title {
       width: 100%;
@@ -247,18 +255,14 @@ nav {
       }
     }
   }
-
-  .competition.max {
-    float: right;
-  }
 }
 
 img#logo-competition {
   position: absolute;
   top: 50%;
   left: 50%;
-  height: 50%;
-  width: auto;
+  width: 25%;
+  height: auto;
 
   cursor: pointer;
 }
