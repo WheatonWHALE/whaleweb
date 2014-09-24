@@ -28,15 +28,19 @@ var numFinished = 0;
 // for (person in listOfPeople) {
 listOfPeople.forEach(function(person) {
 	request('https://github.com/' + person.id, function(err, resp, body) {
+		if (err) {
+			console.log(err);
+			return;
+		}
+
 		$ = cheerio.load(body);
 
 		var myFirebaseRef = new Firebase('https://whalesite.firebaseio.com/Competitions/GitHub%20Streak/Entrants/' + person.id);
 		
-		var currStreak = $('.contrib-streak-current .num').text();
-		var maxStreak = $('.contrib-streak .num').text();
+		var contributionColumns = $('.contrib-column');
 
-		currStreak = currStreak.replace(/ days/, '');
-		maxStreak = maxStreak.replace(/ days/, '');
+		var currStreak = $(contributionColumns[2]).find('.contrib-number').text().replace(/ days/, '');
+		var maxStreak = $(contributionColumns[1]).find('.contrib-number').text().replace(/ days/, '');
 
 		myFirebaseRef.update({
 			current: currStreak,
@@ -52,11 +56,14 @@ listOfPeople.forEach(function(person) {
 });
 
 function waitForFinish() {
-	console.log('Not finished yet, ' + numFinished + ' out of ' + numTotal);
-	if (numFinished < numTotal)
+	if (numFinished < numTotal) {
+		console.log('Not finished yet, ' + numFinished + ' out of ' + numTotal);
 		setTimeout(waitForFinish, 1000);
-	else
-		process.exit(1);
+	}
+	else {
+		console.log('Finished, ' + numFinished + ' out of ' + numTotal);
+		process.exit(0); // Exit when done.
+	}
 }
 
 waitForFinish();
