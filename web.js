@@ -3,6 +3,7 @@ var express = require("express"),
 	logfmt = require("logfmt")
 	exec = require("child_process").exec;
 
+// Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
 var routeMap = new Object();
 routeMap[''] = 'main';
 routeMap['printing'] = 'selling';
@@ -10,6 +11,7 @@ routeMap['members'] = 'members';
 routeMap['projects'] = 'projects';
 routeMap['makerspaces'] = 'generalinfo';
 routeMap['competitions'] = 'compete';
+routeMap['wave'] = 'wave';
 
 var app = express();
 
