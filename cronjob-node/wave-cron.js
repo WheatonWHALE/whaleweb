@@ -1,26 +1,25 @@
-var Firebase = require("firebase"),
-	cheerio = require("cheerio"),
+var cheerio = require("cheerio"),
 	request = require("request");
 
 
 var listOfPeople = Array(
-	{ id: 'akuisara', name: 'Sara' },
-	{ id: 'bawjensen', name: 'Bryan' },
-	{ id: 'cjrieck', name: 'Clayton' },
-	{ id: 'dshelts', name: 'Drew' },
-	{ id: 'devindelfino', name: 'Devin' },
-	{ id: 'evan1590', name: 'Evan' },
-	{ id: 'iopaluch', name: 'Ian' },
-	{ id: 'jge94', name: 'Jinnan' },
-	{ id: 'jmorneau', name: 'Julia' },
-	{ id: 'kimballan', name: '(?)' },
-	{ id: 'lithiah', name: 'Lithia' },
-	{ id: 'MichaelKristy', name: 'Michael' },
-	{ id: 'omigayy', name: 'Yingying' },
-	{ id: 'rubinz', name: 'Zevi' },
-	{ id: 'tkicks', name: 'Tyler' },
-	{ id: 'tarmstro', name: 'Tom' },
-	{ id: 'zahrarikan', name: 'Zahra' }
+	{ id: 'akuisara',  		name: 'Sara' },
+	{ id: 'bawjensen', 		name: 'Bryan' },
+	{ id: 'cjrieck', 		name: 'Clayton' },
+	{ id: 'dshelts', 		name: 'Drew' },
+	{ id: 'devindelfino', 	name: 'Devin' },
+	{ id: 'evan1590', 		name: 'Evan' },
+	{ id: 'iopaluch', 		name: 'Ian' },
+	{ id: 'jge94', 			name: 'Jinnan' },
+	{ id: 'jmorneau', 		name: 'Julia' },
+	{ id: 'kimballan', 		name: '(?)' },
+	{ id: 'lithiah', 		name: 'Lithia' },
+	{ id: 'MichaelKristy', 	name: 'Michael' },
+	{ id: 'omigayy', 		name: 'Yingying' },
+	{ id: 'rubinz', 		name: 'Zevi' },
+	{ id: 'tkicks', 		name: 'Tyler' },
+	{ id: 'tarmstro', 		name: 'Tom' },
+	{ id: 'zahrarikan', 	name: 'Zahra' }
 )
 
 var numTotal = listOfPeople.length;
