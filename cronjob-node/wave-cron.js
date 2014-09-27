@@ -1,69 +1,64 @@
 var cheerio = require("cheerio"),
-	request = require("request");
+    request = require("request");
 
+// var numTotal = listOfPeople.length;
+// var numFinished = 0;
 
-var listOfPeople = Array(
-	{ id: 'akuisara',  		name: 'Sara' },
-	{ id: 'bawjensen', 		name: 'Bryan' },
-	{ id: 'cjrieck', 		name: 'Clayton' },
-	{ id: 'dshelts', 		name: 'Drew' },
-	{ id: 'devindelfino', 	name: 'Devin' },
-	{ id: 'evan1590', 		name: 'Evan' },
-	{ id: 'iopaluch', 		name: 'Ian' },
-	{ id: 'jge94', 			name: 'Jinnan' },
-	{ id: 'jmorneau', 		name: 'Julia' },
-	{ id: 'kimballan', 		name: '(?)' },
-	{ id: 'lithiah', 		name: 'Lithia' },
-	{ id: 'MichaelKristy', 	name: 'Michael' },
-	{ id: 'omigayy', 		name: 'Yingying' },
-	{ id: 'rubinz', 		name: 'Zevi' },
-	{ id: 'tkicks', 		name: 'Tyler' },
-	{ id: 'tarmstro', 		name: 'Tom' },
-	{ id: 'zahrarikan', 	name: 'Zahra' }
-)
+// request('https://github.com/' + person.id, function(err, resp, body) {
+//  if (err) {
+//      console.log(err);
+//      return;
+//  }
 
-var numTotal = listOfPeople.length;
-var numFinished = 0;
+//  $ = cheerio.load(body);
 
-// for (person in listOfPeople) {
-listOfPeople.forEach(function(person) {
-	request('https://github.com/' + person.id, function(err, resp, body) {
-		if (err) {
-			console.log(err);
-			return;
-		}
+//  var contributionColumns = $('.contrib-column');
 
-		$ = cheerio.load(body);
+// });
 
-		var myFirebaseRef = new Firebase('https://whalesite.firebaseio.com/Competitions/GitHub%20Streak/Entrants/' + person.id);
-		
-		var contributionColumns = $('.contrib-column');
+// function waitForFinish() {
+//  if (numFinished < numTotal) {
+//      console.log('Not finished yet, ' + numFinished + ' out of ' + numTotal);
+//      setTimeout(waitForFinish, 1000);
+//  }
+//  else {
+//      console.log('Finished, ' + numFinished + ' out of ' + numTotal);
+//      process.exit(0); // Exit when done.
+//  }
+// }
 
-		var currStreak = $(contributionColumns[2]).find('.contrib-number').text().replace(/ days/, '');
-		var maxStreak = $(contributionColumns[1]).find('.contrib-number').text().replace(/ days/, '');
+// waitForFinish();
 
-		myFirebaseRef.update({
-			current: currStreak,
-			max: maxStreak,
-			name: person.name,
-			id: person.id
-		});
+function fetchData() {
+    var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor';
 
-		console.log(person.name + ': ' + currStreak + ' / ' + maxStreak);
+    var dataValues = {
+        'intmajor_sch' : '%',
+        'area_sch' : '%',
+        'area_cat' : '%',
+        'submit_btn' : 'Search Schedule',
+        'subject_sch' : '%',
+        'subject_cat' : '%',
+        'foundation_sch' : '%',
+        'schedule_beginterm' : '201510',
+        'intmajor_cat' : '%',
+        'division_sch' : '%',
+        'foundation_cat' : '%',
+        'crse_numb' : '%',
+        'division_cat' : '%'
+    };
 
-		numFinished += 1;
-	});
-});
+    var headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/37.0.2062.120 Safari/537.36',
+        'Cookie': '_ga=GA1.2.99013180.1410794952; session=eyJyZWNlbnQiOlsiMTNxMHdjcDEiXX0.BviaPw.QJ5xAWB91r8I21WDad6uYYk6xPw'
+    };
 
-function waitForFinish() {
-	if (numFinished < numTotal) {
-		console.log('Not finished yet, ' + numFinished + ' out of ' + numTotal);
-		setTimeout(waitForFinish, 1000);
-	}
-	else {
-		console.log('Finished, ' + numFinished + ' out of ' + numTotal);
-		process.exit(0); // Exit when done.
-	}
+    request.post(url, {form:dataValues, headers:headers}, function(err, resp, body) {
+        console.log('test');
+        console.log(resp);
+
+        $ = cheerio.load(body);
+
+        $('.tr')
+    });
 }
-
-waitForFinish();

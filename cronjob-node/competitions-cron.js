@@ -2,7 +2,6 @@ var Firebase = require("firebase"),
 	cheerio = require("cheerio"),
 	request = require("request");
 
-
 var listOfPeople = Array(
 	{ id: 'akuisara',  		name: 'Sara' },
 	{ id: 'bawjensen', 		name: 'Bryan' },
