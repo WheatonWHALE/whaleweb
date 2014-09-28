@@ -20,10 +20,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/refresh-competitions', function(req, res) {
-	var child = exec('node cronjob-node/cron.js',
+	var child = exec('node cronjob-node/competitions-cron.js',
 		function(error, stdout, stderr) {
 			console.log('Updated the competitions');
-	});
+		}
+	);
 
 	res.end('Success!');
 });
