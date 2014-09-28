@@ -49,13 +49,13 @@ function markStreakless(element) {
 	});
 }
 
-function centerLogo() {
-	$('img.centered_logo').load(function() {
-		$(this).css('margin-left', -1 * $(this).width() / 2);
-		$(this).css('margin-top', -1 * $(this).height() / 2);
-	}).each(function() {
-		$(this).load();
-	});
+function centerLogo() { // REMOVED (no longer dynamic sized, so no need for dynamic centering)
+	// $('img.centered-logo').load(function() {
+	// 	$(this).css('margin-left', -1 * $(this).width() / 2);
+	// 	$(this).css('margin-top', -1 * $(this).height() / 2);
+	// }).each(function() {
+	// 	$(this).load();
+	// });
 }
 
 $(function() {

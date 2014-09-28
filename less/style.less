@@ -60,6 +60,22 @@ nav {
   }
 }
 
+@logo-width: 350px;
+img.whale-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  // width: 25%;
+
+  width: @logo-width;
+  height: @logo-width;
+
+  margin-left: -@logo-width/2;  // Center the logo
+  margin-top: -@logo-width/2;   // Center the logo
+
+  // z-index: -1;
+}
+
 #mainpage-container {
   .cf;
 
@@ -98,14 +114,6 @@ nav {
 
   a#facebook {
     right: @icon-spacing;
-  }
-
-  img#logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 25%;
-    height: auto;
   }
 
   #sidebar {
@@ -173,19 +181,25 @@ nav {
 
   min-height: 90vh;
   width: 100%;
+  margin-top: 20px;
+
+  // z-index: -2;
 
   .competition {
     @comp-width: 360px;
+
+    position: relative; // Allows for z-index (for putting in front of logo)
 
     background-color: white;
 
     width: @comp-width;
     min-height: @comp-width * 1.618; // Golden ratio
-    margin: 20px;
     padding: 20px;
     overflow: auto;
     // box-shadow: 0px 0px 10px 5px #BEBEBE; // Lighter box shadow (for white page)
     box-shadow: 0px 0px 10px 5px #606060; // Darker box shadow (for background image)
+
+    z-index: 1; // Put in front of logo
 
     &.current {
       margin-left: 40px;
@@ -195,6 +209,7 @@ nav {
     &.max {
       margin-right: 40px;
       float: right;
+      // margin-left: @logo-width; // Width of the logo
     }
 
     .title {
@@ -258,11 +273,5 @@ nav {
 }
 
 img#logo-competition {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 25%;
-  height: auto;
-
   cursor: pointer;
 }
