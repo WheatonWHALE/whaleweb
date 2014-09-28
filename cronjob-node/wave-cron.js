@@ -32,7 +32,14 @@ var cheerio = require("cheerio"),
 function parseOutData(body) {
     $ = cheerio.load(body);
 
-    $('.tr');
+    var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?-[0-9][0-9][0-9]/;
+
+    allRows = $('.tr');
+
+    allRows.each(function(index, element) {
+        // element.text()
+        console.log($(this).text());
+    });
 }
 
 function fetchData() {
