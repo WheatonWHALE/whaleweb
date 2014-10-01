@@ -31,7 +31,7 @@ body {
   header {
     width: 100%;
     text-align: center;
-    font-size: 40px;
+    font-size: 55px;
 
     color: rgba(255, 255, 255, 1.0); // White
     text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
@@ -55,18 +55,17 @@ nav {
     margin: 0 auto;
     padding: 0;
 
-    color: white;
-    text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
-
     li {
       display: inline-block;
       color: inherit;
 
       a {
         display: block;
-        padding: 0 26px;
+        padding: 0 20px;
 
-        color: inherit;
+        font-size: 18px;
+        color: white;
+        text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
         text-decoration: none;
       }
     }
@@ -195,6 +194,8 @@ img.whale-logo {
   min-height: 90vh;
   width: 100%;
   margin-top: 20px;
+
+  position: relative; // Allows for absolute position of logo within container
 
   // z-index: -2;
 
