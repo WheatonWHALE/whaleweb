@@ -32,6 +32,9 @@ body {
     width: 100%;
     text-align: center;
     font-size: 40px;
+
+    color: rgba(255, 255, 255, 1.0); // White
+    text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
   }
 
   footer {
@@ -47,15 +50,25 @@ body {
 
 nav {
   ul {
-    display: block;
-    width: 701px;
+    display: block; // Hacky way to set width to size of children
+    width: 900px;
     margin: 0 auto;
     padding: 0;
 
+    color: white;
+    text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
+
     li {
       display: inline-block;
+      color: inherit;
 
-      padding-right: 20px;
+      a {
+        display: block;
+        padding: 0 26px;
+
+        color: inherit;
+        text-decoration: none;
+      }
     }
   }
 }
