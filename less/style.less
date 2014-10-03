@@ -33,7 +33,7 @@ body {
     text-align: center;
 
     color: rgba(255, 255, 255, 1.0); // White
-    text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
+    text-shadow: 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black, 0 0 2px black; // Stack text-shadows until it looks dark
 
     clear: both;
   }
@@ -177,43 +177,16 @@ img#logo-competition {
 
   min-height: 90vh;
   width: 100%;
-  margin-top: 20px;
-
-  position: relative; // Allows for absolute position of logo within container
-
-  // z-index: -2;
 
   .competition {
-    @comp-width: 360px;
-
-    position: relative; // Allows for z-index (for putting in front of logo)
-
     background-color: white;
-
-    width: @comp-width;
-    min-height: @comp-width * 1.618; // Golden ratio
-    padding: 20px;
-    overflow: auto;
-    // box-shadow: 0px 0px 10px 5px #BEBEBE; // Lighter box shadow (for white page)
-    box-shadow: 0px 0px 10px 5px #606060; // Darker box shadow (for background image)
-
-    z-index: 1; // Put in front of logo
-
-    &.current {
-      margin-left: 40px;
-      float: left;
-    }
-
-    &.max {
-      margin-right: 40px;
-      float: right;
-      // margin-left: @logo-width; // Width of the logo
-    }
+    padding: 50px;
 
     .title {
       width: 100%;
       text-align: center;
       font-size: 40px;
+      font-weight: bold;
     }
 
     .entrant {
@@ -264,7 +237,6 @@ img#logo-competition {
 
       &.streakless {
         font-size: 1em;
-        // line-height: 1em;
       }
     }
   }

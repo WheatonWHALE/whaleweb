@@ -116,7 +116,8 @@ $(function() {
 
 		// ================================================================================
 
-		$('#logo-competition').click(function() {
+		$('header').click(function() {
+			console.log('test');
 			$.get('/refresh-competitions/', function() {
 				console.log('Update request sent!');
 			});
