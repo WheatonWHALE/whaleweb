@@ -38,6 +38,7 @@ app.configure(function() {
 	app.use(logfmt.requestLogger());
 
 	// Static serving files from specific folders
+	app.use('/foundation', express.static(__dirname + '/foundation'));
 	app.use('/css', express.static(__dirname + '/css'));
 	app.use('/js', express.static(__dirname + '/js'));
     app.use('/images', express.static(__dirname + '/images'));
