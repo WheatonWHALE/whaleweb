@@ -48,29 +48,6 @@ body {
   }
 }
 
-nav {
-  ul {
-    display: block;
-    width: 900px;
-    margin: 0 auto;
-    padding: 0;
-
-    li {
-      display: inline-block;
-
-      a {
-        display: block;
-        padding: 0 20px;
-
-        font-size: 18px;
-        color: white;
-        text-shadow: 0 0 7px black, 0 0 7px black, 0 0 7px black; // Stack text-shadows until it looks dark
-        text-decoration: none;
-      }
-    }
-  }
-}
-
 @logo-width: 350px;
 img.whale-logo {
   position: absolute;
@@ -85,6 +62,12 @@ img.whale-logo {
   margin-top: -@logo-width/2;   // Center the logo
 
   // z-index: -1;
+}
+
+// ====================== Mainpage Styling ============================
+
+img#logo-competition {
+  cursor: pointer;
 }
 
 #mainpage-container {
@@ -171,21 +154,23 @@ img.whale-logo {
   }
 }
 
-#competition-background {
-  position: fixed;
-  top: 0;
+// ====================== Competitions Styling ========================
 
-  left: -20px; // To get rid of white edge on left side, created by blur
-  z-index: -1;
+// #competition-background {
+//   position: fixed;
+//   top: 0;
 
-  min-width: calc(~"100% + 40px");
-  min-height: calc(~"100% + 40px");
+//   left: -20px; // To get rid of white edge on left side, created by blur
+//   z-index: -1;
 
-  background: transparent url('../images/main_background.jpg') center center no-repeat;
-  background-size: cover;
+//   min-width: calc(~"100% + 40px");
+//   min-height: calc(~"100% + 40px");
 
-  -webkit-filter: blur(7px);
-}
+//   background: transparent url('../images/main_background.jpg') center center no-repeat;
+//   background-size: cover;
+
+//   -webkit-filter: blur(7px);
+// }
 
 #competition-container {
   .cf;
@@ -283,8 +268,4 @@ img.whale-logo {
       }
     }
   }
-}
-
-img#logo-competition {
-  cursor: pointer;
 }
