@@ -1,29 +1,41 @@
-function sortByCurrentStreak(a, b) {
-	var aCurrent = parseInt(a.current);
-	var bCurrent = parseInt(b.current);
+function sortByStreak(a, b, key, otherKey) {
+	var aVal = parseInt(a[key]), bVal = parseInt(b[key]);
 
-	if (aCurrent == bCurrent) {
-		comparison = parseInt(b.max) - parseInt(a.max);
-	}
-	else {
-		comparison = bCurrent - aCurrent;
-	}
+	if (aVal == bVal)
+		comparison = parseInt(b[otherKey]) - parseInt(b[otherKey]);
+	else
+		comparison = bVal - aVal;
 
 	return comparison;
 }
 
+function sortByCurrentStreak(a, b) {
+	return sortByStreak(a, b, 'current', 'max');
+}
+
 function sortByMaxStreak(a, b) {
-	var aMax = parseInt(a.max);
-	var bMax = parseInt(b.max);
+	return sortByStreak(a, b, 'max', 'current');
+}
 
-	if (aMax == bMax) {
-		comparison = parseInt(b.current) - parseInt(a.current);
-	}
-	else {
-		comparison = bMax - aMax;
-	}
+function extractStreak(entrants, key) {
+	var entrantsCurrentStreak = [];
 
-	return comparison;
+	entrants.forEach(function(entry, index) {
+		entry.streakVal = entry[key];
+		entrantsCurrentStreak.push(entry);
+	});
+
+	(key == 'current') ? entrantsCurrentStreak.sort(sortByCurrentStreak) : entrantsCurrentStreak.sort(sortByMaxStreak);
+
+	return entrantsCurrentStreak;
+}
+
+function extractMaxStreak(entrants) {
+	return extractStreak(entrants, 'max');
+}
+
+function extractCurrentStreak(entrants) {
+	return extractStreak(entrants, 'current');
 }
 
 function markTopThree(element) {
@@ -74,18 +86,14 @@ $(function() {
 				entrants.push(this);
 			});
 
-			entrants.sort(sortByCurrentStreak);
-
-			dust.render("current_streak", {title: 'Current Streak', entrants: entrants}, function(err, out) {
+			dust.render("current_streak", {title: 'Current Streak', entrants: extractCurrentStreak(entrants)}, function(err, out) {
 				out = $(out);
 				markTopThree(out);
 				markStreakless(out);
 				$("#competition-container").append(out);
 			});
 
-			entrants.sort(sortByMaxStreak);
-
-			dust.render("max_streak", {title: 'Max Streak', entrants: entrants}, function(err, out) {
+			dust.render("current_streak", {title: 'Max Streak', entrants: extractMaxStreak(entrants)}, function(err, out) {
 				out = $(out);
 				markTopThree(out);
 				markStreakless(out);
@@ -94,9 +102,6 @@ $(function() {
 
 			snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
 				var changedEntrant = snapshot.val();
-
-
-				// console.log(changedEntrant.id);
 
 				$('.' + changedEntrant.id).each(function(index) {
 					var entrantElement = $(this);

@@ -1,4 +1,4 @@
-<div class="competition max">
+<div class="large-6 columns">
 	<div class="title">{title}</div>
 	{#entrants}
 	<div class="entrant {id}">

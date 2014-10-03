@@ -1,9 +1,9 @@
-<div class="competition current">
+<div class="large-6 columns">
 	<div class="title">{title}</div>
 	{#entrants}
 	<div class="entrant {id}">
 		<a href="https://github.com/{id}" class="competition-link"><div class="name">{name} <span class="user-id">({id})</span></div></a>
-		<div class="score">{current} days</div>
+		<div class="score">{streakVal} days</div>
 	</div>{~n}
 	{/entrants}
 </div>
