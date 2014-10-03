@@ -86,14 +86,14 @@ $(function() {
 				entrants.push(this);
 			});
 
-			dust.render("current_streak", {title: 'Current Streak', entrants: extractCurrentStreak(entrants)}, function(err, out) {
+			dust.render("competition", {title: 'Current Streak', entrants: extractCurrentStreak(entrants)}, function(err, out) {
 				out = $(out);
 				markTopThree(out);
 				markStreakless(out);
 				$("#competition-container").append(out);
 			});
 
-			dust.render("current_streak", {title: 'Max Streak', entrants: extractMaxStreak(entrants)}, function(err, out) {
+			dust.render("competition", {title: 'Max Streak', entrants: extractMaxStreak(entrants)}, function(err, out) {
 				out = $(out);
 				markTopThree(out);
 				markStreakless(out);
