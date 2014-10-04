@@ -70,6 +70,13 @@ function centerLogo() { // REMOVED (no longer dynamic sized, so no need for dyna
 	// });
 }
 
+function postProcessAndAppend(err, out) {
+	out = $(out);
+	markTopThree(out);
+	markStreakless(out);
+	$("#competition-container").append(out);
+}
+
 $(function() {
 	centerLogo();
 
@@ -86,27 +93,18 @@ $(function() {
 				entrants.push(this);
 			});
 
-			dust.render("competition", {title: 'Current Streak', entrants: extractCurrentStreak(entrants)}, function(err, out) {
-				out = $(out);
-				markTopThree(out);
-				markStreakless(out);
-				$("#competition-container").append(out);
-			});
+			dust.render("competition", {title: 'Current Streak', compId: 'current', entrants: extractCurrentStreak(entrants)}, postProcessAndAppend);
 
-			dust.render("competition", {title: 'Max Streak', entrants: extractMaxStreak(entrants)}, function(err, out) {
-				out = $(out);
-				markTopThree(out);
-				markStreakless(out);
-				$("#competition-container").append(out);
-			});
+			dust.render("competition", {title: 'Max Streak', compId: 'max', entrants: extractMaxStreak(entrants)}, postProcessAndAppend);
 
+			// Roundabout method of assigning change listener to every child individually
 			snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
 				var changedEntrant = snapshot.val();
 
 				$('.' + changedEntrant.id).each(function(index) {
 					var entrantElement = $(this);
 
-					if (entrantElement.parents('.competition.max').length)
+					if (entrantElement.parents('.competition#max').length)
 						entrantElement.find('.score').html(changedEntrant.max + ' days');
 					else
 						entrantElement.find('.score').html(changedEntrant.current + ' days');
