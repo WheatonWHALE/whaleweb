@@ -2,7 +2,7 @@ function sortByStreak(a, b, key, otherKey) {
 	var aVal = parseInt(a[key]), bVal = parseInt(b[key]);
 
 	if (aVal == bVal)
-		comparison = parseInt(b[otherKey]) - parseInt(b[otherKey]);
+		comparison = parseInt(b[otherKey]) - parseInt(a[otherKey]);
 	else
 		comparison = bVal - aVal;
 
