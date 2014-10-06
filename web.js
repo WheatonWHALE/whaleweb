@@ -29,17 +29,26 @@ app.get('/refresh-competitions', function(req, res) {
 
 app.get('/wave', function(req, res) {
     var year = req.query.year;
+    var currentYear = '2014-2015';
+    var errorMessage = '';
 
-    fs.readFile('static/course-data/' + year +  '.json', function(err, data) {
-        if (err) {
-            console.log(err);
+    fs.exists('static/course-data/' + year + '.json', function(exists) {
+        if (!exists) {
+            if (year != undefined)
+                errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
+            
+            year = currentYear; // Default to the current year
         }
-        else {
-            // console.log('\n\n\n\n\nRequest at: ' + req.params.route);
-            console.log(req.query);
-            res.render('wave.jade', { courseData: JSON.parse(data) });
-        }
-    })
+
+        fs.readFile('static/course-data/' + year + '.json', function(err, data) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.render('wave.jade', { courseData: JSON.parse(data), errorMessage: errorMessage });
+            }
+        });
+    });
 });
 
 app.get('/:route', function(req, res) {

@@ -5,28 +5,49 @@ block scripts
 
 block contents
   .row
-    .columns.large-6
+    = errorMessage
+    .columns.small-12.large-6
       .row
-        .columns.large-6
+        .columns.small-6
           select(name='semester')
+            option(value='all') - Semester -
             option(value='fall') Fall
             option(value='winter') Winter
             option(value='spring') Spring
             option(value='summer') Summer
-        .columns.large-6
+        .columns.small-6
           select(name='department')
+            option(value='all') - Department -
             option(value='COMP') Computer Science
             option(value='MATH') Mathematics
+      //- .row
+      //-   .columns.small-6
+      //-     select(name='semester')
+      //-       option(value='all') - Semester -
+      //-       option(value='fall') Fall
+      //-       option(value='winter') Winter
+      //-       option(value='spring') Spring
+      //-       option(value='summer') Summer
+      //-   .columns.small-6
+      //-     select(name='department')
+      //-       option(value='all') - Department -
+      //-       option(value='COMP') Computer Science
+      //-       option(value='MATH') Mathematics
 
       .row
         |Schedule preview
 
-    .columns.large-6
+    .columns.small-12.large-6
+
       each semesterData, semesterName in courseData['2014-2015']
         .semesterContainer(class=semesterName)
-          each course in semesterData
-            .row
-              .columns.large-6
-                = course['courseTitle']
-              .columns.large-6
-                = course['courseCode']
+
+          each departmentData, departmentName in semesterData
+            .departmentContainer(class=departmentName)
+
+              each course in departmentData
+                .row
+                  .columns.small-6
+                    = course['courseTitle']
+                  .columns.small-6
+                    = course['courseCode']

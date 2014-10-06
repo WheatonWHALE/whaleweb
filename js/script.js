@@ -72,6 +72,19 @@ function postProcessAndAppend(err, out) {
 
 // ========================================================================================================================
 
+function toggleContainer(container, selector) {
+    console.log('container: ' + container)
+    if (selector == 'all') {
+        $(container).removeClass('hidden');
+    }
+    else {
+        $(container + ':not(.' + selector + ')').addClass('hidden');
+        $(container +      '.' + selector).removeClass('hidden');
+    }
+}
+
+// ========================================================================================================================
+
 $(function() {
     console.dir();
     if (window.location.pathname == '/github') { // Test for "github" page
@@ -109,7 +122,6 @@ $(function() {
         // ================================================================================
 
         $('header').click(function() {
-            console.log('test');
             $.get('/refresh-competitions/', function() {
                 console.log('Update request sent!');
             });
@@ -118,9 +130,12 @@ $(function() {
     else if (window.location.pathname == '/wave') {
         $('select[name=semester]').change(function() {
             var selector = $(this).val();
-            $('.semesterContainer:not(.' + selector + ')').addClass('hidden');
-            $('.semesterContainer.' + selector).removeClass('hidden');
-            // console.log($(this).val());
+            toggleContainer('.semesterContainer', selector);
+        });
+
+        $('select[name=department]').change(function() {
+            var selector = $(this).val();
+            toggleContainer('.departmentContainer', selector);
         });
     }
 });
