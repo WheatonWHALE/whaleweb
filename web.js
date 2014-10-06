@@ -28,14 +28,18 @@ app.get('/refresh-competitions', function(req, res) {
 });
 
 app.get('/wave', function(req, res) {
-    fs.readFile("static/course-data/test.json", function(err, data) {
+    var year = req.query.year;
+
+    fs.readFile('static/course-data/' + year +  '.json', function(err, data) {
         if (err) {
             console.log(err);
         }
         else {
+            // console.log('\n\n\n\n\nRequest at: ' + req.params.route);
+            console.log(req.query);
             res.render('wave.jade', { courseData: JSON.parse(data) });
         }
-    });
+    })
 });
 
 app.get('/:route', function(req, res) {

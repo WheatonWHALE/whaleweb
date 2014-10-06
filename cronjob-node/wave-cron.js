@@ -5,41 +5,13 @@ var cheerio = require("cheerio"),
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function(deleteValue) {
     for (var i = 0; i < this.length; i++) {
-        if (this[i] == deleteValue) {         
+        if (this[i] == deleteValue) {
             this.splice(i, 1);
             i--;
         }
     }
     return this;
 };
-
-// var numTotal = listOfPeople.length;
-// var numFinished = 0;
-
-// request('https://github.com/' + person.id, function(err, resp, body) {
-//  if (err) {
-//      console.log(err);
-//      return;
-//  }
-
-//  $ = cheerio.load(body);
-
-//  var contributionColumns = $('.contrib-column');
-
-// });
-
-// function waitForFinish() {
-//  if (numFinished < numTotal) {
-//      console.log('Not finished yet, ' + numFinished + ' out of ' + numTotal);
-//      setTimeout(waitForFinish, 1000);
-//  }
-//  else {
-//      console.log('Finished, ' + numFinished + ' out of ' + numTotal);
-//      process.exit(0); // Exit when done.
-//  }
-// }
-
-// waitForFinish();
 
 // Note: Fall 2014 is considered part of the 2015 year
 // Years: 2004 (Fall 2003) - 2016 (Spring 2016)
@@ -110,7 +82,6 @@ function parseCourseData(allRows, i) {
         textbookLink:       $(firstRowElements[10]).find('a').attr('href')
     };
 
-    // courseData.each()
     for (var key in courseData) {
         courseData[key] = courseData[key].replace(/\n/g, '');
     }
@@ -136,14 +107,12 @@ function parseData(body) {
     return semesterCourses;
 }
 
-function writeDataToFile(schData) {
-    fs.writeFile("test.json", JSON.stringify(schData, null, 2), function(err) {
-        if (err) {
+function writeDataToFile(schData, label) {
+    fs.writeFile('static/course-data/' + label + '.json', JSON.stringify(schData, null, 2), function(err) {
+        if (err)
             console.log(err);
-        }
-        else {
+        else
             console.log("The file was saved!");
-        }
     });
 }
 
@@ -177,16 +146,22 @@ function fetchAndParseData() {
 
             dataValues['schedule_beginterm'] = year.toString() + semester.toString();
 
+            console.log('pinging for ' + translatedYear + ' and ' + translatedSemester);
             request.post(url, {form:dataValues}, function(err, resp, body) {
-                if (resp.statusCode == 200)
-                    scheduleData[translatedYear][translatedSemester] = parseData(body);
-                else
+                console.log('response for ' + translatedYear + ' and ' + translatedSemester);
+                if (resp.statusCode == 200) {
+                    var semesterData = parseData(body);
+                    if (semesterData.length)
+                        scheduleData[translatedYear][translatedSemester] = semesterData;
+                }
+                else {
                     console.log(resp.statusCode);
+                }
 
                 numResponses++;
 
                 if (numResponses >= numResponsesExpected)
-                    writeDataToFile(scheduleData);
+                    writeDataToFile(scheduleData, translatedYear);
             });
         });
     }
