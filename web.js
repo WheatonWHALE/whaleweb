@@ -4,14 +4,15 @@ var express = require("express"),
     exec = require("child_process").exec;
 
 // Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
-var routeMap = new Object();
-routeMap[''] = 'main';
-routeMap['printing'] = 'selling';
-routeMap['members'] = 'members';
-routeMap['projects'] = 'projects';
-routeMap['makerspaces'] = 'generalinfo';
-routeMap['competitions'] = 'compete';
-routeMap['wave'] = 'wave';
+var routeMap =  {
+    '':             'main',
+    'printing':     'selling',
+    'members':      'members',
+    'projects':     'projects',
+    'makerspaces':  'generalinfo',
+    'competitions': 'compete',
+    'wave':         'wave'
+};;
 
 var app = express();
 
@@ -25,7 +26,6 @@ app.get('/refresh-competitions', function(req, res) {
             console.log('Updated the competitions');
         }
     );
-
     res.end('Success!');
 });
 
