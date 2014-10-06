@@ -26,17 +26,25 @@ block contents
         .columns.small-6
           select(name='foundation')
             option(value='all') - Foundation -
+            each foundation in filterData['foundation']
+              option(value=foundation)= foundation
         .columns.small-6
           select(name='division')
             option(value='all') - Division -
+            each division in filterData['division']
+              option(value=division)= division
 
       .row
         .columns.small-6
-          select(name='foundation')
+          select(name='area')
             option(value='all') - Area -
+            each area in filterData['area']
+              option(value=area)= area
         .columns.small-6
-          select(name='division')
+          select(name='interdis_major')
             option(value='all') - Interdis. Major -
+            each interdis_major in filterData['interdis_major']
+              option(value=interdis_major)= interdis_major
 
       .row
         |Schedule preview
@@ -49,7 +57,7 @@ block contents
             .departmentContainer(class=departmentName)
 
               each course in departmentData
-                .row.course
+                .row.course(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
                   .columns.small-6
                     = course['courseTitle']
                   .columns.small-6.text-right
@@ -64,7 +72,11 @@ block contents
                     .columns.small-6.text-right
                       = course['professors']
                     .columns.small-6
-                      = course['courseAttributes']
+                      = course['foundation']
+                    .columns.small-6.text-right
+                      = 'Div: ' + course['division'].replace(/DV/, '')
+                    .columns.small-6
+                      = course['area']
                     .columns.small-6.text-right
                       = course['connections']
                     .columns.small-6

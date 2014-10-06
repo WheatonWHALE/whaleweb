@@ -67,8 +67,6 @@ function parseCourseData(allRows, i) {
 
     var timePlaceSplit = $(firstRowElements[4]).text().split(/\n/).clean('');
 
-    var attributes = $(firstRowElements[6]).text() + ', ' + $(firstRowElements[7]).text() + ', ' + $(firstRowElements[8]).text();
-
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
         courseTitle:        $(firstRowElements[2]).text(),
@@ -76,7 +74,9 @@ function parseCourseData(allRows, i) {
         meetingTime:        timePlaceSplit[0],
         meetingPlace:       timePlaceSplit[1],
         professors:         $(firstRowElements[5]).text(),
-        courseAttributes:   attributes,
+        foundation:         $(firstRowElements[6]).text(),
+        division:           $(firstRowElements[7]).text(),
+        area:               $(firstRowElements[8]).text(),
         connections:        $(firstRowElements[9]).text(),
         examSlot:           $(firstRowElements[1]).text(),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href')

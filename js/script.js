@@ -73,13 +73,36 @@ function postProcessAndAppend(err, out) {
 // ========================================================================================================================
 
 function toggleContainer(container, selector) {
-    console.log('container: ' + container)
     if (selector == 'all') {
         $(container).removeClass('hidden');
     }
     else {
         $(container + ':not(.' + selector + ')').addClass('hidden');
         $(container +      '.' + selector).removeClass('hidden');
+    }
+}
+
+var activeFilters = {};
+// $.get('/static/course-data/filters.json', function(data) {
+//     for (var filterType in data) {
+//         activeFilters[filterType] = '';
+//     }
+// });
+
+function toggleIndividuals(type, selector) {
+    console.log(type);
+    if (selector == 'all') {
+        if (type in activeFilters)
+            $('.course:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
+
+        delete activeFilters[type];
+    }
+    else {
+        if (type in activeFilters)
+            $('.course:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
+
+        $('.course:not(.' + selector + ')').addClass(type+'-hidden');
+        activeFilters[type] = selector;
     }
 }
 
@@ -136,6 +159,21 @@ $(function() {
         $('select[name=department]').change(function() {
             var selector = $(this).val();
             toggleContainer('.departmentContainer', selector);
+        });
+
+        $('select[name=foundation]').change(function() {
+            var selector = $(this).val();
+            toggleIndividuals('foundation', selector);
+        });
+
+        $('select[name=division]').change(function() {
+            var selector = $(this).val();
+            toggleIndividuals('division', selector);
+        });
+
+        $('select[name=area]').change(function() {
+            var selector = $(this).val();
+            toggleIndividuals('area', selector);
         });
 
         $('.course').click(function(evt) {
