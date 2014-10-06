@@ -54,15 +54,22 @@ dev_server = {
     "watchFiles": function() {
         var that = this;
 
-        child_process.exec('find . | grep "\.js$"', function(error, stdout, stderr) {
+        child_process.exec("find . -path ./node_modules -prune -o -name '*.js'", function(error, stdout, stderr) {
+            // console.log(stdout.length);
             var files = stdout.trim().split("\n");
 
             files.forEach(function(file) {
+                // console.log('watching ' + file);
                 that.files.push(file);
+                // console.log(files.length);
+                // console.log(that.files.length);
                 fs.watchFile(file, {interval : 500}, function(curr, prev) {
                     if (curr.mtime.valueOf() != prev.mtime.valueOf() || curr.ctime.valueOf() != prev.ctime.valueOf()) {
                         sys.debug('DEVSERVER: Restarting because of changed file at ' + file);
                         dev_server.restart();
+                    }
+                    else {
+                        console.log(file);
                     }
                 });
             });
