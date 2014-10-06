@@ -137,6 +137,12 @@ $(function() {
             var selector = $(this).val();
             toggleContainer('.departmentContainer', selector);
         });
+
+        $('.course').click(function(evt) {
+            $(this).find('.secondary-info').toggleClass('hidden');
+        })/*.children().click(function(evt) {
+            return false;
+        })*/;
     }
 });
 

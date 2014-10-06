@@ -3,24 +3,25 @@ extends skeleton_general
 block scripts
   script(type='text/javascript' src='/static/templates/templates.js' defer)
   meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
-    
+
 block contents
+  = errorMessage
   .row
-    = errorMessage
-    .columns.small-12.large-6
+    .columns.small-12.large-5
       .row
         .columns.small-6
           select(name='semester')
             option(value='all') - Semester -
-            option(value='fall') Fall
+            option(value='fall' selected) Fall
             option(value='winter') Winter
             option(value='spring') Spring
             option(value='summer') Summer
         .columns.small-6
           select(name='department')
             option(value='all') - Department -
-            option(value='COMP') Computer Science
-            option(value='MATH') Mathematics
+            each department in filterData['department']
+              option(value=department)= department
+
       .row
         .columns.small-6
           select(name='foundation')
@@ -35,13 +36,12 @@ block contents
             option(value='all') - Area -
         .columns.small-6
           select(name='division')
-            option(value='all') - Interdisciplinary Major -
+            option(value='all') - Interdis. Major -
 
       .row
         |Schedule preview
 
-    .columns.small-12.large-6
-
+    .columns.small-12.large-7
       each semesterData, semesterName in courseData['2014-2015']
         .semesterContainer(class=semesterName)
 
@@ -49,8 +49,40 @@ block contents
             .departmentContainer(class=departmentName)
 
               each course in departmentData
-                .row
+                .row.course
                   .columns.small-6
                     = course['courseTitle']
-                  .columns.small-6
+                  .columns.small-6.text-right
                     = course['courseCode']
+                  .secondary-info.hidden
+                    .columns.small-6
+                      = course['crn']
+                    .columns.small-6.text-right
+                      = course['meetingTime']
+                    .columns.small-6
+                      = course['meetingPlace']
+                    .columns.small-6.text-right
+                      = course['professors']
+                    .columns.small-6
+                      = course['courseAttributes']
+                    .columns.small-6.text-right
+                      = course['connections']
+                    .columns.small-6
+                      = course['examSlot']
+                    .columns.small-6.text-right
+                      a(href=course['textbookLink']) Textbook
+
+
+
+        //- {
+        //-   "courseCode": "ANTH-102 B",
+        //-   "courseTitle": "Intro to Cultural Anthropology",
+        //-   "crn": "10298",
+        //-   "meetingTime": "M  W  F 9:30 AM - 10:20 AM",
+        //-   "meetingPlace": "Location info TBA",
+        //-   "professors": "Torres, M. Gabriela",
+        //-   "courseAttributes": "BW, DVSS, ARSS",
+        //-   "connections": "2023",
+        //-   "examSlot": "B.",
+        //-   "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ANTH&course-1=102&section-1=B"
+        //- },

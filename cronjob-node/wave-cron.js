@@ -119,11 +119,11 @@ function writeDataToFile(schData, label) {
         if (err)
             console.log(err);
         else
-            console.log("The file was saved!");
+            console.log("The schedule file was saved!");
     });
 }
 
-function fetchAndParseData() {
+function fetchAndParseScheduleData() {
     var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor';
 
     var dataValues = {
@@ -174,4 +174,49 @@ function fetchAndParseData() {
     }
 }
 
-fetchAndParseData();
+function fetchAndParseFilterData() {
+    var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_ListSection';
+
+    var filters = [
+        'subject_sch',
+        'foundation_sch',
+        'division_sch',
+        'area_sch',
+        'intmajor_sch'
+    ];
+
+    var filterTranslator = {
+        'subject_sch': 'department',
+        'foundation_sch': 'foundation',
+        'division_sch': 'division',
+        'area_sch': 'area',
+        'intmajor_sch': 'interdis_major'
+    }
+
+    request.get(url, function(err, resp, body) {
+        $ = cheerio.load(body);
+
+        var filtersObject = {};
+
+        filters.forEach(function(filter, index, array) {
+            var translatedFilter = filterTranslator[filter];
+            filtersObject[translatedFilter] = [];
+
+            $('select[name=' + filter + ']').find('option').each(function(entry) {
+                var filterValue = $(this).val();
+                if (filterValue != '%')
+                    filtersObject[translatedFilter].push(filterValue);
+            });
+        });
+
+        fs.writeFile('static/course-data/filters.json', JSON.stringify(filtersObject, null, 2), function(err) {
+            if (err)
+                console.log(err);
+            else
+                console.log("The filters file was saved!");
+        });
+    });
+}
+
+// fetchAndParseScheduleData();
+fetchAndParseFilterData();
