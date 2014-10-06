@@ -2,7 +2,8 @@ extends skeleton_general
 
 block scripts
   script(type='text/javascript' src='/static/templates/templates.js' defer)
-
+  meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+    
 block contents
   .row
     = errorMessage
@@ -20,19 +21,21 @@ block contents
             option(value='all') - Department -
             option(value='COMP') Computer Science
             option(value='MATH') Mathematics
-      //- .row
-      //-   .columns.small-6
-      //-     select(name='semester')
-      //-       option(value='all') - Semester -
-      //-       option(value='fall') Fall
-      //-       option(value='winter') Winter
-      //-       option(value='spring') Spring
-      //-       option(value='summer') Summer
-      //-   .columns.small-6
-      //-     select(name='department')
-      //-       option(value='all') - Department -
-      //-       option(value='COMP') Computer Science
-      //-       option(value='MATH') Mathematics
+      .row
+        .columns.small-6
+          select(name='foundation')
+            option(value='all') - Foundation -
+        .columns.small-6
+          select(name='division')
+            option(value='all') - Division -
+
+      .row
+        .columns.small-6
+          select(name='foundation')
+            option(value='all') - Area -
+        .columns.small-6
+          select(name='division')
+            option(value='all') - Interdisciplinary Major -
 
       .row
         |Schedule preview
