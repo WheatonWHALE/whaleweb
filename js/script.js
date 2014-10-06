@@ -83,11 +83,6 @@ function toggleContainer(container, selector) {
 }
 
 var activeFilters = {};
-// $.get('/static/course-data/filters.json', function(data) {
-//     for (var filterType in data) {
-//         activeFilters[filterType] = '';
-//     }
-// });
 
 function toggleIndividuals(type, selector) {
     console.log(type);

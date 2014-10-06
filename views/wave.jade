@@ -9,10 +9,19 @@ block contents
   .row
     .columns.small-12.large-5
       .row
+        form
+          .columns.small-6
+            select(name='year')
+              option(value='2013-2014') Fall 2013 - Spring 2014
+              option(value='2014-2015') Fall 2014 - Spring 2015
+          .columns.small-6
+            input(type='submit' value='Change Year').radius.button.small
+
+
         .columns.small-6
           select(name='semester')
             option(value='all') - Semester -
-            option(value='fall' selected) Fall
+            option(value='fall') Fall
             option(value='winter') Winter
             option(value='spring') Spring
             option(value='summer') Summer
@@ -22,7 +31,7 @@ block contents
             each department in filterData['department']
               option(value=department)= department
 
-      .row
+
         .columns.small-6
           select(name='foundation')
             option(value='all') - Foundation -
@@ -34,7 +43,7 @@ block contents
             each division in filterData['division']
               option(value=division)= division
 
-      .row
+
         .columns.small-6
           select(name='area')
             option(value='all') - Area -
@@ -46,11 +55,13 @@ block contents
             each interdis_major in filterData['interdis_major']
               option(value=interdis_major)= interdis_major
 
+
       .row
         |Schedule preview
 
+
     .columns.small-12.large-7
-      each semesterData, semesterName in courseData['2014-2015']
+      each semesterData, semesterName in courseData
         .semesterContainer(class=semesterName)
 
           each departmentData, departmentName in semesterData

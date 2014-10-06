@@ -15,7 +15,7 @@ Array.prototype.clean = function(deleteValue) {
 
 // Note: Fall 2014 is considered part of the 2015 year
 // Years: 2004 (Fall 2003) - 2016 (Spring 2016)
-var startYear = 2015;   // Inclusive
+var startYear = 2014;   // Inclusive
 var endYear = 2015;     // Inclusive
 
 var possibleSemesters = [
@@ -65,25 +65,36 @@ function parseCourseData(allRows, i) {
     enrollmentRowElements = enrollmentRow.find('td');
     // Testing for prereqs row
 
-    var timePlaceSplit = $(firstRowElements[4]).text().split(/\n/).clean('');
+    var timePlace = $(firstRowElements[4]).text().trim();
+    if (timePlace != '')
+        var timePlaceSplit = timePlace.split(/\n/).clean('');
+    else
+        var timePlaceSplit = ['', ''];
 
     var courseData = {
-        courseCode:         $(firstRowElements[0]).text(),
-        courseTitle:        $(firstRowElements[2]).text(),
-        crn:                $(firstRowElements[3]).text(),
+        courseCode:         $(firstRowElements[0]).text().trim(),
+        courseTitle:        $(firstRowElements[2]).text().trim(),
+        crn:                $(firstRowElements[3]).text().trim(),
         meetingTime:        timePlaceSplit[0],
         meetingPlace:       timePlaceSplit[1],
-        professors:         $(firstRowElements[5]).text(),
-        foundation:         $(firstRowElements[6]).text(),
-        division:           $(firstRowElements[7]).text(),
-        area:               $(firstRowElements[8]).text(),
-        connections:        $(firstRowElements[9]).text(),
-        examSlot:           $(firstRowElements[1]).text(),
+        professors:         $(firstRowElements[5]).text().trim(),
+        foundation:         $(firstRowElements[6]).text().trim(),
+        division:           $(firstRowElements[7]).text().trim(),
+        area:               $(firstRowElements[8]).text().trim(),
+        connections:        $(firstRowElements[9]).text().trim(),
+        examSlot:           $(firstRowElements[1]).text().trim(),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href')
     };
 
     for (var key in courseData) {
-        courseData[key] = courseData[key].replace(/\n/g, '');
+        try {
+            courseData[key] = courseData[key].replace(/\n/g, '');
+        }
+        catch (err) {
+            console.log(err);
+            console.log(courseData);
+            console.log(key);
+        }
     }
 
     return courseData;
@@ -114,13 +125,17 @@ function parseData(body) {
     return semesterCourses;
 }
 
-function writeDataToFile(schData, label) {
-    fs.writeFile('static/course-data/' + label + '.json', JSON.stringify(schData, null, 2), function(err) {
-        if (err)
-            console.log(err);
-        else
-            console.log("The schedule file was saved!");
-    });
+function writeDataToFile(schData) {
+    for (var currYear = startYear; currYear <= endYear; currYear++) {
+        var translatedYear = translateYear(currYear);
+
+        fs.writeFile('static/course-data/' + translatedYear + '.json', JSON.stringify(schData[translatedYear], null, 2), function(err) {
+            if (err)
+                console.log(err);
+            else
+                console.log("The schedule file was saved!");
+        });
+    }
 }
 
 function fetchAndParseScheduleData() {
@@ -168,7 +183,7 @@ function fetchAndParseScheduleData() {
                 numResponses++;
 
                 if (numResponses >= numResponsesExpected)
-                    writeDataToFile(scheduleData, translatedYear);
+                    writeDataToFile(scheduleData);
             });
         });
     }
