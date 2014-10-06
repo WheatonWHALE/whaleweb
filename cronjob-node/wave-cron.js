@@ -92,16 +92,23 @@ function parseCourseData(allRows, i) {
 function parseData(body) {
     $ = cheerio.load(body);
 
-    var semesterCourses = [];
-    var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?-[0-9][0-9][0-9]/;
+    var semesterCourses = {};
+    var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?\-[0-9][0-9][0-9]/;
 
     allRows = $('tr');
 
     allRows.each(function(index, element) {
-        var possibleClassLabel = $(this).find('td').text();
+        var possibleClassLabel = $(this).find('td').text().trim();
 
-        if (possibleClassLabel.match(classLabelMatch))
-            semesterCourses.push(parseCourseData(allRows, index));
+        if (possibleClassLabel.match(classLabelMatch)) {
+            var department = possibleClassLabel.split(/-/)[0];
+            var courseData = parseCourseData(allRows, index);
+
+            if (department in semesterCourses)
+                semesterCourses[department].push(courseData);
+            else
+                semesterCourses[department] = [courseData];
+        }
     });
 
     return semesterCourses;
@@ -151,7 +158,7 @@ function fetchAndParseData() {
                 console.log('response for ' + translatedYear + ' and ' + translatedSemester);
                 if (resp.statusCode == 200) {
                     var semesterData = parseData(body);
-                    if (semesterData.length)
+                    if (Object.keys(semesterData).length)
                         scheduleData[translatedYear][translatedSemester] = semesterData;
                 }
                 else {
