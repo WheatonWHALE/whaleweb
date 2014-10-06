@@ -218,5 +218,5 @@ function fetchAndParseFilterData() {
     });
 }
 
-// fetchAndParseScheduleData();
+fetchAndParseScheduleData();
 fetchAndParseFilterData();
