@@ -1,5 +1,17 @@
 var cheerio = require("cheerio"),
-    request = require("request");
+    request = require("request"),
+    fs      = require("fs");
+
+// Adding a method to arrays to 'clean' out unwanted values
+Array.prototype.clean = function(deleteValue) {
+    for (var i = 0; i < this.length; i++) {
+        if (this[i] == deleteValue) {         
+            this.splice(i, 1);
+            i--;
+        }
+    }
+    return this;
+};
 
 // var numTotal = listOfPeople.length;
 // var numFinished = 0;
@@ -30,18 +42,31 @@ var cheerio = require("cheerio"),
 // waitForFinish();
 
 // Note: Fall 2014 is considered part of the 2015 year
-// Years: 2004 (Fall 2013) - 2016 (Spring 2016)
-var startYear = 2015;
-var endYear = 2015;
+// Years: 2004 (Fall 2003) - 2016 (Spring 2016)
+var startYear = 2015;   // Inclusive
+var endYear = 2015;     // Inclusive
 
 var possibleSemesters = [
-    '10',   // Fall
-    '15',   // Winter
-    '20',   // Spring
-    '35'    // Summer
+    10,   // Fall
+    15,   // Winter
+    20,   // Spring
+    35    // Summer
 ]
 
-function parseClassData(allRows, i, year, semester) {
+var semesterTranslator = {
+    10: 'fall',
+    15: 'winter',
+    20: 'spring',
+    35: 'summer'
+}
+
+function translateYear(year) {
+    return (year - 1).toString() + '-' + year.toString();
+}
+
+var scheduleData = {};
+
+function parseCourseData(allRows, i) {
     // 2 Types of formats:
     //      W/o prereqs: 5 lines long, info on lines 0,    2
     //      Prereqs:     6 lines long, info on lines 0, 1, 3
@@ -68,26 +93,35 @@ function parseClassData(allRows, i, year, semester) {
     enrollmentRowElements = enrollmentRow.find('td');
     // Testing for prereqs row
 
-    classObject = {
-        classCode: $(firstRowElements[0]).text(),
-        examSlot: $(firstRowElements[1]).text()
+    var timePlaceSplit = $(firstRowElements[4]).text().split(/\n/).clean('');
+
+    var attributes = $(firstRowElements[6]).text() + ', ' + $(firstRowElements[7]).text() + ', ' + $(firstRowElements[8]).text();
+
+    var courseData = {
+        courseCode:         $(firstRowElements[0]).text(),
+        courseTitle:        $(firstRowElements[2]).text(),
+        crn:                $(firstRowElements[3]).text(),
+        meetingTime:        timePlaceSplit[0],
+        meetingPlace:       timePlaceSplit[1],
+        professors:         $(firstRowElements[5]).text(),
+        courseAttributes:   attributes,
+        connections:        $(firstRowElements[9]).text(),
+        examSlot:           $(firstRowElements[1]).text(),
+        textbookLink:       $(firstRowElements[10]).find('a').attr('href')
     };
 
-    // classObject.each()
-    for (var key in classObject) {
-        classObject[key] = classObject[key].replace(/\n/g, '');
+    // courseData.each()
+    for (var key in courseData) {
+        courseData[key] = courseData[key].replace(/\n/g, '');
     }
 
-    console.log(classObject);
-
-    console.log(year + ' : ' + semester);
-
-    process.exit(0);
+    return courseData;
 }
 
-function parseData(body, year, semester) {
+function parseData(body) {
     $ = cheerio.load(body);
 
+    var semesterCourses = [];
     var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?-[0-9][0-9][0-9]/;
 
     allRows = $('tr');
@@ -95,13 +129,25 @@ function parseData(body, year, semester) {
     allRows.each(function(index, element) {
         var possibleClassLabel = $(this).find('td').text();
 
-        if (possibleClassLabel.match(classLabelMatch)) {
-            parseClassData(allRows, index, year, semester);
+        if (possibleClassLabel.match(classLabelMatch))
+            semesterCourses.push(parseCourseData(allRows, index));
+    });
+
+    return semesterCourses;
+}
+
+function writeDataToFile(schData) {
+    fs.writeFile("test.json", JSON.stringify(schData, null, 2), function(err) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            console.log("The file was saved!");
         }
     });
 }
 
-function fetchData() {
+function fetchAndParseData() {
     var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor';
 
     var dataValues = {
@@ -110,30 +156,40 @@ function fetchData() {
         'submit_btn' : 'Search Schedule',
         'subject_sch' : '%',
         'foundation_sch' : '%',
-        'schedule_beginterm' : '',
+        'schedule_beginterm' : '', // Nothing in this one yet
         'division_sch' : '%',
         'crse_numb' : '%',
     };
 
-    var year;
-    var semester;
+    var numResponses = 0;
+    var numResponsesExpected = possibleSemesters.length * (endYear+1 - startYear);
 
-    for (year = startYear; year <= endYear; year++) {
-        possibleSemesters.forEach(function(entry, index, array) {
-            semester = entry;
+    // Two different types of for loops for the different types of data
+    for (var currYear = startYear; currYear <= endYear; currYear++) {
+        var translatedCurrYear = translateYear(currYear);
+        scheduleData[translatedCurrYear] = {};
 
-            dataValues['schedule_beginterm'] = year.toString() + semester;
+        possibleSemesters.forEach(function(semester, index, array) {
+            var year = currYear; // Make copy of variable so its value is not overwritten by following loops
 
-            console.log(dataValues);
+            var translatedSemester = semesterTranslator[semester];
+            var translatedYear = translatedCurrYear;
+
+            dataValues['schedule_beginterm'] = year.toString() + semester.toString();
 
             request.post(url, {form:dataValues}, function(err, resp, body) {
                 if (resp.statusCode == 200)
-                    parseData(body, year, semester);
+                    scheduleData[translatedYear][translatedSemester] = parseData(body);
                 else
                     console.log(resp.statusCode);
+
+                numResponses++;
+
+                if (numResponses >= numResponsesExpected)
+                    writeDataToFile(scheduleData);
             });
         });
     }
 }
 
-fetchData();
+fetchAndParseData();

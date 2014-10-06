@@ -17,9 +17,11 @@ html
     //- Make sure to defer all scripts, so they don't block page load
     script(type='text/javascript', src='https://cdn.firebase.com/v0/firebase.js' defer)
     script(type='text/javascript', src='/js/jquery-1.10.2.js' defer)
-    script(type='text/javascript', src='/js/dust-core-0.3.0.min.js' defer)
-    script(type='text/javascript', src='/js/script.js' defer)
+
     block head
+
+    //- script.js is always last to load
+    script(type='text/javascript', src='/js/script.js' defer)
 
   body
     block body

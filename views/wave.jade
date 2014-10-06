@@ -1,11 +1,32 @@
 extends skeleton_general
 
+block scripts
+  script(type='text/javascript' src='/static/templates/templates.js' defer)
+
 block contents
   .row
     .columns.large-6
       .row
-        |Filters
+        .columns.large-6
+          select(name='semester')
+            option(value='fall') Fall
+            option(value='winter') Winter
+            option(value='spring') Spring
+            option(value='summer') Summer
+        .columns.large-6
+          select(name='department')
+            option(value='COMP') Computer Science
+            option(value='MATH') Mathematics
+
       .row
         |Schedule preview
+
     .columns.large-6
-      |Courses
+      each semesterData, semesterName in courseData['2014-2015']
+        .semesterContainer(class=semesterName)
+          each course in semesterData
+            .row
+              .columns.large-6
+                = course['courseTitle']
+              .columns.large-6
+                = course['courseCode']

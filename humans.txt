@@ -1,8 +1,0 @@
-/* The WHALE website was created by students at Wheaton College, MA, members of the Wheaton Autonomous Learning Lab. */
-/* whale.wheatoncollege.edu */
-/* humanstxt.org */
-
-/* SITE */
-  Standards: HTML5, CSS3
-  Components: jQuery
-  Software: Sublime, Git, Less

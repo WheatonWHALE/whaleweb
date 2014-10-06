@@ -1,18 +1,18 @@
-var express = require("express"),
-    Firebase = require("firebase"),
-    logfmt = require("logfmt")
-    exec = require("child_process").exec;
+var exec        = require("child_process").exec,
+    express     = require("express"),
+    Firebase    = require("firebase"),
+    logfmt      = require("logfmt"),
+    fs          = require("fs");
 
 // Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
 var routeMap =  {
-    '':             'main',
     'printing':     'selling',
     'members':      'members',
     'projects':     'projects',
     'makerspaces':  'generalinfo',
-    'competitions': 'compete',
-    'wave':         'wave'
-};;
+    'github':       'compete'
+    // 'wave':         'wave'
+};
 
 var app = express();
 
@@ -21,12 +21,21 @@ app.get('/', function(req, res) {
 });
 
 app.get('/refresh-competitions', function(req, res) {
-    var child = exec('node cronjob-node/competitions-cron.js',
-        function(error, stdout, stderr) {
-            console.log('Updated the competitions');
-        }
-    );
+    var child = exec('node cronjob-node/competitions-cron.js', function(error, stdout, stderr) {
+        console.log('Updated the competitions');
+    });
     res.end('Success!');
+});
+
+app.get('/wave', function(req, res) {
+    fs.readFile("static/course-data/test.json", function(err, data) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            res.render('wave.jade', { courseData: JSON.parse(data) });
+        }
+    });
 });
 
 app.get('/:route', function(req, res) {
