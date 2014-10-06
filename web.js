@@ -31,7 +31,13 @@ app.get('/refresh-competitions', function(req, res) {
 
 app.get('/:route', function(req, res) {
     console.log('Request at: ' + req.params.route);
-    res.render(routeMap[req.params.route] + '.jade');
+    var requestRoute = req.params.route,
+        rerouted = routeMap[requestRoute];
+
+    if (rerouted == undefined)
+        rerouted = '404';
+    
+    res.render(rerouted + '.jade');
 });
 
 app.configure(function() {
