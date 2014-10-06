@@ -13,20 +13,21 @@ block head
   block scripts
 
 block body
-  .row: header WHALE Lab
-  
   div.fixed
     nav(data-topbar role='navigation').top-bar
       ul.title-area
-        li.name: h1: a(href="/") Wh.A.Le.
+        li.name: h1: a(href='/') Wh.A.Le.
+        li(class='toggle-topbar menu-icon'): a(href='#'): span Menu
       section.top-bar-section
         ul.left
-          li: a(href="/github") GitHub Competition
-          li: a(href="/wave") WAVE
-          li: a(href="/projects") Projects
-          li: a(href="/printing") 3D Printing
-          li: a(href="/makerspaces") About Makerspaces
-          li: a(href="/members") About Us
+          li: a(href='/github') GitHub Competition
+          li: a(href='/wave') WAVE
+          li: a(href='/projects') Projects
+          li: a(href='/printing') 3D Printing
+          li: a(href='/makerspaces') About Makerspaces
+          li: a(href='/members') About Us
+
+  .row: header WHALE Lab
 
   #container
     block contents
