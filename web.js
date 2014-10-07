@@ -27,6 +27,62 @@ app.get('/refresh-competitions', function(req, res) {
     res.end('Success!');
 });
 
+app.get('/wave3', function(req, res) {
+    var year = req.query.year;
+    var currentYear = '2014-2015';
+    var errorMessage = '';
+
+    fs.exists('static/course-data/' + year + '.json', function(exists) {
+        if (!exists) {
+            if (year != undefined)
+                errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
+
+            year = currentYear; // Default to the current year
+        }
+
+        fs.readFile('static/course-data/' + year + '.json', function(err, courseData) {
+            if (err)
+                console.log(err);
+            else {
+                fs.readFile('static/course-data/filters.json', function(err, filterData) {
+                    if (err)
+                        console.log(err);
+                    else
+                        res.render('wave3.jade', { courseData: JSON.parse(courseData), filterData: JSON.parse(filterData), errorMessage: errorMessage });
+                });
+            }
+        });
+    });
+});
+
+app.get('/wave2', function(req, res) {
+    var year = req.query.year;
+    var currentYear = '2014-2015';
+    var errorMessage = '';
+
+    fs.exists('static/course-data/' + year + '.json', function(exists) {
+        if (!exists) {
+            if (year != undefined)
+                errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
+
+            year = currentYear; // Default to the current year
+        }
+
+        fs.readFile('static/course-data/' + year + '.json', function(err, courseData) {
+            if (err)
+                console.log(err);
+            else {
+                fs.readFile('static/course-data/filters.json', function(err, filterData) {
+                    if (err)
+                        console.log(err);
+                    else
+                        res.render('wave2.jade', { courseData: JSON.parse(courseData), filterData: JSON.parse(filterData), errorMessage: errorMessage });
+                });
+            }
+        });
+    });
+});
+
 app.get('/wave', function(req, res) {
     var year = req.query.year;
     var currentYear = '2014-2015';

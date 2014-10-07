@@ -1,0 +1,112 @@
+extends skeleton_general
+
+block scripts
+  meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
+
+block contents
+  = errorMessage
+  .row
+    .columns.small-12.large-5
+      .row
+        form
+          .columns.small-6
+            select(name='year')
+              option(value='2013-2014') Fall 2013 - Spring 2014
+              option(value='2014-2015' selected) Fall 2014 - Spring 2015
+          .columns.small-6
+            input(type='submit' value='Change Year').radius.button.small
+
+
+      .row.filters
+        .columns.small-6
+          select(name='semester')
+            option(value='all') - Semester -
+            option(value='fall') Fall
+            option(value='winter') Winter
+            option(value='spring') Spring
+            option(value='summer') Summer
+        .columns.small-6
+          select(name='department')
+            option(value='all') - Department -
+            each department in filterData['department']
+              option(value=department)= department
+
+
+        .columns.small-6
+          select(name='foundation')
+            option(value='all') - Foundation -
+            each foundation in filterData['foundation']
+              option(value=foundation)= foundation
+        .columns.small-6
+          select(name='division')
+            option(value='all') - Division -
+            each division in filterData['division']
+              option(value=division)= division
+
+
+        .columns.small-6
+          select(name='area')
+            option(value='all') - Area -
+            each area in filterData['area']
+              option(value=area)= area
+        //- .columns.small-6
+        //-   select(name='interdis_major')
+        //-     option(value='all') - Interdis. Major -
+        //-     each interdis_major in filterData['interdis_major']
+        //-       option(value=interdis_major)= interdis_major
+
+
+      .row
+        |Schedule preview
+
+
+    .columns.small-12.large-7
+      each semesterData, semesterName in courseData
+        .semesterContainer(class=semesterName)
+
+          each departmentData, departmentName in semesterData
+            .departmentContainer(class=departmentName)
+
+              each course in departmentData
+                .row.course(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
+                  .columns.small-6
+                    = course['courseTitle']
+                  .columns.small-6.text-right
+                    = course['courseCode']
+                  //- .secondary-info.hidden
+                  .columns.small-12
+                    = course['crn']
+                    = course['meetingTime']
+                    = course['meetingPlace']
+                    = course['professors']
+                    = course['foundation']
+                    = course['division']
+                    = course['area']
+                    = course['connections']
+                    = course['examSlot']
+                    a(href=course['textbookLink']) Textbook
+
+                    //- .columns.small-6.text-right
+                    //- .columns.small-6
+                    //- .columns.small-6.text-right
+                    //- .columns.small-6
+                    //- .columns.small-6.text-right
+                    //- .columns.small-6
+                    //- .columns.small-6.text-right
+                    //- .columns.small-6
+                    //- .columns.small-6.text-right
+
+
+
+        //- {
+        //-   "courseCode": "ANTH-102 B",
+        //-   "courseTitle": "Intro to Cultural Anthropology",
+        //-   "crn": "10298",
+        //-   "meetingTime": "M  W  F 9:30 AM - 10:20 AM",
+        //-   "meetingPlace": "Location info TBA",
+        //-   "professors": "Torres, M. Gabriela",
+        //-   "courseAttributes": "BW, DVSS, ARSS",
+        //-   "connections": "2023",
+        //-   "examSlot": "B.",
+        //-   "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ANTH&course-1=102&section-1=B"
+        //- },
