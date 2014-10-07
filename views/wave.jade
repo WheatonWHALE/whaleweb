@@ -1,7 +1,6 @@
 extends skeleton_general
 
 block scripts
-  script(type='text/javascript' src='/static/templates/templates.js' defer)
   meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
 
 block contents
@@ -13,11 +12,12 @@ block contents
           .columns.small-6
             select(name='year')
               option(value='2013-2014') Fall 2013 - Spring 2014
-              option(value='2014-2015') Fall 2014 - Spring 2015
+              option(value='2014-2015' selected) Fall 2014 - Spring 2015
           .columns.small-6
             input(type='submit' value='Change Year').radius.button.small
 
 
+      .row.filters
         .columns.small-6
           select(name='semester')
             option(value='all') - Semester -
@@ -49,11 +49,11 @@ block contents
             option(value='all') - Area -
             each area in filterData['area']
               option(value=area)= area
-        .columns.small-6
-          select(name='interdis_major')
-            option(value='all') - Interdis. Major -
-            each interdis_major in filterData['interdis_major']
-              option(value=interdis_major)= interdis_major
+        //- .columns.small-6
+        //-   select(name='interdis_major')
+        //-     option(value='all') - Interdis. Major -
+        //-     each interdis_major in filterData['interdis_major']
+        //-       option(value=interdis_major)= interdis_major
 
 
       .row

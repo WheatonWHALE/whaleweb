@@ -3,12 +3,14 @@
 
 extends skeleton_base
 
-block head
+block skele-css
+  link(rel='stylesheet' type='text/css' href='/foundation/css/foundation.css')
+
+  block css
+
+block skele-script
   script(src='/foundation/js/foundation.min.js' defer)
   script(src='/foundation/js/vendor/modernizr.js' defer)
-  script(src='/js/dust-core-0.3.0.min.js' defer)
-
-  link(rel='stylesheet' type='text/css' href='/foundation/css/foundation.css')
 
   block scripts
 

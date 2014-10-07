@@ -14,14 +14,16 @@ html
     link(rel='stylesheet', type='text/css', href='/static/webfont_icons/flaticon.css')
     link(rel='stylesheet', type='text/css', href='/css/style.css')
 
+    block skele-css
+
     //- Make sure to defer all scripts, so they don't block page load
     script(type='text/javascript', src='https://cdn.firebase.com/v0/firebase.js' defer)
     script(type='text/javascript', src='/js/jquery-1.10.2.js' defer)
 
-    block head
+    block skele-script
 
     //- script.js is always last to load
-    script(type='text/javascript', src='/js/script.js' defer)
+    //- script(type='text/javascript', src='/js/script.js' defer)
 
   body
     block body
