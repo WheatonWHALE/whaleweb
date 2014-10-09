@@ -1,0 +1,33 @@
+each semesterData, semesterName in courseData
+  .semesterContainer(class=semesterName)
+
+    each departmentData, departmentName in semesterData
+      .departmentContainer(class=departmentName)
+
+        each course in departmentData
+          .row.course(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
+            .columns.small-6
+              = course['courseTitle']
+            .columns.small-6.text-right
+              = course['courseCode']
+            .secondary-info.hidden
+              .columns.small-6
+                = 'CRN: ' + course['crn']
+              .columns.small-6.text-right
+                = 'Time: ' + course['meetingTime']
+              .columns.small-6
+                = 'Place: ' + course['meetingPlace']
+              .columns.small-6.text-right
+                = 'Prof.: ' + course['professors']
+              .columns.small-6
+                = 'Foundation: ' + course['foundation']
+              .columns.small-6.text-right
+                = 'Division: ' + course['division']
+              .columns.small-6
+                = 'Area: ' + course['area']
+              .columns.small-6.text-right
+                = 'Connections: ' + course['connections']
+              .columns.small-6
+                = 'Exam Slot: ' + course['examSlot']
+              .columns.small-6.text-right
+                a(href=course['textbookLink']) Textbook

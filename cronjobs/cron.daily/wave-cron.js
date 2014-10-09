@@ -1,4 +1,4 @@
-var debug = false;
+var debug = true;
 
 var cheerio = require("cheerio"),
     request = require("request"),
@@ -139,16 +139,37 @@ function writeDataToFile(schData) {
     for (var currYear = startYear; currYear <= endYear; currYear++) {
         var translatedYear = translateYear(currYear);
 
-        fs.writeFile('static/course-data/' + translatedYear + '.json', JSON.stringify(schData[translatedYear], null, 2), function(err) {
-            if (err)
-                console.log(err);
-            else
-                console.log("The schedule file was saved!");
+        fs.readFile('static/course-data/courses.jade', function(err, data) {
+            if (err) console.log(err);
+
+            var func = jade.compile(data, { pretty: debug });
+            var html = func({ courseData: schData[translatedYear] });
+
+            fs.writeFile('static/course-data/compiled/' + translatedYear + '.html', html, function(err) {
+                if (err) console.log(err);
+                else console.log("The courses " + translatedYear + " html file was saved!");
+            });
+
+            if (debug) {
+                fs.writeFile('static/course-data/' + translatedYear + '.json', JSON.stringify(schData[translatedYear], null, 2), function(err) {
+                    if (err) console.log(err);
+                    else console.log("The courses " + translatedYear + " json file was saved!");
+                });
+            }
         });
     }
 }
 
-// Function that does everything to do with the acutal schedule and course data, which is almost everything
+// Add the currently supported years to the filters object
+function addYearsToFilters(filtersObject) {
+    filtersObject['years'] = [];
+    for (var currYear = startYear; currYear <= endYear; currYear++) {
+        var translatedYear = translateYear(currYear);
+        filtersObject['years'].push({ val: translatedYear, display: translatedYear });
+    }
+}
+
+// Function that does everything to do with the acutal schedule and course data, which is almost all the work
 function fetchAndParseScheduleData() {
     var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor';
 
@@ -197,15 +218,6 @@ function fetchAndParseScheduleData() {
                     writeDataToFile(scheduleData);
             });
         });
-    }
-}
-
-// Add the currently supported years to the filters
-function addYearsToFilters(filtersObject) {
-    filtersObject['years'] = [];
-    for (var currYear = startYear; currYear <= endYear; currYear++) {
-        var translatedYear = translateYear(currYear);
-        filtersObject['years'].push({ val: translatedYear, display: translatedYear });
     }
 }
 
@@ -273,4 +285,4 @@ function fetchAndParseFilterData() {
 }
 
 fetchAndParseScheduleData();
-fetchAndParseFilterData();
+// fetchAndParseFilterData();

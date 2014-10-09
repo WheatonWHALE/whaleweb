@@ -49,17 +49,9 @@ app.get('/wave', function(req, res) {
             year = currentYear; // Default to the current year
         }
 
-        fs.readFile('static/course-data/' + year + '.json', function(err, courseData) {
-            if (err)
-                console.log(err);
-            else {
-                // fs.readFile('static/course-data/filters.json', function(err, filterData) {
-                //     if (err)
-                //         console.log(err);
-                //     else
-                        res.render('wave.jade', { courseData: JSON.parse(courseData), /*filterData: JSON.parse(filterData),*/ errorMessage: errorMessage });
-                // });
-            }
+        fs.readFile('static/course-data/compiled/' + year + '.html', function(err, data) {
+            if (err) console.log(err);
+            else res.render('wave.jade', { dynamicData: data, errorMessage: errorMessage });
         });
     });
 });
