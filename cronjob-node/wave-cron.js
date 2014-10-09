@@ -72,23 +72,23 @@ function parseCourseData(allRows, i) {
         var timePlaceSplit = ['', ''];
 
     var courseData = {
-        courseCode:         $(firstRowElements[0]).text().trim(),
-        courseTitle:        $(firstRowElements[2]).text().trim(),
-        crn:                $(firstRowElements[3]).text().trim(),
+        courseCode:         $(firstRowElements[0]).text(),
+        courseTitle:        $(firstRowElements[2]).text(),
+        crn:                $(firstRowElements[3]).text(),
         meetingTime:        timePlaceSplit[0],
         meetingPlace:       timePlaceSplit[1],
-        professors:         $(firstRowElements[5]).text().trim(),
-        foundation:         $(firstRowElements[6]).text().trim(),
-        division:           $(firstRowElements[7]).text().trim(),
-        area:               $(firstRowElements[8]).text().trim(),
-        connections:        $(firstRowElements[9]).text().trim(),
-        examSlot:           $(firstRowElements[1]).text().trim(),
+        professors:         $(firstRowElements[5]).text(),
+        foundation:         $(firstRowElements[6]).text(),
+        division:           $(firstRowElements[7]).text(),
+        area:               $(firstRowElements[8]).text(),
+        connections:        $(firstRowElements[9]).text(),
+        examSlot:           $(firstRowElements[1]).text(),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href')
     };
 
     for (var key in courseData) {
         try {
-            courseData[key] = courseData[key].replace(/\n/g, '');
+            courseData[key] = courseData[key].trim()/*.replace(/\n/g, '')*/;
         }
         catch (err) {
             console.log(err);

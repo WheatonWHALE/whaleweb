@@ -12,16 +12,15 @@ html
     link(rel='shortcut icon' href='/images/favicon.ico')
     link(rel='stylesheet', type='text/css', href='/css/normalize.css')
     link(rel='stylesheet', type='text/css', href='/static/webfont_icons/flaticon.css')
+    block skele-css
+    //- style.css is always last to load
     link(rel='stylesheet', type='text/css', href='/css/style.css')
 
-    block skele-css
 
     //- Make sure to defer all scripts, so they don't block page load
     script(type='text/javascript', src='https://cdn.firebase.com/v0/firebase.js' defer)
     script(type='text/javascript', src='https://code.jquery.com/jquery-1.11.1.min.js' defer)
-
     block skele-script
-
     //- script.js is always last to load
     script(type='text/javascript', src='/js/script.js' defer)
 

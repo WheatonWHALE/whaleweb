@@ -75,23 +75,23 @@ block contents
                     = course['courseCode']
                   .secondary-info.hidden
                     .columns.small-6
-                      = course['crn']
+                      = 'CRN: ' + course['crn']
                     .columns.small-6.text-right
-                      = course['meetingTime']
+                      = 'Time: ' + course['meetingTime']
                     .columns.small-6
-                      = course['meetingPlace']
+                      = 'Place: ' + course['meetingPlace']
                     .columns.small-6.text-right
-                      = course['professors']
+                      = 'Prof.: ' + course['professors']
                     .columns.small-6
-                      = course['foundation']
+                      = 'Foundation: ' + course['foundation']
                     .columns.small-6.text-right
-                      = 'Div: ' + course['division'].replace(/DV/, '')
+                      = 'Division: ' + course['division'].replace(/DV/, '')
                     .columns.small-6
-                      = course['area']
+                      = 'Area: ' + course['area'].replace(/AR/, '')
                     .columns.small-6.text-right
-                      = course['connections']
+                      = 'Connections: ' + course['connections']
                     .columns.small-6
-                      = course['examSlot']
+                      = 'Exam Slot: ' + course['examSlot']
                     .columns.small-6.text-right
                       a(href=course['textbookLink']) Textbook
 
