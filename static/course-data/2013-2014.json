@@ -1,4 +1,22 @@
 {
+  "winter": {
+    "AFDS": [
+      {
+        "courseCode": "AFDS-201 W",
+        "courseTitle": "Witness Contemp African Soc",
+        "crn": "50001",
+        "meetingTime": "TBA",
+        "meetingPlace": "Location info TBA",
+        "professors": "Freeman, James A.\n\nPolanichka, Dana M.",
+        "foundation": "BW",
+        "division": "",
+        "area": "",
+        "connections": "",
+        "examSlot": "J",
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Winter+2014&div-1=&dept-1=AFDS&course-1=201&section-1=W"
+      }
+    ]
+  },
   "summer": {
     "ANTH": [
       {
@@ -158,24 +176,6 @@
         "connections": "",
         "examSlot": "J",
         "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Summer+2014&div-1=&dept-1=THEA&course-1=298&section-1=S"
-      }
-    ]
-  },
-  "winter": {
-    "AFDS": [
-      {
-        "courseCode": "AFDS-201 W",
-        "courseTitle": "Witness Contemp African Soc",
-        "crn": "50001",
-        "meetingTime": "TBA",
-        "meetingPlace": "Location info TBA",
-        "professors": "Freeman, James A.\n\nPolanichka, Dana M.",
-        "foundation": "BW",
-        "division": "",
-        "area": "",
-        "connections": "",
-        "examSlot": "J",
-        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Winter+2014&div-1=&dept-1=AFDS&course-1=201&section-1=W"
       }
     ]
   },

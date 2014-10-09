@@ -7,53 +7,7 @@ block contents
   = errorMessage
   .row
     .columns.small-12.large-5
-      .row
-        form
-          .columns.small-6
-            select(name='year')
-              option(value='2013-2014') Fall 2013 - Spring 2014
-              option(value='2014-2015' selected) Fall 2014 - Spring 2015
-          .columns.small-6
-            input(type='submit' value='Change Year').button.radius.small
-
-
-      .row.filters
-        .columns.small-6
-          select(name='semester')
-            option(value='all') - Semester -
-            option(value='fall') Fall
-            option(value='winter') Winter
-            option(value='spring') Spring
-            option(value='summer') Summer
-        .columns.small-6
-          select(name='department')
-            option(value='all') - Department -
-            each department in filterData['department']
-              option(value=department)= department
-
-
-        .columns.small-6
-          select(name='foundation')
-            option(value='all') - Foundation -
-            each foundation in filterData['foundation']
-              option(value=foundation)= foundation
-        .columns.small-6
-          select(name='division')
-            option(value='all') - Division -
-            each division in filterData['division']
-              option(value=division)= division
-
-
-        .columns.small-6
-          select(name='area')
-            option(value='all') - Area -
-            each area in filterData['area']
-              option(value=area)= area
-        //- .columns.small-6
-        //-   select(name='interdis_major')
-        //-     option(value='all') - Interdis. Major -
-        //-     each interdis_major in filterData['interdis_major']
-        //-       option(value=interdis_major)= interdis_major
+      include ../static/course-data/compiled/filters.html
 
 
       .row

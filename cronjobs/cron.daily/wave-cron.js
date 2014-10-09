@@ -1,6 +1,9 @@
+var debug = false;
+
 var cheerio = require("cheerio"),
     request = require("request"),
-    fs      = require("fs");
+    fs      = require("fs"),
+    jade    = require("jade");
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function(deleteValue) {
@@ -18,6 +21,7 @@ Array.prototype.clean = function(deleteValue) {
 var startYear = 2014;   // Inclusive
 var endYear = 2015;     // Inclusive
 
+// All the possible semesters
 var possibleSemesters = [
     10,   // Fall
     15,   // Winter
@@ -25,6 +29,7 @@ var possibleSemesters = [
     35    // Summer
 ]
 
+// Translates the number system that Wheaton uses into the word system that WAVE uses
 var semesterTranslator = {
     10: 'fall',
     15: 'winter',
@@ -32,12 +37,15 @@ var semesterTranslator = {
     35: 'summer'
 }
 
+// Translates the year from an int (e.g. 2014) to a string (e.g. '2013-2014')
 function translateYear(year) {
     return (year - 1).toString() + '-' + year.toString();
 }
 
+// Global variable for schedule data
 var scheduleData = {};
 
+// Parses one course's data out from the given list of rows
 function parseCourseData(allRows, i) {
     // 2 Types of formats:
     //      W/o prereqs: 5 lines long, info on lines 0,    2
@@ -100,7 +108,8 @@ function parseCourseData(allRows, i) {
     return courseData;
 }
 
-function parseData(body) {
+// Parses the semester data out from the given html
+function parseSemesterData(body) {
     $ = cheerio.load(body);
 
     var semesterCourses = {};
@@ -125,6 +134,7 @@ function parseData(body) {
     return semesterCourses;
 }
 
+// Writes all the schedule data to a file
 function writeDataToFile(schData) {
     for (var currYear = startYear; currYear <= endYear; currYear++) {
         var translatedYear = translateYear(currYear);
@@ -138,6 +148,7 @@ function writeDataToFile(schData) {
     }
 }
 
+// Function that does everything to do with the acutal schedule and course data, which is almost everything
 function fetchAndParseScheduleData() {
     var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor';
 
@@ -172,7 +183,7 @@ function fetchAndParseScheduleData() {
             request.post(url, {form:dataValues}, function(err, resp, body) {
                 console.log('response for ' + translatedYear + ' and ' + translatedSemester);
                 if (resp.statusCode == 200) {
-                    var semesterData = parseData(body);
+                    var semesterData = parseSemesterData(body);
                     if (Object.keys(semesterData).length)
                         scheduleData[translatedYear][translatedSemester] = semesterData;
                 }
@@ -189,29 +200,44 @@ function fetchAndParseScheduleData() {
     }
 }
 
+// Add the currently supported years to the filters
+function addYearsToFilters(filtersObject) {
+    filtersObject['years'] = [];
+    for (var currYear = startYear; currYear <= endYear; currYear++) {
+        var translatedYear = translateYear(currYear);
+        filtersObject['years'].push({ val: translatedYear, display: translatedYear });
+    }
+}
+
+// Filters are things used to narrow down the options when browsing the wave course schedule,
+// such as department, general requirements, etc.
 function fetchAndParseFilterData() {
+    // The url for searching the course schedule
     var url = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_ListSection';
 
+    // All the filters we care about.
     var filters = [
         'subject_sch',
         'foundation_sch',
         'division_sch',
-        'area_sch',
-        'intmajor_sch'
+        'area_sch'
+        // 'intmajor_sch' // Currently don't care about interdisciplinary majors
     ];
 
     var filterTranslator = {
         'subject_sch': 'department',
         'foundation_sch': 'foundation',
         'division_sch': 'division',
-        'area_sch': 'area',
-        'intmajor_sch': 'interdis_major'
+        'area_sch': 'area'
+        // 'intmajor_sch': 'interdis_major' // Currently don't care about interdisciplinary majors
     }
 
     request.get(url, function(err, resp, body) {
         $ = cheerio.load(body);
 
         var filtersObject = {};
+
+        addYearsToFilters(filtersObject);
 
         filters.forEach(function(filter, index, array) {
             var translatedFilter = filterTranslator[filter];
@@ -220,15 +246,28 @@ function fetchAndParseFilterData() {
             $('select[name=' + filter + ']').find('option').each(function(entry) {
                 var filterValue = $(this).val();
                 if (filterValue != '%')
-                    filtersObject[translatedFilter].push(filterValue);
+                    filtersObject[translatedFilter].push({ val: filterValue, display: filterValue });
             });
         });
 
-        fs.writeFile('static/course-data/filters.json', JSON.stringify(filtersObject, null, 2), function(err) {
-            if (err)
-                console.log(err);
-            else
-                console.log("The filters file was saved!");
+        fs.readFile('static/course-data/filters.jade', function(err, data) {
+            if (err) console.log(err);
+
+            var func = jade.compile(data, { pretty: debug });
+
+            var html = func({ filterData: filtersObject });
+
+            fs.writeFile('static/course-data/compiled/filters.html', html, function(err) {
+                if (err) console.log(err);
+                else console.log("The filters html file was saved!");
+            });
+
+            if (debug) {
+                fs.writeFile('static/course-data/filters.json', JSON.stringify(filtersObject, null, 2), function(err) {
+                    if (err) console.log(err);
+                    else console.log("The filters json file was saved!");
+                });
+            }
         });
     });
 }

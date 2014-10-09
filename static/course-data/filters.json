@@ -1,81 +1,260 @@
 {
+  "years": [
+    {
+      "val": "2013-2014",
+      "display": "2013-2014"
+    },
+    {
+      "val": "2014-2015",
+      "display": "2014-2015"
+    }
+  ],
   "department": [
-    "AFDS",
-    "ANTH",
-    "ARBC",
-    "ARTH",
-    "ARTS",
-    "AST",
-    "BIO",
-    "MGMT",
-    "CHEM",
-    "CHIN",
-    "CLAS",
-    "COMP",
-    "CONX",
-    "CW",
-    "ECON",
-    "EDUC",
-    "ENG",
-    "ENV",
-    "FNMS",
-    "FSEM",
-    "FR",
-    "GER",
-    "GK",
-    "HISP",
-    "HIST",
-    "INT",
-    "IR",
-    "ITAS",
-    "JAPN",
-    "LAT",
-    "MATH",
-    "MUSC",
-    "MUSP",
-    "NEUR",
-    "PHIL",
-    "PHYS",
-    "POLS",
-    "PSY",
-    "PH",
-    "REL",
-    "RUSS",
-    "SOC",
-    "THEA",
-    "URB",
-    "WGS",
-    "WMST"
+    {
+      "val": "AFDS",
+      "display": "AFDS"
+    },
+    {
+      "val": "ANTH",
+      "display": "ANTH"
+    },
+    {
+      "val": "ARBC",
+      "display": "ARBC"
+    },
+    {
+      "val": "ARTH",
+      "display": "ARTH"
+    },
+    {
+      "val": "ARTS",
+      "display": "ARTS"
+    },
+    {
+      "val": "AST",
+      "display": "AST"
+    },
+    {
+      "val": "BIO",
+      "display": "BIO"
+    },
+    {
+      "val": "MGMT",
+      "display": "MGMT"
+    },
+    {
+      "val": "CHEM",
+      "display": "CHEM"
+    },
+    {
+      "val": "CHIN",
+      "display": "CHIN"
+    },
+    {
+      "val": "CLAS",
+      "display": "CLAS"
+    },
+    {
+      "val": "COMP",
+      "display": "COMP"
+    },
+    {
+      "val": "CONX",
+      "display": "CONX"
+    },
+    {
+      "val": "CW",
+      "display": "CW"
+    },
+    {
+      "val": "ECON",
+      "display": "ECON"
+    },
+    {
+      "val": "EDUC",
+      "display": "EDUC"
+    },
+    {
+      "val": "ENG",
+      "display": "ENG"
+    },
+    {
+      "val": "ENV",
+      "display": "ENV"
+    },
+    {
+      "val": "FNMS",
+      "display": "FNMS"
+    },
+    {
+      "val": "FSEM",
+      "display": "FSEM"
+    },
+    {
+      "val": "FR",
+      "display": "FR"
+    },
+    {
+      "val": "GER",
+      "display": "GER"
+    },
+    {
+      "val": "GK",
+      "display": "GK"
+    },
+    {
+      "val": "HISP",
+      "display": "HISP"
+    },
+    {
+      "val": "HIST",
+      "display": "HIST"
+    },
+    {
+      "val": "INT",
+      "display": "INT"
+    },
+    {
+      "val": "IR",
+      "display": "IR"
+    },
+    {
+      "val": "ITAS",
+      "display": "ITAS"
+    },
+    {
+      "val": "JAPN",
+      "display": "JAPN"
+    },
+    {
+      "val": "LAT",
+      "display": "LAT"
+    },
+    {
+      "val": "MATH",
+      "display": "MATH"
+    },
+    {
+      "val": "MUSC",
+      "display": "MUSC"
+    },
+    {
+      "val": "MUSP",
+      "display": "MUSP"
+    },
+    {
+      "val": "NEUR",
+      "display": "NEUR"
+    },
+    {
+      "val": "PHIL",
+      "display": "PHIL"
+    },
+    {
+      "val": "PHYS",
+      "display": "PHYS"
+    },
+    {
+      "val": "POLS",
+      "display": "POLS"
+    },
+    {
+      "val": "PSY",
+      "display": "PSY"
+    },
+    {
+      "val": "PH",
+      "display": "PH"
+    },
+    {
+      "val": "REL",
+      "display": "REL"
+    },
+    {
+      "val": "RUSS",
+      "display": "RUSS"
+    },
+    {
+      "val": "SOC",
+      "display": "SOC"
+    },
+    {
+      "val": "THEA",
+      "display": "THEA"
+    },
+    {
+      "val": "URB",
+      "display": "URB"
+    },
+    {
+      "val": "WGS",
+      "display": "WGS"
+    },
+    {
+      "val": "WMST",
+      "display": "WMST"
+    }
   ],
   "foundation": [
-    "BW",
-    "FS",
-    "WR",
-    "FL",
-    "QA"
+    {
+      "val": "BW",
+      "display": "BW"
+    },
+    {
+      "val": "FS",
+      "display": "FS"
+    },
+    {
+      "val": "WR",
+      "display": "WR"
+    },
+    {
+      "val": "FL",
+      "display": "FL"
+    },
+    {
+      "val": "QA",
+      "display": "QA"
+    }
   ],
   "division": [
-    "DVAH",
-    "DVNS",
-    "DVSS"
+    {
+      "val": "DVAH",
+      "display": "DVAH"
+    },
+    {
+      "val": "DVNS",
+      "display": "DVNS"
+    },
+    {
+      "val": "DVSS",
+      "display": "DVSS"
+    }
   ],
   "area": [
-    "ARCA",
-    "ARHS",
-    "ARHM",
-    "ARMC",
-    "ARNS",
-    "ARSS"
-  ],
-  "interdis_major": [
-    "IAAD",
-    "IAMR",
-    "IANC",
-    "IASN",
-    "IBIO",
-    "IENV",
-    "IFNM",
-    "IINR",
-    "IWMS"
+    {
+      "val": "ARCA",
+      "display": "ARCA"
+    },
+    {
+      "val": "ARHS",
+      "display": "ARHS"
+    },
+    {
+      "val": "ARHM",
+      "display": "ARHM"
+    },
+    {
+      "val": "ARMC",
+      "display": "ARMC"
+    },
+    {
+      "val": "ARNS",
+      "display": "ARNS"
+    },
+    {
+      "val": "ARSS",
+      "display": "ARSS"
+    }
   ]
 }
