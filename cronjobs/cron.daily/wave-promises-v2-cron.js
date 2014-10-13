@@ -90,13 +90,7 @@ function parseOutFilters(searchPageBody) {
 function getSearchFilters() {
 
     fetchSearchPage().then(parseOutFilters)
-    .then(function(result) {
-        console.log(result);
-
-        return "Yay2";
-    }).then(function(result) {
-        console.log(result);
-    }).catch(function(err) {
+    .catch(function(err) {
         console.error(err);
         throw err;
     });
