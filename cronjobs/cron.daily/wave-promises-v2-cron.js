@@ -3,7 +3,7 @@
 // 	  and most importantly, get possible semesters
 // 2. Query using those semesters, to build a database. Set up translation
 //    to turn cryptic stuff from existing schedule into most understandable
-//    terms. For instance, instead of '201510' being Fall 2014, it would be
+//    terms. For instance, instead of '201510' (a.k.a. Fall 2014) it would be
 //    an object with { '2014': { 'fall': data } }, etc.
 // 3. Make second pass over the data, to perform the conversion of ugly data
 //    into nice, readable stuff, as a static pre-process step
@@ -17,7 +17,30 @@
 // - All network stuff (requests) should be async
 // - This is fairly sequential, so overall structure can probably not be async
 
-function getSearchFilters() {
+function fetchSearchPage() {
+    return new Promise(function(resolve, reject) {
+        if (true) {
+            resolve("Yay");
+        }
+        else {
+            reject(Error("No"));
+        }
+    });
+}
+
+function parseOutFilters(searchPageBody) {
 
 }
 
+function getSearchFilters() {
+    fetchSearchPage().then(function(result) {
+        console.log(result);
+        return "Yay2";
+    }).then(function(result) {
+        console.log(result);
+    }).catch(function(err) {
+        console.log(err);
+    });
+}
+
+getSearchFilters();
