@@ -20,13 +20,13 @@ dev_server = {
 
     "restart": function() {
         this.restarting = true;
-        sys.debug('DEVSERVER: Stopping server for restart');
+        console.error('DEVSERVER: Stopping server for restart');
         this.process.kill();
     },
 
     "start": function() {
         var that = this;
-        sys.debug('DEVSERVER: Starting server\n');
+        console.error('DEVSERVER: Starting server\n');
         that.watchFiles();
 
         this.process = child_process.spawn(process.argv[0], ['web.js', process.argv[2]]);
@@ -40,7 +40,7 @@ dev_server = {
         });
 
         this.process.addListener('exit', function (code) {
-            sys.debug('DEVSERVER: Child process exited: ' + code);
+            console.error('DEVSERVER: Child process exited: ' + code);
             this.process = null;
             if (that.restarting) {
                 that.restarting = true;
@@ -61,7 +61,7 @@ dev_server = {
                 that.files.push(file);
                 fs.watchFile(file, {interval : 500}, function(curr, prev) {
                     if (curr.mtime.valueOf() != prev.mtime.valueOf() || curr.ctime.valueOf() != prev.ctime.valueOf()) {
-                        sys.debug('DEVSERVER: Restarting because of changed file at ' + file);
+                        console.error('DEVSERVER: Restarting because of changed file at ' + file);
                         dev_server.restart();
                     }
                 });
