@@ -47,83 +47,10 @@ function get(url) {
     });
 }
 
-var filterValueTranslator;
-function prettifyFilterValue(filterValue) {
-    filterValueTranslator = filterValueTranslator ||
-    {
-        // Departments
-        'AFDS': '',
-        'ANTH': '',
-        'ARBC': '',
-        'ARTH': '',
-        'ARTS': '',
-        'AST': '',
-        'BIO': '',
-        'MGMT': '',
-        'CHEM': '',
-        'CHIN': '',
-        'CLAS': '',
-        'COMP': '',
-        'CONX': '',
-        'CW': '',
-        'ECON': '',
-        'EDUC': '',
-        'ENG': '',
-        'ENV': '',
-        'FNMS': '',
-        'FSEM': '',
-        'FR': '',
-        'GER': '',
-        'GK': '',
-        'HISP': '',
-        'HIST': '',
-        'INT': '',
-        'IR': '',
-        'ITAS': '',
-        'JAPN': '',
-        'LAT': '',
-        'MATH': '',
-        'MUSC': '',
-        'MUSP': '',
-        'NEUR': '',
-        'PHIL': '',
-        'PHYS': '',
-        'POLS': '',
-        'PSY': '',
-        'PH': '',
-        'REL': '',
-        'RUSS': '',
-        'SOC': '',
-        'THEA': '',
-        'URB': '',
-        'WGS': '',
-        'WMST': '',
+var filterTranslator;
 
-        // Foundations
-        'BW': '',
-        'FS': '',
-        'WR': '',
-        'FL': '',
-        'QA': '',
-
-        // Divisions
-        'DVAH': '',
-        'DVNS': '',
-        'DVSS': '',
-
-        // Areas
-        'ARCA': '',
-        'ARHS': '',
-        'ARHM': '',
-        'ARMC': '',
-        'ARNS': '',
-        'ARSS': ''
-    }
-}
-
-var filterClassTranslator;
-function prettifyFilterClass(filterClassName) {
-    filterClassTranslator = filterClassTranslator ||
+function prettifyFilter(filterName) {
+    filterTranslator = filterTranslator ||
     {
         'subject_sch': 'department',
         'foundation_sch': 'foundation',
@@ -133,9 +60,9 @@ function prettifyFilterClass(filterClassName) {
         // 'intmajor_sch': 'interdis_major' // Currently don't care about interdisciplinary majors
     }
 
-    var translated = filterClassTranslator[filterClassName];
+    var translated = filterTranslator[filterName];
     if (translated == undefined) {
-        translated = filterClassName;
+        translated = filterName;
     }
 
     return translated;
@@ -151,13 +78,13 @@ function parseOutFilters(searchPageBody) {
     var filterObj = {};
 
     filters.forEach(function(filter, i, array) {
-        var prettifiedFilter = prettifyFilterClass(filter);
+        var prettifiedFilter = prettifyFilter(filter);
         filterObj[prettifiedFilter] = [];
 
         $('select[name=' + filter + ']').find('option').each(function(entry) {
             var filterValue = $(this).val();
             if (filterValue != '%')
-                filterObj[prettifiedFilter].push({ val: filterValue, display: prettifyFilterValue(filterValue) });
+                filterObj[prettifiedFilter].push({ val: filterValue, display: filterValue });
         });
     });
 
@@ -202,7 +129,8 @@ function getSearchFilters() {
 }
 
 function preprocessFilters(rawFilterObj) {
-
+    // Not currently preprocessing...
+    return rawFilterObj;
 }
 
 function getScheduleData(semesters) {
