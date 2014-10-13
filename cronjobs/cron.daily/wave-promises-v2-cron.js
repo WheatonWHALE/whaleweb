@@ -28,8 +28,12 @@ function fetchSearchPage() {
     });
 }
 
-function parseOutFilters(searchPageBody) {
+function parseOutSemesters($) {
+    
+}
 
+function parseOutFilters(searchPageBody) {
+    
 }
 
 function getSearchFilters() {
