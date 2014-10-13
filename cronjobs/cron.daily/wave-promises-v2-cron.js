@@ -47,8 +47,15 @@ function get(url) {
     });
 }
 
-var filterTranslator;
+function prettifyFilterValue(filterValueText) {
+    // Possibly inefficient due to unnecessary replaces
+    return filterValueText.trim()
+        .replace(/Found: /, '')
+        .replace(/Area: /, '')
+        .replace(/Division: /, '');
+}
 
+var filterTranslator;
 function prettifyFilter(filterName) {
     filterTranslator = filterTranslator ||
     {
@@ -84,7 +91,7 @@ function parseOutFilters(searchPageBody) {
         $('select[name=' + filter + ']').find('option').each(function(entry) {
             var filterValue = $(this).val();
             if (filterValue != '%')
-                filterObj[prettifiedFilter].push({ val: filterValue, display: filterValue });
+                filterObj[prettifiedFilter].push({ val: filterValue, display: prettifyFilterValue($(this).text()) });
         });
     });
 
@@ -97,7 +104,7 @@ function saveFilters(filterObj) {
             if (err)
                 reject(err);
             else {
-                console.log(filterObj);
+                // console.log(filterObj);
                 var func = jade.compile(data, { pretty: debug });
                 var html = func({ filterData: filterObj });
 
@@ -141,8 +148,8 @@ function fetchAndParseAll() {
     getSearchFilters()
     .then(preprocessFilters)
     .then(function(filterObj) {
-        console.log('Filters: ');
-        console.log(filterObj);
+        // console.log('Filters: ');
+        // console.log(filterObj);
         saveFilters(filterObj);
 
         return getScheduleData(filterObj['semester']);

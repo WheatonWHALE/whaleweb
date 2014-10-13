@@ -2,383 +2,383 @@
   "department": [
     {
       "val": "AFDS",
-      "display": "AFDS"
+      "display": "African/Afr Am/Diaspora Stdies"
     },
     {
       "val": "ANTH",
-      "display": "ANTH"
+      "display": "Anthropology"
     },
     {
       "val": "ARBC",
-      "display": "ARBC"
+      "display": "Arabic"
     },
     {
       "val": "ARTH",
-      "display": "ARTH"
+      "display": "Art History"
     },
     {
       "val": "ARTS",
-      "display": "ARTS"
+      "display": "Art Studio"
     },
     {
       "val": "AST",
-      "display": "AST"
+      "display": "Astronomy"
     },
     {
       "val": "BIO",
-      "display": "BIO"
+      "display": "Biology"
     },
     {
       "val": "MGMT",
-      "display": "MGMT"
+      "display": "Business and Management"
     },
     {
       "val": "CHEM",
-      "display": "CHEM"
+      "display": "Chemistry"
     },
     {
       "val": "CHIN",
-      "display": "CHIN"
+      "display": "Chinese"
     },
     {
       "val": "CLAS",
-      "display": "CLAS"
+      "display": "Classics"
     },
     {
       "val": "COMP",
-      "display": "COMP"
+      "display": "Computer Science"
     },
     {
       "val": "CONX",
-      "display": "CONX"
+      "display": "CONNECTIONS"
     },
     {
       "val": "CW",
-      "display": "CW"
+      "display": "Creative Writing"
     },
     {
       "val": "ECON",
-      "display": "ECON"
+      "display": "Economics"
     },
     {
       "val": "EDUC",
-      "display": "EDUC"
+      "display": "Education"
     },
     {
       "val": "ENG",
-      "display": "ENG"
+      "display": "English"
     },
     {
       "val": "ENV",
-      "display": "ENV"
+      "display": "Environmental Studies"
     },
     {
       "val": "FNMS",
-      "display": "FNMS"
+      "display": "Film and New Media Studies"
     },
     {
       "val": "FSEM",
-      "display": "FSEM"
+      "display": "First Year Seminar"
     },
     {
       "val": "FR",
-      "display": "FR"
+      "display": "French"
     },
     {
       "val": "GER",
-      "display": "GER"
+      "display": "German"
     },
     {
       "val": "GK",
-      "display": "GK"
+      "display": "Greek"
     },
     {
       "val": "HISP",
-      "display": "HISP"
+      "display": "Hispanic Studies"
     },
     {
       "val": "HIST",
-      "display": "HIST"
+      "display": "History"
     },
     {
       "val": "INT",
-      "display": "INT"
+      "display": "Interdepartmental"
     },
     {
       "val": "IR",
-      "display": "IR"
+      "display": "International Relations"
     },
     {
       "val": "ITAS",
-      "display": "ITAS"
+      "display": "Italian Studies"
     },
     {
       "val": "JAPN",
-      "display": "JAPN"
+      "display": "Japanese"
     },
     {
       "val": "LAT",
-      "display": "LAT"
+      "display": "Latin"
     },
     {
       "val": "MATH",
-      "display": "MATH"
+      "display": "Mathematics"
     },
     {
       "val": "MUSC",
-      "display": "MUSC"
+      "display": "Music"
     },
     {
       "val": "MUSP",
-      "display": "MUSP"
+      "display": "Music Performance"
     },
     {
       "val": "NEUR",
-      "display": "NEUR"
+      "display": "Neuroscience"
     },
     {
       "val": "PHIL",
-      "display": "PHIL"
+      "display": "Philosophy"
     },
     {
       "val": "PHYS",
-      "display": "PHYS"
+      "display": "Physics"
     },
     {
       "val": "POLS",
-      "display": "POLS"
+      "display": "Political Science"
     },
     {
       "val": "PSY",
-      "display": "PSY"
+      "display": "Psychology"
     },
     {
       "val": "PH",
-      "display": "PH"
+      "display": "Public Health"
     },
     {
       "val": "REL",
-      "display": "REL"
+      "display": "Religion"
     },
     {
       "val": "RUSS",
-      "display": "RUSS"
+      "display": "Russian"
     },
     {
       "val": "SOC",
-      "display": "SOC"
+      "display": "Sociology"
     },
     {
       "val": "THEA",
-      "display": "THEA"
+      "display": "Theatre"
     },
     {
       "val": "URB",
-      "display": "URB"
+      "display": "Urban Studies"
     },
     {
       "val": "WGS",
-      "display": "WGS"
+      "display": "Women's and Gender Studies"
     },
     {
       "val": "WMST",
-      "display": "WMST"
+      "display": "Women's Studies"
     }
   ],
   "foundation": [
     {
       "val": "BW",
-      "display": "BW"
+      "display": " Beyond the West"
     },
     {
       "val": "FS",
-      "display": "FS"
+      "display": " First Year Seminar"
     },
     {
       "val": "WR",
-      "display": "WR"
+      "display": " First Year Writing"
     },
     {
       "val": "FL",
-      "display": "FL"
+      "display": " Foreign Language"
     },
     {
       "val": "QA",
-      "display": "QA"
+      "display": " Quantitative Analysis"
     }
   ],
   "division": [
     {
       "val": "DVAH",
-      "display": "DVAH"
+      "display": "Arts and Humanities"
     },
     {
       "val": "DVNS",
-      "display": "DVNS"
+      "display": "Natural Science"
     },
     {
       "val": "DVSS",
-      "display": "DVSS"
+      "display": "Social Sciences"
     }
   ],
   "area": [
     {
       "val": "ARCA",
-      "display": "ARCA"
+      "display": "Creative Arts"
     },
     {
       "val": "ARHS",
-      "display": "ARHS"
+      "display": "History"
     },
     {
       "val": "ARHM",
-      "display": "ARHM"
+      "display": "Humanities"
     },
     {
       "val": "ARMC",
-      "display": "ARMC"
+      "display": "Math and Comp Science"
     },
     {
       "val": "ARNS",
-      "display": "ARNS"
+      "display": "Natural Sciences"
     },
     {
       "val": "ARSS",
-      "display": "ARSS"
+      "display": "Social Sciences"
     }
   ],
   "semester": [
     {
       "val": "201620",
-      "display": "201620"
+      "display": "Spring 2016"
     },
     {
       "val": "201610",
-      "display": "201610"
+      "display": "Fall 2015"
     },
     {
       "val": "201520",
-      "display": "201520"
+      "display": "Spring 2015"
     },
     {
       "val": "201510",
-      "display": "201510"
+      "display": "Fall 2014"
     },
     {
       "val": "201435",
-      "display": "201435"
+      "display": "Summer 2014"
     },
     {
       "val": "201420",
-      "display": "201420"
+      "display": "Spring 2014"
     },
     {
       "val": "201410",
-      "display": "201410"
+      "display": "Fall 2013"
     },
     {
       "val": "201335",
-      "display": "201335"
+      "display": "Summer 2013"
     },
     {
       "val": "201320",
-      "display": "201320"
+      "display": "Spring 2013"
     },
     {
       "val": "201315",
-      "display": "201315"
+      "display": "Winter 2013"
     },
     {
       "val": "201310",
-      "display": "201310"
+      "display": "Fall 2012"
     },
     {
       "val": "201220",
-      "display": "201220"
+      "display": "Spring 2012"
     },
     {
       "val": "201215",
-      "display": "201215"
+      "display": "Winter 2012"
     },
     {
       "val": "201210",
-      "display": "201210"
+      "display": "Fall 2011"
     },
     {
       "val": "201120",
-      "display": "201120"
+      "display": "Spring 2011"
     },
     {
       "val": "201115",
-      "display": "201115"
+      "display": "Winter 2011"
     },
     {
       "val": "201110",
-      "display": "201110"
+      "display": "Fall 2010"
     },
     {
       "val": "201020",
-      "display": "201020"
+      "display": "Spring 2010"
     },
     {
       "val": "201015",
-      "display": "201015"
+      "display": "Winter 2010"
     },
     {
       "val": "201010",
-      "display": "201010"
+      "display": "Fall 2009"
     },
     {
       "val": "200920",
-      "display": "200920"
+      "display": "Spring 2009"
     },
     {
       "val": "200910",
-      "display": "200910"
+      "display": "Fall 2008"
     },
     {
       "val": "200820",
-      "display": "200820"
+      "display": "Spring 2008"
     },
     {
       "val": "200810",
-      "display": "200810"
+      "display": "Fall 2007"
     },
     {
       "val": "200720",
-      "display": "200720"
+      "display": "Spring 2007"
     },
     {
       "val": "200710",
-      "display": "200710"
+      "display": "Fall 2006"
     },
     {
       "val": "200620",
-      "display": "200620"
+      "display": "Spring 2006"
     },
     {
       "val": "200610",
-      "display": "200610"
+      "display": "Fall 2005"
     },
     {
       "val": "200520",
-      "display": "200520"
+      "display": "Spring 2005"
     },
     {
       "val": "200515",
-      "display": "200515"
+      "display": "Winter 2005"
     },
     {
       "val": "200510",
-      "display": "200510"
+      "display": "Fall 2004"
     },
     {
       "val": "200420",
-      "display": "200420"
+      "display": "Spring 2004"
     },
     {
       "val": "200410",
-      "display": "200410"
+      "display": "Fall 2003"
     }
   ]
 }
