@@ -163,6 +163,8 @@ $(function() {
         })/*.children().click(function(evt) {
             return false;
         })*/;
+
+        $('select[name=year]').val($('input#year').val());
     }
 });
 
