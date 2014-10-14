@@ -49,6 +49,7 @@ app.get('/wave', function(req, res) {
                 errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
 
             year = currentYear; // Default to the current year
+            expectedFilePath = 'static/course-data/compiled/' + year + '.html';
         }
 
         fs.readFile(expectedFilePath, function(err, data) {
