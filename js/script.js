@@ -146,29 +146,16 @@ $(function() {
         });
     }
     else if (window.location.pathname == '/wave') {
-        $('select[name=semester]').change(function() {
+        $('select[name=semester], select[name=department]').change(function() {
+            var name = $(this).attr('name');
             var selector = $(this).val();
-            toggleContainer('.semesterContainer', selector);
+            toggleContainer('.' + name + 'Container', selector);
         });
 
-        $('select[name=department]').change(function() {
+        $('select[name=foundation], select[name=division], select[name=area]').change(function() {
+            var name = $(this).attr('name');
             var selector = $(this).val();
-            toggleContainer('.departmentContainer', selector);
-        });
-
-        $('select[name=foundation]').change(function() {
-            var selector = $(this).val();
-            toggleIndividuals('foundation', selector);
-        });
-
-        $('select[name=division]').change(function() {
-            var selector = $(this).val();
-            toggleIndividuals('division', selector);
-        });
-
-        $('select[name=area]').change(function() {
-            var selector = $(this).val();
-            toggleIndividuals('area', selector);
+            toggleIndividuals(name, selector);
         });
 
         $('.course').click(function(evt) {

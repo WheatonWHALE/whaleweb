@@ -53,7 +53,7 @@ app.get('/wave', function(req, res) {
 
         fs.readFile(expectedFilePath, function(err, data) {
             if (err) console.log(err);
-            else res.render('wave.jade', { dynamicData: data, errorMessage: errorMessage });
+            else res.render('wave.jade', { dynamicData: data, year: year, errorMessage: errorMessage });
         });
     });
 });
