@@ -4,8 +4,8 @@
       select(name='year')
         //- option(value='2013-2014') Fall 2013 - Spring 2014
         //- option(value='2014-2015') Fall 2014 - Spring 2015
-        each semester in filterData['semester']
-          option(value=semester.val)= semester.display
+        each year in filterData['year']
+          option(value=year.val)= year.display
     .columns.small-6
       input(type='submit' value='Change Year').button.radius.small
 

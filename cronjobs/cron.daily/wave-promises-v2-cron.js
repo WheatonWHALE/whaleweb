@@ -24,16 +24,7 @@ var debug = true;
 // - All network stuff (requests) should be async
 // - This is fairly sequential, so overall structure can probably not be async
 
-
-// All the filters we care about.
-var filters = [
-    'subject_sch',
-    'foundation_sch',
-    'division_sch',
-    'area_sch',
-    'schedule_beginterm'
-    // 'intmajor_sch' // Currently don't care about interdisciplinary majors
-];
+// =========================== General Stuff ==========================
 
 function get(url) {
     // Return a new promise.
@@ -46,6 +37,19 @@ function get(url) {
         });
     });
 }
+
+
+// =========================== Filter Stuff ===========================
+
+// All the filters we care about.
+var filters = [
+    'subject_sch',
+    'foundation_sch',
+    'division_sch',
+    'area_sch',
+    'schedule_beginterm'
+    // 'intmajor_sch' // Currently don't care about interdisciplinary majors
+];
 
 function prettifyFilterValue(filterValueText) {
     // Possibly inefficient due to unnecessary replaces
@@ -104,15 +108,12 @@ function saveFilters(filterObj) {
             if (err)
                 reject(err);
             else {
-                // console.log(filterObj);
                 var func = jade.compile(data, { pretty: debug });
                 var html = func({ filterData: filterObj });
-
                 resolve(html);
             }
         })
     }).then(function(html) {
-        // console.log('into saving filters');
         fs.writeFile('static/course-data/compiled/filters.html', html, function(err) {
             if (err) console.error(err);
             else console.log('The filters html file was saved');
@@ -135,25 +136,53 @@ function getSearchFilters() {
     });
 }
 
-function preprocessFilters(rawFilterObj) {
+function preprocessFilters(filterObj) {
     // Not currently preprocessing...
-    return rawFilterObj;
+    var integerSemesterCodes = filterObj['semester'].map(function(entry, i, array) {
+        return parseInt(entry.val);
+    });
+
+    filterObj.year = [];
+
+    // Floor the result of the integer code (in the format YYYYSS, for Year and Semester)
+    // divided by 100, to isolate the year.
+    var latestYear = Math.floor(Math.max.apply(null, integerSemesterCodes) / 100);
+    var earliestYear = Math.floor(Math.min.apply(null, integerSemesterCodes) / 100);
+
+    for (var currYear = latestYear; currYear >= earliestYear; --currYear) {
+        var yearFilterValue = (currYear - 1).toString() + '-' + currYear.toString()
+        var yearFilterDisplay = 'Fall ' + (currYear - 1).toString() + ' - Spring ' + currYear.toString();
+        filterObj.year.push({ val: yearFilterValue, display: yearFilterDisplay });
+    }
+
+    return filterObj;
 }
 
-function getScheduleData(semesters) {
+// =========================== Course Stuff ===========================
+
+function getCourseData(semesters) {
+    console.log(semesters);
+}
+
+function saveCourseData(scheduleObj) {
 
 }
+
+// =========================== Driver Stuff ===========================
 
 function fetchAndParseAll() {
     getSearchFilters()
-    .then(preprocessFilters)
-    .then(function(filterObj) {
-        // console.log('Filters: ');
-        // console.log(filterObj);
-        saveFilters(filterObj);
+        .then(preprocessFilters)
+        .then(function(filterObj) {
+            saveFilters(filterObj); // Fire off async call, don't care when it finishes
 
-        return getScheduleData(filterObj['semester']);
-    });
+            if (debug)
+                return filterObj['semester'].slice(0, 8);
+            else
+                return filterObj['semester'];
+        })
+        .then(getCourseData)
+        .then(saveCourseData);
 }
 
 fetchAndParseAll();

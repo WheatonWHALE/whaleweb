@@ -380,5 +380,59 @@
       "val": "200410",
       "display": "Fall 2003"
     }
+  ],
+  "year": [
+    {
+      "val": "2015-2016",
+      "display": "Fall 2015 - Spring 2016"
+    },
+    {
+      "val": "2014-2015",
+      "display": "Fall 2014 - Spring 2015"
+    },
+    {
+      "val": "2013-2014",
+      "display": "Fall 2013 - Spring 2014"
+    },
+    {
+      "val": "2012-2013",
+      "display": "Fall 2012 - Spring 2013"
+    },
+    {
+      "val": "2011-2012",
+      "display": "Fall 2011 - Spring 2012"
+    },
+    {
+      "val": "2010-2011",
+      "display": "Fall 2010 - Spring 2011"
+    },
+    {
+      "val": "2009-2010",
+      "display": "Fall 2009 - Spring 2010"
+    },
+    {
+      "val": "2008-2009",
+      "display": "Fall 2008 - Spring 2009"
+    },
+    {
+      "val": "2007-2008",
+      "display": "Fall 2007 - Spring 2008"
+    },
+    {
+      "val": "2006-2007",
+      "display": "Fall 2006 - Spring 2007"
+    },
+    {
+      "val": "2005-2006",
+      "display": "Fall 2005 - Spring 2006"
+    },
+    {
+      "val": "2004-2005",
+      "display": "Fall 2004 - Spring 2005"
+    },
+    {
+      "val": "2003-2004",
+      "display": "Fall 2003 - Spring 2004"
+    }
   ]
 }
