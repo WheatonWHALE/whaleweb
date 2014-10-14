@@ -137,7 +137,8 @@ function getSearchFilters() {
 }
 
 function preprocessFilters(filterObj) {
-    // Not currently preprocessing...
+    // Preprocess to add the 'years' to the object, as they're something extra
+    // not inherent in the old course schedule
     var integerSemesterCodes = filterObj['semester'].map(function(entry, i, array) {
         return parseInt(entry.val);
     });
@@ -161,7 +162,11 @@ function preprocessFilters(filterObj) {
 // =========================== Course Stuff ===========================
 
 function getCourseData(semesters) {
-    console.log(semesters);
+    var semesterPromises = semesters.map(function(value, i, array) {
+        return value.val;
+    });
+
+    console.log(semesterPromises);
 }
 
 function saveCourseData(scheduleObj) {
