@@ -922,6 +922,20 @@
         "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=BIO&course-1=254&section-1=L"
       },
       {
+        "courseCode": "BIO-290 B",
+        "courseTitle": "Biology of Whales",
+        "crn": "10525",
+        "meetingTime": "W   5:30 PM - 8:30 PM",
+        "meetingPlace": "Location info TBA",
+        "professors": "DEPT",
+        "foundation": "",
+        "division": "DVNS",
+        "area": "ARNS",
+        "connections": "",
+        "examSlot": "J.",
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=BIO&course-1=290&section-1=B"
+      },
+      {
         "courseCode": "BIO-316 B",
         "courseTitle": "Molecular Biology and Genomics",
         "crn": "10147",
@@ -939,7 +953,7 @@
         "courseCode": "BIO-316 L",
         "courseTitle": "Molecular Bio & Genomics Lab",
         "crn": "10148",
-        "meetingTime": "W   2:00 PM - 4:50 PM",
+        "meetingTime": "M     2:00 PM - 4:50 PM",
         "meetingPlace": "Location info TBA",
         "professors": "McCafferty, S. Shawn",
         "foundation": "",
@@ -967,7 +981,7 @@
         "courseCode": "BIO-320 L",
         "courseTitle": "Evolution of Invertebrates Lab",
         "crn": "10463",
-        "meetingTime": "M     2:00 PM - 4:50 PM",
+        "meetingTime": "W   2:00 PM - 4:50 PM",
         "meetingPlace": "Location info TBA",
         "professors": "Dyer, Betsey",
         "foundation": "",
@@ -1004,6 +1018,20 @@
         "connections": "",
         "examSlot": "",
         "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=BIO&course-1=375&section-1=L"
+      },
+      {
+        "courseCode": "BIO-390 B",
+        "courseTitle": "Biology of Fishes",
+        "crn": "10526",
+        "meetingTime": "T    5:00 PM - 9:00 PM",
+        "meetingPlace": "Location info TBA",
+        "professors": "DEPT",
+        "foundation": "",
+        "division": "DVNS",
+        "area": "ARNS",
+        "connections": "",
+        "examSlot": "J.",
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=BIO&course-1=390&section-1=B"
       },
       {
         "courseCode": "BIO-405 B",
@@ -1744,7 +1772,7 @@
         "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ECON&course-1=330&section-1=B"
       },
       {
-        "courseCode": "ECON-402 B01",
+        "courseCode": "ECON-402 B",
         "courseTitle": "Seminar: Current Econ Issues",
         "crn": "10278",
         "meetingTime": "T  R  11:00 AM - 12:20 PM",
@@ -1755,12 +1783,12 @@
         "area": "ARSS",
         "connections": "",
         "examSlot": "N.",
-        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ECON&course-1=402&section-1=B01"
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ECON&course-1=402&section-1=B"
       },
       {
-        "courseCode": "ECON-402 B02",
-        "courseTitle": "Seminar: Current Econ Issues",
-        "crn": "10279",
+        "courseCode": "ECON-403 B",
+        "courseTitle": "Sem: Global Ec Controversies",
+        "crn": "10524",
         "meetingTime": "W   2:00 PM - 4:50 PM",
         "meetingPlace": "Location info TBA",
         "professors": "Miller, John",
@@ -1769,7 +1797,7 @@
         "area": "ARSS",
         "connections": "",
         "examSlot": "K.",
-        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ECON&course-1=402&section-1=B02"
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ECON&course-1=403&section-1=B"
       }
     ],
     "EDUC": [
@@ -2266,6 +2294,20 @@
         "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ENG&course-1=273&section-1=B"
       },
       {
+        "courseCode": "ENG-275 B",
+        "courseTitle": "Gender Politics in Narrative",
+        "crn": "10523",
+        "meetingTime": "M  W  F 11:30 AM - 12:20 PM",
+        "meetingPlace": "Location info TBA",
+        "professors": "Conway, Katherine",
+        "foundation": "",
+        "division": "DVAH",
+        "area": "ARHM",
+        "connections": "",
+        "examSlot": "D.",
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ENG&course-1=275&section-1=B"
+      },
+      {
         "courseCode": "ENG-285 B",
         "courseTitle": "Journalism",
         "crn": "10366",
@@ -2309,20 +2351,6 @@
       },
       {
         "courseCode": "ENG-298 B01",
-        "courseTitle": "Gender Politics in Narrative",
-        "crn": "10362",
-        "meetingTime": "M  W  F 11:30 AM - 12:20 PM",
-        "meetingPlace": "Location info TBA",
-        "professors": "Conway, Katherine",
-        "foundation": "",
-        "division": "",
-        "area": "",
-        "connections": "",
-        "examSlot": "D.",
-        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ENG&course-1=298&section-1=B01"
-      },
-      {
-        "courseCode": "ENG-298 B02",
         "courseTitle": "Advanced Writing",
         "crn": "10370",
         "meetingTime": "T  R  2:00 PM - 3:20 PM",
@@ -2333,7 +2361,7 @@
         "area": "",
         "connections": "",
         "examSlot": "O.",
-        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ENG&course-1=298&section-1=B02"
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ENG&course-1=298&section-1=B01"
       },
       {
         "courseCode": "ENG-313 B",
@@ -3070,6 +3098,20 @@
         "connections": "",
         "examSlot": "",
         "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=INT&course-1=111&section-1=L"
+      },
+      {
+        "courseCode": "INT-215 B",
+        "courseTitle": "Coastal Zone Management",
+        "crn": "10527",
+        "meetingTime": "R  5:00 PM - 8:00 PM",
+        "meetingPlace": "Location info TBA",
+        "professors": "DEPT",
+        "foundation": "",
+        "division": "DVSS",
+        "area": "ARSS",
+        "connections": "",
+        "examSlot": "J.",
+        "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=INT&course-1=215&section-1=B"
       },
       {
         "courseCode": "INT-250 B",
@@ -5009,7 +5051,7 @@
         "crn": "10154",
         "meetingTime": "T  R  12:30 PM - 1:50 PM",
         "meetingPlace": "Location info TBA",
-        "professors": "DEPT",
+        "professors": "Girouard, Jennifer",
         "foundation": "BW",
         "division": "DVSS",
         "area": "ARSS",

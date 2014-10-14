@@ -41,7 +41,9 @@ app.get('/wave', function(req, res) {
     var currentYear = '2014-2015';
     var errorMessage = '';
 
-    fs.exists('static/course-data/' + year + '.json', function(exists) {
+    var expectedFilePath = 'static/course-data/compiled/' + year + '.html';
+
+    fs.exists(expectedFilePath, function(exists) {
         if (!exists) {
             if (year != undefined)
                 errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
@@ -49,7 +51,7 @@ app.get('/wave', function(req, res) {
             year = currentYear; // Default to the current year
         }
 
-        fs.readFile('static/course-data/compiled/' + year + '.html', function(err, data) {
+        fs.readFile(expectedFilePath, function(err, data) {
             if (err) console.log(err);
             else res.render('wave.jade', { dynamicData: data, errorMessage: errorMessage });
         });
