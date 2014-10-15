@@ -3,7 +3,7 @@ var request = require('request'),
     fs      = require('fs'),
     jade    = require('jade');
 
-var debug = false;
+var debug = true;
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function(deleteValue) {
@@ -207,12 +207,20 @@ function extractInfoFromCode(semesterCode) {
     return returnObj;
 }
 
-function getSemesterPages(semesters) {
+function getAndParseSemesterPages(semesters) {
     return Promise.all(
         semesters.map(function(value, i, array) {
             var tempFormData = dataValues;
             tempFormData['schedule_beginterm'] = value.val;
-            return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData);
+            return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData).then(function parseSemester(semester) {
+                console.log('Parsing for ' + semester.code);
+                var semesterInfo = extractInfoFromCode(semester.code);
+
+                if (!(semesterInfo.year in scheduleData))
+                    scheduleData[semesterInfo.year] = {};
+
+                scheduleData[semesterInfo.year][semesterInfo.semester] = parseOutSemesterData(semester.body);
+            });
         })
     );
 }
@@ -313,17 +321,8 @@ var dataValues = {
     'crse_numb' : '%',
 };
 function getScheduleData(semesters) {
-    return getSemesterPages(semesters).then(function(rawSemesterDataArray) {
-        rawSemesterDataArray.forEach(function(semester, i, array) {
-            console.log('Parsing for ' + semester.code);
-            var semesterInfo = extractInfoFromCode(semester.code);
-
-            if (!(semesterInfo.year in scheduleData))
-                scheduleData[semesterInfo.year] = {};
-
-            scheduleData[semesterInfo.year][semesterInfo.semester] = parseOutSemesterData(semester.body);
-        });
-    }).catch(function(err) {
+    return getAndParseSemesterPages(semesters).catch(function(err) {
+        console.error('Errored in getAndParse');
         console.error(err);
         throw err;
     });
