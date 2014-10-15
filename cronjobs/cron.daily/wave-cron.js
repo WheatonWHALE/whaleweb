@@ -3,7 +3,7 @@ var request = require('request'),
     fs      = require('fs'),
     jade    = require('jade');
 
-var debug = true;
+var debug = false;
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function(deleteValue) {
