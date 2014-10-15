@@ -231,9 +231,16 @@ img#logo-competition {
 
 // ====================== WAVE Styling ================================
 
+@new-top-bar-color: #007095;
+
+// Changing color of the top bar
+nav.top-bar.expanded,
+nav.top-bar.expanded .title-area {
+  background: @new-top-bar-color;
+}
 .top-bar,
 .top-bar ul li:not(.has-form) a:not(.button) {
-  background: #007095;
+  background: @new-top-bar-color;
   transition-duration: .3s;
 }
 
