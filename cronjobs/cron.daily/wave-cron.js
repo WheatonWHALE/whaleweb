@@ -3,7 +3,7 @@ var request = require('request'),
     fs      = require('fs'),
     jade    = require('jade');
 
-var debug = false;
+var debug = true;
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function(deleteValue) {
@@ -139,7 +139,7 @@ function saveFilters(filterObj) {
             if (err)
                 reject(err);
             else {
-                var func = jade.compile(data, { pretty: debug });
+                var func = jade.compile(data, { pretty: debug, doctype: 'html' });
                 var html = func({ filterData: filterObj });
                 resolve(html);
             }
@@ -345,7 +345,7 @@ function saveScheduleData() {
                         resolve(data);
                 });
             }).then(function(template) {
-                var func = jade.compile(template, { pretty: debug });
+                var func = jade.compile(template, { pretty: debug, doctype: 'html' });
                 var html = func({ courseData: scheduleData[key] });
 
                 fs.writeFile('static/course-data/compiled/' + key + '.html', html, function(err) {
