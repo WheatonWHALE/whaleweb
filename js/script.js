@@ -158,11 +158,10 @@ $(function() {
             toggleIndividuals(name, selector);
         });
 
-        $('.course').click(function(evt) {
-            $(this).find('.secondary-info').toggleClass('hidden');
-        })/*.children().click(function(evt) {
-            return false;
-        })*/;
+        $('.course i.exp').click(function(evt) {
+            $(this).parents('.courseContainer').find('.course').removeClass('expanded');
+            $(this).parents('.course').toggleClass('expanded');
+        });
 
         $('select[name=year]').val($('input#year').val());
     }

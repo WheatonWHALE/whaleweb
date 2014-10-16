@@ -6,28 +6,30 @@ each semesterData, semesterName in courseData
 
         each course in departmentData
           .row.course(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
-            .columns.small-6
-              = course['courseTitle']
-            .columns.small-6.text-right
+            .columns.small-3
               = course['courseCode']
-            .secondary-info.hidden
-              .columns.small-6
+            .columns.small-4
+              = course['courseTitle']
+            .columns.small-4.text-right
+              = 'Time: ' + course['meetingTime']
+            .columns.small-1
+              i.exp.fi-list
+            .secondary-info
+              div
                 = 'CRN: ' + course['crn']
-              .columns.small-6.text-right
-                = 'Time: ' + course['meetingTime']
-              .columns.small-6
+              div
                 = 'Place: ' + course['meetingPlace']
-              .columns.small-6.text-right
+              div
                 = 'Prof.: ' + course['professors']
-              .columns.small-6
+              div
                 = 'Foundation: ' + course['foundation']
-              .columns.small-6.text-right
+              div
                 = 'Division: ' + course['division']
-              .columns.small-6
+              div
                 = 'Area: ' + course['area']
-              .columns.small-6.text-right
+              div
                 = 'Connections: ' + course['connections']
-              .columns.small-6
+              div
                 = 'Exam Slot: ' + course['examSlot']
-              .columns.small-6.text-right
+              div
                 a(href=course['textbookLink']) Textbook

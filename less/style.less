@@ -272,21 +272,37 @@ nav.top-bar.expanded .title-area {
 }
 
 .course {
-  cursor: pointer;
-
   border-bottom: 1px solid #E6E6E6;
+  position: relative;
+
+  i.exp {
+    cursor: pointer;
+  }
+
+  .secondary-info {
+    position: absolute;
+    background-color: #FFF;
+
+    z-index: 1;
+
+    top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent)
+    right: 10px;
+
+    // border: 1px solid black;
+    box-shadow: 0 0 20px -6px black;
+
+    div {
+      padding: 0 5px;
+    }
+  }
+
+  &:not(.expanded) .secondary-info {
+    display: none;
+  }
 }
 
 .course.foundation-hidden,
 .course.division-hidden,
 .course.area-hidden {
-  display: none;
-}
-
-.secondary-info {
-  clear: both;
-}
-
-.secondary-info.hidden {
   display: none;
 }
