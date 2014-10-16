@@ -55,12 +55,12 @@ function semesterPost(url, formData) {
     var copiedFormData = JSON.parse(JSON.stringify(formData));
 
     return new Promise(function requestPost(resolve, reject) {
-        console.log('Posting for ' + copiedFormData['schedule_beginterm']);
+        console.log('Posting for ' + copiedFormData.schedule_beginterm);
         request.post(url, { form: copiedFormData }, function handlePostResponse(err, resp, body) {
             if (err)
                 return reject(err);
             else
-                return resolve({ code: copiedFormData['schedule_beginterm'], body: body });
+                return resolve({ code: copiedFormData.schedule_beginterm, body: body });
         });
     });
 }
@@ -100,10 +100,10 @@ function prettifyFilter(filterName) {
         'area_sch': 'area',
         'schedule_beginterm': 'semester'
         // 'intmajor_sch': 'interdis_major' // Currently don't care about interdisciplinary majors
-    }
+    };
 
     var translated = filterTranslator[filterName];
-    if (translated == undefined) {
+    if (translated === undefined) {
         translated = filterName;
     }
 
@@ -143,7 +143,7 @@ function saveFilters(filterObj) {
                 var html = func({ filterData: filterObj });
                 resolve(html);
             }
-        })
+        });
     }).then(function saveRenderedTemplate(html) {
         fs.writeFile('static/course-data/compiled/filters.html', html, function handleFileWriteResponse(err) {
             if (err) console.error(err);
@@ -171,7 +171,7 @@ function getSearchFilters() {
 function preprocessFilters(filterObj) {
     // Preprocess to add the 'years' to the object, as they're something extra
     // not inherent in the old course schedule
-    var integerSemesterCodes = filterObj['semester'].map(function handleEntry(entry, i, array) {
+    var integerSemesterCodes = filterObj.semester.map(function handleEntry(entry, i, array) {
         return parseInt(entry.val);
     });
 
@@ -201,7 +201,7 @@ var semesterTranslator = {
     15: 'winter',
     20: 'spring',
     35: 'summer'
-}
+};
 function extractInfoFromCode(semesterCode) {
     var integerCode = parseInt(semesterCode);
     var returnObj = { year: formatConvertYear(Math.floor(integerCode / 100)), semester: semesterTranslator[integerCode % 100] };
@@ -213,7 +213,7 @@ function getAndParseSemesterPages(semesterCodes) {
     return Promise.all(
         semesterCodes.map(function mapSemesterCodeToPromise(value, i, array) {
             var tempFormData = dataValues;
-            tempFormData['schedule_beginterm'] = value.val;
+            tempFormData.schedule_beginterm = value.val;
             return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData).then(function parseSemester(semester) {
                 console.log('Parsing for ' + semester.code);
                 var semesterInfo = extractInfoFromCode(semester.code);
@@ -255,10 +255,11 @@ function parseCourseData(allRows, i) {
     // Testing for prereqs row
 
     var timePlace = $(firstRowElements[4]).text().trim();
-    if (timePlace != '')
-        var timePlaceSplit = timePlace.split(/\n/).clean('');
+    var timePlaceSplit;
+    if (timePlace !== '')
+        timePlaceSplit = timePlace.split(/\n/).clean('');
     else
-        var timePlaceSplit = ['', ''];
+        timePlaceSplit = ['', ''];
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
@@ -293,7 +294,7 @@ function parseOutSemesterData(body) {
     var semesterCourses = {};
     var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?\-[0-9][0-9][0-9]/;
 
-    var allRows = $('tr')
+    var allRows = $('tr');
 
     allRows.each(function parseRow(index, element) {
         var possibleClassLabel = $(this).find('td').text().trim();
@@ -331,40 +332,42 @@ function getScheduleData(semesters) {
         });
 }
 
+function saveYearOfData(year) {
+    return new Promise(function readTemplateFile(resolve, reject) {
+        fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
+            if (err)
+                reject(err);
+            else
+                resolve(data);
+        });
+    }).then(function renderUsingTemplateFile(template) {
+        var func = jade.compile(template, { pretty: debug, doctype: 'html' });
+        var html = func({ courseData: scheduleData[year] });
+
+        fs.writeFile('static/course-data/compiled/' + year + '.html', html, function saveRenderedTemplate(err) {
+            if (err) console.error(err);
+            else console.log("The courses " + year + " html file was saved!");
+        });
+
+        if (debug) {
+            fs.writeFile('static/course-data/' + year + '.json', JSON.stringify(scheduleData[year], null, 2), function handleFileWriteResponse(err) {
+                if (err) console.error(err);
+                else console.log("The courses " + year + " json file was saved!");
+            });
+        }
+    }).catch(function handleSaveScheduleDataError(err) {
+        console.error('Error in saving schedule data');
+        console.error(err);
+        throw err;
+    });
+}
+
 function saveScheduleData() {
     // Note: Schedule data will be in the global variable, not passed as a parameter
 
     for (var year in scheduleData) {
         // This promise will always resolve, and resolve with this key
-        Promise.resolve(year).then(function handleYear(year) {
-            return new Promise(function readTemplateFile(resolve, reject) {
-                fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
-                    if (err)
-                        reject(err);
-                    else
-                        resolve(data);
-                });
-            }).then(function renderUsingTemplateFile(template) {
-                var func = jade.compile(template, { pretty: debug, doctype: 'html' });
-                var html = func({ courseData: scheduleData[year] });
-
-                fs.writeFile('static/course-data/compiled/' + year + '.html', html, function saveRenderedTemplate(err) {
-                    if (err) console.error(err);
-                    else console.log("The courses " + year + " html file was saved!");
-                });
-
-                if (debug) {
-                    fs.writeFile('static/course-data/' + year + '.json', JSON.stringify(scheduleData[year], null, 2), function handleFileWriteResponse(err) {
-                        if (err) console.error(err);
-                        else console.log("The courses " + year + " json file was saved!");
-                    });
-                }
-            }).catch(function handleSaveScheduleDataError(err) {
-                console.error('Error in saving schedule data');
-                console.error(err);
-                throw err;
-            });
-        });
+        Promise.resolve(year).then(saveYearOfData);
     }
 }
 
@@ -376,7 +379,7 @@ function fetchAndParseAll() {
         .then(function saveFiltersAndStartScheduleGet(filterObj) {
             saveFilters(filterObj); // Fire off async call, don't care when it finishes
 
-            return debug ? filterObj['semester'].slice(0, 7) : filterObj['semester'];
+            return debug ? filterObj.semester.slice(0, 7) : filterObj.semester;
         })
         .then(getScheduleData)
         .then(saveScheduleData)
