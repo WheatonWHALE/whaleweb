@@ -3,7 +3,7 @@ var request = require('request'),
     fs      = require('fs'),
     jade    = require('jade');
 
-var debug = false;
+var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function(deleteValue) {
