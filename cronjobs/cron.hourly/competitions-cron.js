@@ -17,8 +17,9 @@ var listOfPeople = Array(
 	{ id: 'MichaelKristy', 	name: 'Michael' },
 	{ id: 'omigayy', 		name: 'Yingying' },
 	{ id: 'rubinz', 		name: 'Zevi' },
-	{ id: 'tkicks', 		name: 'Tyler' },
 	{ id: 'tarmstro', 		name: 'Tom' },
+	{ id: 'tkicks', 		name: 'Tyler' },
+	{ id: 'tnguyen14', 		name: 'Tri' },
 	{ id: 'zahrarikan', 	name: 'Zahra' }
 )
 
