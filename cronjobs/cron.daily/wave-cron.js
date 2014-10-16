@@ -6,7 +6,7 @@ var request = require('request'),
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
 
 // Adding a method to arrays to 'clean' out unwanted values
-Array.prototype.clean = function(deleteValue) {
+Array.prototype.clean = function clean(deleteValue) {
     for (var i = 0; i < this.length; i++) {
         if (this[i] == deleteValue) {
             this.splice(i, 1);
@@ -39,8 +39,8 @@ Array.prototype.clean = function(deleteValue) {
 
 function get(url) {
     // Return a new promise.
-    return new Promise(function(resolve, reject) {
-        request.get(url, function(err, resp, body) {
+    return new Promise(function requestGet(resolve, reject) {
+        request.get(url, function handleGetResponse(err, resp, body) {
             if (err)
                 return reject(err);
             else
@@ -54,9 +54,9 @@ function semesterPost(url, formData) {
     // Have to perform a deep copy for the variable to not be overwritten by the time the callback is used.
     var copiedFormData = JSON.parse(JSON.stringify(formData));
 
-    return new Promise(function(resolve, reject) {
+    return new Promise(function requestPost(resolve, reject) {
         console.log('Posting for ' + copiedFormData['schedule_beginterm']);
-        request.post(url, { form: copiedFormData }, function(err, resp, body) {
+        request.post(url, { form: copiedFormData }, function handlePostResponse(err, resp, body) {
             if (err)
                 return reject(err);
             else
@@ -119,11 +119,11 @@ function parseOutFilters(searchPageBody) {
 
     var filterObj = {};
 
-    filters.forEach(function(filter, i, array) {
+    filters.forEach(function handleEntry(filter, i, array) {
         var prettifiedFilter = prettifyFilter(filter);
         filterObj[prettifiedFilter] = [];
 
-        $('select[name=' + filter + ']').find('option').each(function(entry) {
+        $('select[name=' + filter + ']').find('option').each(function parseSelectOption(entry) {
             var filterValue = $(this).val();
             if (filterValue != '%')
                 filterObj[prettifiedFilter].push({ val: filterValue, display: prettifyFilterValue($(this).text()) });
@@ -134,8 +134,8 @@ function parseOutFilters(searchPageBody) {
 }
 
 function saveFilters(filterObj) {
-    var promise = new Promise(function(resolve, reject) {
-        fs.readFile('static/course-data/filters.jade', function(err, data) {
+    var promise = new Promise(function getFiltersTemplate(resolve, reject) {
+        fs.readFile('static/course-data/filters.jade', function renderUsingTemplateFile(err, data) {
             if (err)
                 reject(err);
             else {
@@ -144,14 +144,14 @@ function saveFilters(filterObj) {
                 resolve(html);
             }
         })
-    }).then(function(html) {
-        fs.writeFile('static/course-data/compiled/filters.html', html, function(err) {
+    }).then(function saveRenderedTemplate(html) {
+        fs.writeFile('static/course-data/compiled/filters.html', html, function handleFileWriteResponse(err) {
             if (err) console.error(err);
             else console.log('The filters html file was saved!');
         });
 
         if (debug) {
-            fs.writeFile('static/course-data/filters.json', JSON.stringify(filterObj, null, 2), function(err) {
+            fs.writeFile('static/course-data/filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
                 if (err) console.error(err);
                 else console.log("The filters json file was saved!");
             });
@@ -160,16 +160,18 @@ function saveFilters(filterObj) {
 }
 
 function getSearchFilters() {
-    return fetchSearchPage().then(parseOutFilters).catch(function(err) {
-        console.error(err);
-        throw err;
-    });
+    return fetchSearchPage()
+        .then(parseOutFilters)
+        .catch(function handleSearchFiltersError(err) {
+            console.error(err);
+            throw err;
+        });
 }
 
 function preprocessFilters(filterObj) {
     // Preprocess to add the 'years' to the object, as they're something extra
     // not inherent in the old course schedule
-    var integerSemesterCodes = filterObj['semester'].map(function(entry, i, array) {
+    var integerSemesterCodes = filterObj['semester'].map(function handleEntry(entry, i, array) {
         return parseInt(entry.val);
     });
 
@@ -207,9 +209,9 @@ function extractInfoFromCode(semesterCode) {
     return returnObj;
 }
 
-function getAndParseSemesterPages(semesters) {
+function getAndParseSemesterPages(semesterCodes) {
     return Promise.all(
-        semesters.map(function(value, i, array) {
+        semesterCodes.map(function mapSemesterCodeToPromise(value, i, array) {
             var tempFormData = dataValues;
             tempFormData['schedule_beginterm'] = value.val;
             return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData).then(function parseSemester(semester) {
@@ -293,7 +295,7 @@ function parseOutSemesterData(body) {
 
     var allRows = $('tr')
 
-    allRows.each(function(index, element) {
+    allRows.each(function parseRow(index, element) {
         var possibleClassLabel = $(this).find('td').text().trim();
 
         if (possibleClassLabel.match(classLabelMatch)) {
@@ -321,45 +323,43 @@ var dataValues = {
     'crse_numb' : '%',
 };
 function getScheduleData(semesters) {
-    return getAndParseSemesterPages(semesters).catch(function(err) {
-        console.error('Errored in getAndParse');
-        console.error(err);
-        throw err;
-    });
+    return getAndParseSemesterPages(semesters)
+        .catch(function handleScheduleDataError(err) {
+            console.error('Errored in getAndParse');
+            console.error(err);
+            throw err;
+        });
 }
 
 function saveScheduleData() {
     // Note: Schedule data will be in the global variable, not passed as a parameter
 
-    for (var key in scheduleData) {
+    for (var year in scheduleData) {
         // This promise will always resolve, and resolve with this key
-        var promise = Promise.resolve(key);
-
-        // fs.writeFile()
-        promise.then(function(key) {
-            return new Promise(function(resolve, reject) {
-                fs.readFile('static/course-data/courses.jade', function(err, data) {
+        Promise.resolve(year).then(function handleYear(year) {
+            return new Promise(function readTemplateFile(resolve, reject) {
+                fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
                     if (err)
                         reject(err);
                     else
                         resolve(data);
                 });
-            }).then(function(template) {
+            }).then(function renderUsingTemplateFile(template) {
                 var func = jade.compile(template, { pretty: debug, doctype: 'html' });
-                var html = func({ courseData: scheduleData[key] });
+                var html = func({ courseData: scheduleData[year] });
 
-                fs.writeFile('static/course-data/compiled/' + key + '.html', html, function(err) {
+                fs.writeFile('static/course-data/compiled/' + year + '.html', html, function saveRenderedTemplate(err) {
                     if (err) console.error(err);
-                    else console.log("The courses " + key + " html file was saved!");
+                    else console.log("The courses " + year + " html file was saved!");
                 });
 
                 if (debug) {
-                    fs.writeFile('static/course-data/' + key + '.json', JSON.stringify(scheduleData[key], null, 2), function(err) {
+                    fs.writeFile('static/course-data/' + year + '.json', JSON.stringify(scheduleData[year], null, 2), function handleFileWriteResponse(err) {
                         if (err) console.error(err);
-                        else console.log("The courses " + key + " json file was saved!");
+                        else console.log("The courses " + year + " json file was saved!");
                     });
                 }
-            }).catch(function(err) {
+            }).catch(function handleSaveScheduleDataError(err) {
                 console.error('Error in saving schedule data');
                 console.error(err);
                 throw err;
@@ -373,24 +373,18 @@ function saveScheduleData() {
 function fetchAndParseAll() {
     getSearchFilters()
         .then(preprocessFilters)
-        .then(function(filterObj) {
+        .then(function saveFiltersAndStartScheduleGet(filterObj) {
             saveFilters(filterObj); // Fire off async call, don't care when it finishes
 
-            if (debug)
-                return filterObj['semester'].slice(0, 7);
-            else
-                return filterObj['semester'];
+            return debug ? filterObj['semester'].slice(0, 7) : filterObj['semester'];
         })
         .then(getScheduleData)
         .then(saveScheduleData)
-        .catch(function(err) {
+        .catch(function catchAllErrors(err) {
             console.error('Error uncaught elsewhere:');
             console.error(err);
             throw err;
-        }
-    ).catch(function(err) {
-        throw err;
-    });
+        });
 }
 
 fetchAndParseAll();
