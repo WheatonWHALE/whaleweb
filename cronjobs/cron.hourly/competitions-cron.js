@@ -1,6 +1,6 @@
-var Firebase = require("firebase"),
-	cheerio = require("cheerio"),
-	request = require("request");
+var Firebase = require('firebase'),
+	cheerio = require('cheerio'),
+	request = require('request');
 
 var listOfPeople = Array(
 	{ id: 'akuisara',  		name: 'Sara' },
@@ -21,7 +21,7 @@ var listOfPeople = Array(
 	{ id: 'tkicks', 		name: 'Tyler' },
 	{ id: 'tnguyen14', 		name: 'Tri' },
 	{ id: 'zahrarikan', 	name: 'Zahra' }
-)
+);
 
 var numTotal = listOfPeople.length;
 var numFinished = 0;

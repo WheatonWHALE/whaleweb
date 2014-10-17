@@ -41,10 +41,12 @@ function get(url) {
     // Return a new promise.
     return new Promise(function requestGet(resolve, reject) {
         request.get(url, function handleGetResponse(err, resp, body) {
-            if (err)
-                return reject(err);
-            else
-                return resolve(body);
+            if (err) {
+                reject(err);
+            }
+            else {
+                resolve(body);
+            }
         });
     });
 }
@@ -57,10 +59,12 @@ function semesterPost(url, formData) {
     return new Promise(function requestPost(resolve, reject) {
         console.log('Posting for ' + copiedFormData.schedule_beginterm);
         request.post(url, { form: copiedFormData }, function handlePostResponse(err, resp, body) {
-            if (err)
+            if (err) {
                 return reject(err);
-            else
+            }
+            else {
                 return resolve({ code: copiedFormData.schedule_beginterm, body: body });
+            }
         });
     });
 }
@@ -115,7 +119,7 @@ function fetchSearchPage() {
 }
 
 function parseOutFilters(searchPageBody) {
-    $ = cheerio.load(searchPageBody);
+    var $ = cheerio.load(searchPageBody);
 
     var filterObj = {};
 
@@ -125,8 +129,9 @@ function parseOutFilters(searchPageBody) {
 
         $('select[name=' + filter + ']').find('option').each(function parseSelectOption(entry) {
             var filterValue = $(this).val();
-            if (filterValue != '%')
+            if (filterValue != '%') {
                 filterObj[prettifiedFilter].push({ val: filterValue, display: prettifyFilterValue($(this).text()) });
+            }
         });
     });
 
@@ -136,8 +141,9 @@ function parseOutFilters(searchPageBody) {
 function saveFilters(filterObj) {
     var promise = new Promise(function getFiltersTemplate(resolve, reject) {
         fs.readFile('static/course-data/filters.jade', function renderUsingTemplateFile(err, data) {
-            if (err)
+            if (err) {
                 reject(err);
+            }
             else {
                 var func = jade.compile(data, { pretty: debug, doctype: 'html' });
                 var html = func({ filterData: filterObj });
@@ -146,14 +152,22 @@ function saveFilters(filterObj) {
         });
     }).then(function saveRenderedTemplate(html) {
         fs.writeFile('static/course-data/compiled/filters.html', html, function handleFileWriteResponse(err) {
-            if (err) console.error(err);
-            else console.log('The filters html file was saved!');
+            if (err) {
+                console.error(err);
+            }
+            else {
+                console.log('The filters html file was saved!');
+            }
         });
 
         if (debug) {
             fs.writeFile('static/course-data/filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
-                if (err) console.error(err);
-                else console.log("The filters json file was saved!");
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log('The filters json file was saved!');
+                }
             });
         }
     });
@@ -218,8 +232,9 @@ function getAndParseSemesterPages(semesterCodes) {
                 console.log('Parsing for ' + semester.code);
                 var semesterInfo = extractInfoFromCode(semester.code);
 
-                if (!(semesterInfo.year in scheduleData))
+                if (!(semesterInfo.year in scheduleData)) {
                     scheduleData[semesterInfo.year] = {};
+                }
 
                 scheduleData[semesterInfo.year][semesterInfo.semester] = parseOutSemesterData(semester.body);
             });
@@ -240,15 +255,19 @@ function parseCourseData(allRows, i) {
 
     var enrollmentRow;
 
-    if (thirdRow.find('td').length > 3)
+    if (thirdRow.find('td').length > 3) {
         classHasPrereqs = false;
-    else
+    }
+    else {
         classHasPrereqs = true;
+    }
 
-    if (classHasPrereqs)
+    if (classHasPrereqs) {
         enrollmentRow = thirdRow;
-    else
+    }
+    else {
         enrollmentRow = fourthRow;
+    }
 
     firstRowElements      = firstRow.find('td');
     enrollmentRowElements = enrollmentRow.find('td');
@@ -256,10 +275,12 @@ function parseCourseData(allRows, i) {
 
     var timePlace = $(firstRowElements[4]).text().trim();
     var timePlaceSplit;
-    if (timePlace !== '')
+    if (timePlace !== '') {
         timePlaceSplit = timePlace.split(/\n/).clean('');
-    else
+    }
+    else {
         timePlaceSplit = ['', ''];
+    }
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
@@ -303,10 +324,12 @@ function parseOutSemesterData(body) {
             var department = possibleClassLabel.split(/-/)[0];
             var courseData = parseCourseData(allRows, index);
 
-            if (department in semesterCourses)
+            if (department in semesterCourses) {
                 semesterCourses[department].push(courseData);
-            else
+            }
+            else {
                 semesterCourses[department] = [courseData];
+            }
         }
     });
 
@@ -335,24 +358,34 @@ function getScheduleData(semesters) {
 function saveYearOfData(year) {
     return new Promise(function readTemplateFile(resolve, reject) {
         fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
-            if (err)
+            if (err) {
                 reject(err);
-            else
+            }
+            else {
                 resolve(data);
+            }
         });
     }).then(function renderUsingTemplateFile(template) {
         var func = jade.compile(template, { pretty: debug, doctype: 'html' });
         var html = func({ courseData: scheduleData[year] });
 
         fs.writeFile('static/course-data/compiled/' + year + '.html', html, function saveRenderedTemplate(err) {
-            if (err) console.error(err);
-            else console.log("The courses " + year + " html file was saved!");
+            if (err) {
+                console.error(err);
+            }
+            else {
+                console.log('The courses ' + year + ' html file was saved!');
+            }
         });
 
         if (debug) {
             fs.writeFile('static/course-data/' + year + '.json', JSON.stringify(scheduleData[year], null, 2), function handleFileWriteResponse(err) {
-                if (err) console.error(err);
-                else console.log("The courses " + year + " json file was saved!");
+                if (err) {
+                    console.error(err);
+                }
+                else {
+                    console.log('The courses ' + year + ' json file was saved!');
+                }
             });
         }
     }).catch(function handleSaveScheduleDataError(err) {

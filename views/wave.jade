@@ -7,27 +7,10 @@ block contents
   input#year(type='hidden' value=year)
   = errorMessage
   .row
-    .columns.small-12.large-5
+    .columns.small-12.large-5.push-7
       include ../static/course-data/compiled/filters.html
-
-
       .row
         //- Schedule preview goes here
 
-    .columns.small-12.large-7
+    .columns.small-12.large-7.pull-5
       != dynamicData
-
-
-
-        //- {
-        //-   "courseCode": "ANTH-102 B",
-        //-   "courseTitle": "Intro to Cultural Anthropology",
-        //-   "crn": "10298",
-        //-   "meetingTime": "M  W  F 9:30 AM - 10:20 AM",
-        //-   "meetingPlace": "Location info TBA",
-        //-   "professors": "Torres, M. Gabriela",
-        //-   "courseAttributes": "BW, DVSS, ARSS",
-        //-   "connections": "2023",
-        //-   "examSlot": "B.",
-        //-   "textbookLink": "http://www.bkstr.com/webapp/wcs/stores/servlet/booklookServlet?bookstore_id-1=525&term_id-1=Spring+2015&div-1=&dept-1=ANTH&course-1=102&section-1=B"
-        //- },
