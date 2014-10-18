@@ -46,7 +46,8 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
         var yearContrib  = $(contributionColumns[0])
             .find('.contrib-number')
             .text()
-            .replace(/ total/, '');
+            .replace(/ total/, '')
+            .replace(/,/g, ''); // Fix error with commas ruining parseInt
         var maxStreak    = $(contributionColumns[1])
             .find('.contrib-number')
             .text()
@@ -62,19 +63,28 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
             yearContrib:    yearContrib
         };
     }).then(function updateFireBase(entrantData) {
-         var myFirebaseRef = new Firebase('https://whalesite.firebaseio.com/Competitions/GitHub%20Streak/Entrants/' + person.id);
+        return new Promise(function updateEntrant(resolve, reject) {
+            var myFirebaseRef = new Firebase('https://whalesite.firebaseio.com/Competitions/GitHub%20Streak/Entrants/' + person.id);
 
-         myFirebaseRef.update({
-             current:   entrantData.currStreak,
-             max:       entrantData.maxStreak,
-             year:      entrantData.yearContrib,
-             name:      person.name,
-             id:        person.id
-         });
+            myFirebaseRef.update({
+                current:   entrantData.currStreak,
+                max:       entrantData.maxStreak,
+                year:      entrantData.yearContrib,
+                name:      person.name,
+                id:        person.id
+            }, function firebaseCallback(err) {
+                if (err) {
+                    reject(err)
+                }
+                else {
+                    resolve('success');
+                }
+            });
 
-         console.log('Handled ' + person.name + ': ' +
-            entrantData.yearContrib + ' and ' +
-            entrantData.currStreak + '/' + entrantData.maxStreak);
+            console.log('Handled ' + person.name + ': ' +
+                entrantData.yearContrib + ' and ' +
+                entrantData.currStreak + '/' + entrantData.maxStreak);
+        });
     });
 })).then(function forceExit() {
     // TODO: Actually fix why the process doesn't close on its own. Best guess: Firebase

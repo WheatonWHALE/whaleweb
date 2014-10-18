@@ -1,43 +1,64 @@
 // ========================================================================================================================
 
-function sortByStreak(a, b, key, otherKey) {
+function sortByKeyAndSubkey(a, b, key, otherKey) {
     var aVal = parseInt(a[key]), bVal = parseInt(b[key]);
 
-    if (aVal == bVal)
+    if (aVal == bVal) {
         comparison = parseInt(b[otherKey]) - parseInt(a[otherKey]);
-    else
+    }
+    else {
         comparison = bVal - aVal;
+    }
 
     return comparison;
 }
 
 function sortByCurrentStreak(a, b) {
-    return sortByStreak(a, b, 'current', 'max');
+    return sortByKeyAndSubkey(a, b, 'current', 'max');
 }
 
 function sortByMaxStreak(a, b) {
-    return sortByStreak(a, b, 'max', 'current');
+    return sortByKeyAndSubkey(a, b, 'max', 'current');
 }
 
-function extractStreak(entrants, key) {
-    var entrantsCurrentStreak = [];
+function sortByYearData(a, b) {
+    return sortByKeyAndSubkey(a, b, 'year', 'max');
+}
+
+function extractData(entrants, key) {
+    var processedEntrants = [];
 
     entrants.forEach(function(entry, index) {
         entry.streakVal = entry[key];
-        entrantsCurrentStreak.push(entry);
+        processedEntrants.push(entry);
     });
 
-    (key == 'current') ? entrantsCurrentStreak.sort(sortByCurrentStreak) : entrantsCurrentStreak.sort(sortByMaxStreak);
+    if (key == 'current') {
+        processedEntrants.sort(sortByCurrentStreak);
+    }
+    else if (key == 'max') {
+        processedEntrants.sort(sortByMaxStreak);
+    }
+    else if (key == 'year') {
+        processedEntrants.sort(sortByYearData);
+    }
+    else {
+        console.error('Unrecognized key');
+    }
 
-    return entrantsCurrentStreak;
+    return processedEntrants;
 }
 
 function extractMaxStreak(entrants) {
-    return extractStreak(entrants, 'max');
+    return extractData(entrants, 'max');
 }
 
 function extractCurrentStreak(entrants) {
-    return extractStreak(entrants, 'current');
+    return extractData(entrants, 'current');
+}
+
+function extractYearData(entrants) {
+    return extractData(entrants, 'year');
 }
 
 function markTopThree(element) {
@@ -118,9 +139,23 @@ $(function() {
                 entrants.push(this);
             });
 
-            dust.render("competition", {title: 'Current Streak', compId: 'current', entrants: extractCurrentStreak(entrants)}, postProcessAndAppend);
+            // dust.render("competition", {title: 'Current Streak',       
+            //     compId: 'current',
+            //     label: 'days',
+            //     entrants: extractCurrentStreak(entrants)},
+            //     postProcessAndAppend);
+            
+            dust.render("competition", {title: 'Year Of Contributions',
+                compId: 'year',
+                label: 'total',
+                entrants: extractYearData(entrants)},
+                postProcessAndAppend);
 
-            dust.render("competition", {title: 'Max Streak', compId: 'max', entrants: extractMaxStreak(entrants)}, postProcessAndAppend);
+            // dust.render("competition", {title: 'Max Streak',           
+            //     compId: 'max',
+            //     label: 'days',
+            //     entrants: extractMaxStreak(entrants)},
+            //     postProcessAndAppend);
 
             // Roundabout method of assigning change listener to every child individually
             snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
