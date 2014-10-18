@@ -28,7 +28,7 @@ function sortByYearData(a, b) {
 function extractData(entrants, key) {
     var processedEntrants = [];
 
-    entrants.forEach(function(entry, index) {
+    entrants.forEach(function extractAndPushEntrant(entry, index) {
         entry.streakVal = entry[key];
         processedEntrants.push(entry);
     });
@@ -76,7 +76,7 @@ function markStreakless(element) {
     /*
     Function to mark everyone without an active streak.
     */
-    element.find('.score').each(function() {
+    element.find('.score').each(function addClassToStreakless() {
         var that = $(this);
 
         if (that.html() == '0 days')
@@ -130,32 +130,33 @@ $(function() {
 
         var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
 
-        compsRef.on('child_added', function(snapshot) {
+        compsRef.on('child_added', function addChildrenCompetitionsToPage(snapshot) {
 
             var entry = snapshot.val();
 
-            var entrants = Array();
+            var entrants = [];
+            // Iterate over object, convert to array
             $.each(entry.Entrants, function() {
                 entrants.push(this);
             });
 
-            // dust.render("competition", {title: 'Current Streak',       
-            //     compId: 'current',
-            //     label: 'days',
-            //     entrants: extractCurrentStreak(entrants)},
-            //     postProcessAndAppend);
+            dust.render("competition", {title: 'Current Streak',       
+                compId: 'current',
+                label: 'days',
+                entrants: extractCurrentStreak(entrants)},
+                postProcessAndAppend);
+
+            dust.render("competition", {title: 'Max Streak',           
+                compId: 'max',
+                label: 'days',
+                entrants: extractMaxStreak(entrants)},
+                postProcessAndAppend);
             
             dust.render("competition", {title: 'Year Of Contributions',
                 compId: 'year',
                 label: 'total',
                 entrants: extractYearData(entrants)},
                 postProcessAndAppend);
-
-            // dust.render("competition", {title: 'Max Streak',           
-            //     compId: 'max',
-            //     label: 'days',
-            //     entrants: extractMaxStreak(entrants)},
-            //     postProcessAndAppend);
 
             // Roundabout method of assigning change listener to every child individually
             snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
@@ -174,7 +175,7 @@ $(function() {
 
         // ================================================================================
 
-        $('header').click(function() {
+        $('header').click(function updateCompetitions() {
             $.get('/refresh-competitions/', function() {
                 console.log('Update request sent!');
             });
