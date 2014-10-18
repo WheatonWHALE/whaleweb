@@ -152,7 +152,7 @@ $(function() {
                 entrants: extractMaxStreak(entrants)},
                 postProcessAndAppend);
             
-            dust.render("competition", {title: 'Year Of Contributions',
+            dust.render("competition", {title: 'Contributions (Past Year)',
                 compId: 'year',
                 label: 'total',
                 entrants: extractYearData(entrants)},

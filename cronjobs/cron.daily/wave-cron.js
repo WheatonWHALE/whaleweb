@@ -293,7 +293,9 @@ function parseCourseData(allRows, i) {
         division:           $(firstRowElements[7]).text(),
         area:               $(firstRowElements[8]).text(),
         connections:        $(firstRowElements[9]).text(),
+        connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
         examSlot:           $(firstRowElements[1]).text(),
+        examSlotLink:       $(firstRowElements[1]).find('a').attr('href'),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href')
     };
 
@@ -302,6 +304,7 @@ function parseCourseData(allRows, i) {
             courseData[key] = courseData[key].trim()/*.replace(/\n/g, '')*/;
         }
         catch (err) {
+            console.error('Error with ' + key + ':')
             console.error(err);
         }
     }
@@ -397,7 +400,6 @@ function saveYearOfData(year) {
 
 function saveScheduleData() {
     // Note: Schedule data will be in the global variable, not passed as a parameter
-
     for (var year in scheduleData) {
         // This promise will always resolve, and resolve with this key
         Promise.resolve(year).then(saveYearOfData);

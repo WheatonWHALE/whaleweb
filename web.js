@@ -69,26 +69,31 @@ app.get('/wave', function(req, res) {
 // General route for any pages that're static/fully front-end, and just need their jade file parsed and served
 app.get('/:route', function(req, res) {
     console.log('Request at: ' + req.params.route);
+    var code = 200;
     var requestRoute = req.params.route,
         rerouted = routeMap[requestRoute];
 
-    if (rerouted == undefined)
+    if (rerouted == undefined) {
         rerouted = '404';
+        code = 404;
+    }
     
-    res.render(rerouted + '.jade');
+    res.render(rerouted + '.jade', code);
 });
 
 // Configure the static folders that're ok to serve to anyone who asks (a.k.a. most browsers looking for javascript files, etc.)
-app.configure(function() {
-    app.use(logfmt.requestLogger());
+app.use(logfmt.requestLogger());
 
-    // Static serving files from specific folders
-    app.use('/foundation', express.static(__dirname + '/foundation'));
-    app.use('/css', express.static(__dirname + '/css'));
-    app.use('/js', express.static(__dirname + '/js'));
-    app.use('/images', express.static(__dirname + '/images'));
-    app.use('/static', express.static(__dirname + '/static'));
-});
+// Static serving files from specific folders
+app.use('/foundation', express.static(__dirname + '/foundation'));
+app.use('/css', express.static(__dirname + '/css'));
+app.use('/js', express.static(__dirname + '/js'));
+app.use('/images', express.static(__dirname + '/images'));
+app.use('/static', express.static(__dirname + '/static'));
+
+// app.get('*', function(req, res){
+//     res.render('404.jade');
+// });
 
 // Server on port 7500
 var port = 7500;

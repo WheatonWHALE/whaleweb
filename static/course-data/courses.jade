@@ -28,8 +28,8 @@ each semesterData, semesterName in courseData
               div
                 = 'Area: ' + course['area']
               div
-                = 'Connections: ' + course['connections']
+                a(href=course['connectionsLink'])= 'Connections: ' + course['connections']
               div
-                = 'Exam Slot: ' + course['examSlot']
+                a(href=course['examSlotLink'])= 'Exam Slot: ' + course['examSlot']
               div
                 a(href=course['textbookLink']) Textbook
