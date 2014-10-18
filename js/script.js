@@ -84,11 +84,11 @@ function markStreakless(element) {
     });
 }
 
-function postProcessAndAppend(err, out) {
-    out = $(out);
-    markTopThree(out);
-    markStreakless(out);
-    $("#competition-container").append(out);
+function postProcessAndAppend(err, element) {
+    element = $(element);
+    markTopThree(element);
+    markStreakless(element);
+    $("#competition-container").append(element);
 }
 
 // ========================================================================================================================
