@@ -10,8 +10,9 @@ block skele-css
   block css
 
 block skele-script
-  script(src='/foundation/js/foundation.min.js' defer)
-  script(src='/foundation/js/vendor/modernizr.js' defer)
+  //- Note: Not deferred. Prevents flash of unstyled content with the header
+  script(defer src='/foundation/js/foundation.min.js')
+  script(defer src='/foundation/js/vendor/modernizr.js')
 
   block scripts
 
@@ -37,4 +38,4 @@ block body
 
   footer Site created and maintained by members of Wheaton's Autonomous Learning Lab.
 
-  script(src='/foundation/js/init.js' defer)
+  script(defer src='/foundation/js/init.js')

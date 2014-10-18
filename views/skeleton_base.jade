@@ -17,12 +17,12 @@ html
     link(rel='stylesheet', type='text/css', href='/css/style.css')
 
 
-    //- Make sure to defer all scripts, so they don't block page load
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.0.3/es5-shim.min.js' defer)
-    script(type='text/javascript', src='https://code.jquery.com/jquery-1.11.1.min.js' defer)
+    //- Make sure to defer all possible scripts, so they don't block page load
+    script(defer type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.0.3/es5-shim.min.js')
+    script(defer type='text/javascript', src='https://code.jquery.com/jquery-1.11.1.min.js')
     block skele-script
     //- script.js is always last to load
-    script(type='text/javascript', src='/js/script.js' defer)
+    script(defer type='text/javascript', src='/js/script.js')
 
   body
     block body
