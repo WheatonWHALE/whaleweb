@@ -43,11 +43,23 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
         
         var contributionColumns = $('.contrib-column');
 
-        var currStreak = $(contributionColumns[2]).find('.contrib-number').text().replace(/ days/, '');
-        var maxStreak = $(contributionColumns[1]).find('.contrib-number').text().replace(/ days/, '');
+        var yearContrib  = $(contributionColumns[0])
+            .find('.contrib-number')
+            .text()
+            .replace(/ total/, '');
+        var maxStreak    = $(contributionColumns[1])
+            .find('.contrib-number')
+            .text()
+            .replace(/ days/, '');
+        var currStreak   = $(contributionColumns[2])
+            .find('.contrib-number')
+            .text()
+            .replace(/ days/, '');
+
         return {
-            currStreak: currStreak,
-            maxStreak: maxStreak
+            currStreak:     currStreak,
+            maxStreak:      maxStreak,
+            yearContrib:    yearContrib
         };
     }).then(function updateFireBase(entrantData) {
          var myFirebaseRef = new Firebase('https://whalesite.firebaseio.com/Competitions/GitHub%20Streak/Entrants/' + person.id);
@@ -55,12 +67,16 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
          myFirebaseRef.update({
              current:   entrantData.currStreak,
              max:       entrantData.maxStreak,
+             year:      entrantData.yearContrib,
              name:      person.name,
              id:        person.id
          });
 
-         console.log('Handled ' + person.name + ': ' + entrantData.currStreak + ' / ' + entrantData.maxStreak);
+         console.log('Handled ' + person.name + ': ' +
+            entrantData.yearContrib + ' and ' +
+            entrantData.currStreak + '/' + entrantData.maxStreak);
     });
 })).then(function forceExit() {
+    // TODO: Actually fix why the process doesn't close on its own. Best guess: Firebase
     process.exit(0);
 });
