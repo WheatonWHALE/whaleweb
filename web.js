@@ -30,7 +30,14 @@ app.get('/', function(req, res) {
 // Special route for requesting an update to the competitions database
 app.get('/refresh-competitions', function(req, res) {
     var child = exec('node cronjobs/cron.hourly/competitions-cron.js', function(error, stdout, stderr) {
-        console.log('Updated the competitions');
+        console.log(stdout);
+        if (stderr) {
+            console.error(stderr);
+            console.log('Errored while updating the competitions');
+        }
+        else {
+            console.log('Updated the competitions');
+        }
     });
     res.end('Success!');
 });
