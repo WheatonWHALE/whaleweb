@@ -7,10 +7,10 @@ block contents
   input#year(type='hidden' value=year)
   = errorMessage
   .row
-    .columns.small-12.large-5.push-7
+    .columns.small-12.large-5
       include ../static/course-data/compiled/filters.html
       .row
         //- Schedule preview goes here
 
-    .columns.small-12.large-7.pull-5
+    .columns.small-12.large-7
       != dynamicData

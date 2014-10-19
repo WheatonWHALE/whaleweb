@@ -261,8 +261,10 @@ nav.top-bar.expanded .title-area {
   border-bottom: none;
 }
 
-.filters i.fi-info.has-tip:hover {
-  cursor: inherit; // Overriding the 'help' as assigned by foundation
+// Style both to remove flicker of cursor to help
+.filters i.fi-info.has-tip:hover,
+.filters i.fi-info.has-tip {
+  cursor: default; // Overriding the 'help' as assigned by foundation
   border-bottom: none;
 }
 
