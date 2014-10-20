@@ -237,17 +237,17 @@ function parseCourseData(allRows, i) {
     var enrollmentRow;
 
     if (thirdRow.find('td').length > 3) {
-        classHasPrereqs = false;
+        classHasPrereqs = true;
     }
     else {
-        classHasPrereqs = true;
+        classHasPrereqs = false;
     }
 
     if (classHasPrereqs) {
         enrollmentRow = thirdRow;
     }
     else {
-        enrollmentRow = fourthRow;
+        enrollmentRow = secondRow;
     }
 
     firstRowElements      = firstRow.find('td');
@@ -277,16 +277,20 @@ function parseCourseData(allRows, i) {
         connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
         examSlot:           $(firstRowElements[1]).text(),
         examSlotLink:       $(firstRowElements[1]).find('a').attr('href'),
-        textbookLink:       $(firstRowElements[10]).find('a').attr('href')
+        textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
+        maxEnroll:          parseInt($(enrollmentRowElements[1]).text().replace(/Max Enroll:/, '')),
+        currentEnroll:      parseInt($(enrollmentRowElements[2]).text().replace(/Seats Taken:/, '')),
+        seatsAvailable:     parseInt($(enrollmentRowElements[3]).text().replace(/Seats Avail:/, '')),
+        waitList:           parseInt($(enrollmentRowElements[4]).text().replace(/Wait List:/, ''))
     };
 
+    if (classHasPrereqs) {
+        courseData.courseNotes = $(secondRow.find('td')[1]).text();
+    }
+
     for (var key in courseData) {
-        try {
+        if (typeof courseData[key] === 'string') {
             courseData[key] = courseData[key].trim().replace(/\n/g, '');
-        }
-        catch (err) {
-            console.error('Error with ' + key + ':')
-            console.error(err);
         }
     }
 
@@ -384,7 +388,7 @@ function saveYearOfData(year) {
             }
         });
     }).then(function renderUsingTemplateFile(template) {
-        var func = jade.compile(template, { pretty: debug/*false*/, doctype: 'html' });
+        var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
         var html = func({ courseData: scheduleData[year] });
 
         fs.writeFile('static/course-data/compiled/' + year + '.html', html, function handleFileWriteResponse(err) {

@@ -260,7 +260,7 @@ nav.top-bar.expanded .title-area {
   top: 0;
   right: 0;
 
-  color: #006283; // Slightly darker version of the header color
+  color: #5A98AD; // Slightly lighter version of the header color
   border-bottom: none;
 }
 
@@ -295,6 +295,8 @@ nav.top-bar.expanded .title-area {
 
   i.exp {
     cursor: pointer;
+    // font-size: 20px;
+    color: #5A98AD;
   }
 
   & > div {
@@ -302,32 +304,34 @@ nav.top-bar.expanded .title-area {
     padding-left: 0.9375rem;
     padding-right: 0.9375rem;
 
+    // Define widths of "columns" in courses
     &:nth-child(1) {
-      width: calc(~"100% * 2 / 12");
+      width: 23%;
     }
     &:nth-child(2) {
-      width: calc(~"100% * 4 / 12");
+      width: 33%;
     }
     &:nth-child(3) {
-      width: calc(~"100% * 4 / 12");
+      width: 34%;
 
       &::before {
         content: "Time: ";
       }
     }
     &:nth-child(4) {
-      width: calc(~"100% * 2 / 12");
+      width: 10%;
     }
 
     &:last-child {
       position: absolute;
       background-color: #FFF;
+      max-width: 300px;
 
       padding: 0; // Counter-act the column-esque padding from before
 
       z-index: 1;
 
-      top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent)
+      top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent) plus a bit
       right: 10px;
 
       // border: 1px solid black;
@@ -335,6 +339,10 @@ nav.top-bar.expanded .title-area {
 
       div {
         padding: 0 5px;
+
+        a:hover {
+          text-decoration: underline;
+        }
 
         &:nth-child(1)::before {
           content: "CRN: ";
@@ -353,6 +361,21 @@ nav.top-bar.expanded .title-area {
         }
         &:nth-child(6)::before {
           content: "Area: ";
+        }
+        &:nth-child(7)::before {
+          content: "Connections: ";
+        }
+        &:nth-child(8)::before {
+          content: "Exam Slot: ";
+        }
+        &:nth-child(9)::before {
+          content: "Textbook: ";
+        }
+        &:nth-child(10)::before {
+          content: "Enrollment: ";
+        }
+        &:nth-child(11)::before {
+          content: "Notes: ";
         }
       }
     }
