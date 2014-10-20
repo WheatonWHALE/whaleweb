@@ -158,17 +158,22 @@ $(function() {
                 entrants: extractYearData(entrants)},
                 postProcessAndAppend);
 
-            // Roundabout method of assigning change listener to every child individually
+            // Roundabout method of assigning change listener to every entrant individually
             snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
                 var changedEntrant = snapshot.val();
 
                 $('.' + changedEntrant.id).each(function(index) {
                     var entrantElement = $(this);
 
-                    if (entrantElement.parents('.competition#max').length)
+                    if (entrantElement.parents('.competition#max').length) {
                         entrantElement.find('.score').html(changedEntrant.max + ' days');
-                    else
+                    }
+                    else if (entrantElement.parents('.competition#current').length) {
                         entrantElement.find('.score').html(changedEntrant.current + ' days');
+                    }
+                    else if (entrantElement.parents('.competition#year').length) {
+                        entrantElement.find('.score').html(changedEntrant.year + ' total');
+                    }
                 });
             });
         });
