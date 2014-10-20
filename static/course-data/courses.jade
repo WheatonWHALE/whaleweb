@@ -5,16 +5,22 @@ each semesterData, semesterName in courseData
       .departmentContainer(class=departmentName)
 
         each course in departmentData
-          .row.course(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
-            .columns.small-2.medium-3
+          //- .row.course(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
+          div(class=course['foundation'] + ' ' + course['area'] + ' ' + course['division'])
+            //- .column.small-2.medium-3
+            div
               = course['courseCode']
-            .columns.small-4
+            //- .column.small-4
+            div
               = course['courseTitle']
-            .columns.small-4.text-right
-              = 'Time: ' + course['meetingTime']
-            .columns.small-2.medium-1
+            //- .column.small-4
+            div
+              = course['meetingTime']
+            //- .column.small-2.medium-1
+            div
               i.exp.fi-list
-            .secondary-info
+            //- .secondary-info
+            div
               div
                 = 'CRN: ' + course['crn']
               div
@@ -22,16 +28,16 @@ each semesterData, semesterName in courseData
               div
                 = 'Prof.: ' + course['professors']
               div
-                = 'Foundation: ' + course['foundation']
+                = 'Found: ' + course['foundation']
               div
-                = 'Division: ' + course['division']
+                = 'Div: ' + course['division']
               div
                 = 'Area: ' + course['area']
-              div
-                |Connection: 
-                a(href=course['connectionsLink'])= course['connections']
-              div
+              //- div
+                //- |Connection: 
+                //- a(href=course['connectionsLink'])= course['connections']
+              //- div
                 //- a(href=course['examSlotLink'])= 'Exam Slot: ' + course['examSlot']
-                = 'Exam Slot: ' + course['examSlot']
-              div
-                a(href=course['textbookLink']) Textbook
+                //- = 'Exam Slot: ' + course['examSlot']
+              //- div
+                //- a(href=course['textbookLink']) Textbook

@@ -223,25 +223,6 @@ function extractInfoFromCode(semesterCode) {
     return returnObj;
 }
 
-function getAndParseSemesterPages(semesterCodes) {
-    return Promise.all(
-        semesterCodes.map(function mapSemesterCodeToPromise(value, i, array) {
-            var tempFormData = dataValues;
-            tempFormData.schedule_beginterm = value.val;
-            return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData).then(function parseSemester(semester) {
-                console.log('Parsing for ' + semester.code);
-                var semesterInfo = extractInfoFromCode(semester.code);
-
-                if (!(semesterInfo.year in scheduleData)) {
-                    scheduleData[semesterInfo.year] = {};
-                }
-
-                scheduleData[semesterInfo.year][semesterInfo.semester] = parseOutSemesterData(semester.body);
-            });
-        })
-    );
-}
-
 // Parses one course's data out from the given list of rows
 function parseCourseData(allRows, i) {
     // 2 Types of formats:
@@ -301,7 +282,7 @@ function parseCourseData(allRows, i) {
 
     for (var key in courseData) {
         try {
-            courseData[key] = courseData[key].trim()/*.replace(/\n/g, '')*/;
+            courseData[key] = courseData[key].trim().replace(/\n/g, '');
         }
         catch (err) {
             console.error('Error with ' + key + ':')
@@ -312,8 +293,10 @@ function parseCourseData(allRows, i) {
     return courseData;
 }
 
-function parseOutSemesterData(body) {
-    $ = cheerio.load(body);
+function parseSemesterData(semester) {
+    console.log('Parsing for ' + semester.code);
+
+    $ = cheerio.load(semester.body);
 
     var semesterCourses = {};
     var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?\-[0-9][0-9][0-9]/;
@@ -336,7 +319,38 @@ function parseOutSemesterData(body) {
         }
     });
 
-    return semesterCourses;
+    semester.data = semesterCourses;
+
+    return semester;
+}
+
+function postProcessSemesterData(semester) {
+    // semester.data = semester.data;
+
+    return semester;
+}
+
+function getAndParseSemesterPages(semesterCodes) {
+    return Promise.all(
+        semesterCodes.map(function mapSemesterCodeToPromise(semesterCode, i, array) {
+            var tempFormData = dataValues;
+            tempFormData.schedule_beginterm = semesterCode.val;
+
+            return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData)
+                .then(parseSemesterData)
+                .then(postProcessSemesterData)
+                .then(function assignSemesterData(processedSemester) {
+                    var semesterInfo = extractInfoFromCode(processedSemester.code);
+
+                    if (!(semesterInfo.year in scheduleData)) {
+                        scheduleData[semesterInfo.year] = {};
+                    }
+
+                    scheduleData[semesterInfo.year][semesterInfo.semester] = processedSemester.data;
+                }
+            );
+        })
+    );
 }
 
 var dataValues = {
@@ -355,7 +369,8 @@ function getScheduleData(semesters) {
             console.error('Errored in getAndParse');
             console.error(err);
             throw err;
-        });
+        }
+    );
 }
 
 function saveYearOfData(year) {
@@ -369,10 +384,10 @@ function saveYearOfData(year) {
             }
         });
     }).then(function renderUsingTemplateFile(template) {
-        var func = jade.compile(template, { pretty: debug, doctype: 'html' });
+        var func = jade.compile(template, { pretty: debug/*false*/, doctype: 'html' });
         var html = func({ courseData: scheduleData[year] });
 
-        fs.writeFile('static/course-data/compiled/' + year + '.html', html, function saveRenderedTemplate(err) {
+        fs.writeFile('static/course-data/compiled/' + year + '.html', html, function handleFileWriteResponse(err) {
             if (err) {
                 console.error(err);
             }
@@ -414,7 +429,7 @@ function fetchAndParseAll() {
         .then(function saveFiltersAndStartScheduleGet(filterObj) {
             saveFilters(filterObj); // Fire off async call, don't care when it finishes
 
-            return debug ? filterObj.semester.slice(0, 7) : filterObj.semester;
+            return debug ? filterObj.semester.slice(0, 4) : filterObj.semester;
         })
         .then(getScheduleData)
         .then(saveScheduleData)
@@ -422,7 +437,8 @@ function fetchAndParseAll() {
             console.error('Error uncaught elsewhere:');
             console.error(err);
             throw err;
-        });
+        }
+    );
 }
 
 fetchAndParseAll();

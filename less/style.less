@@ -143,7 +143,6 @@ img#logo-competition {
           padding: 7% 0;
           font-size: 23px;
           color: #FFA500;
-          text-decoration: none;
           
           font-weight: 700;
         }
@@ -183,17 +182,21 @@ img#logo-competition {
       line-height: 1.5em;
       color: #808080;
 
-      .competition-link {
-        text-decoration: none;
-        color: inherit;
+      .name {
+        font-size: 1em;
+        float: left;
 
-        .name {
-          font-size: 1em;
-          float: left;
+        .competition-link {
+          text-decoration: none;
+          color: inherit;
 
           .user-id {
             font-size: .66em;
           }
+        }
+
+        &:hover {
+          text-decoration: underline;
         }
       }
 
@@ -273,32 +276,66 @@ nav.top-bar.expanded .title-area {
   display: none;
 }
 
-.course {
+
+// A lot of this styling is really ugly, to avoid any and all classes on the course divs
+.departmentContainer > div {
   border-bottom: 1px solid #E6E6E6;
   position: relative;
+  clear: left;
+
+  // Mimic .row within .row
+  width: auto;
+  margin-left: -0.9375rem;
+  margin-right: -0.9375rem;
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: none;
+
+  .cf;
 
   i.exp {
     cursor: pointer;
   }
 
-  .secondary-info {
-    position: absolute;
-    background-color: #FFF;
+  & > div {
+    float: left;
+    padding-left: 0.9375rem;
+    padding-right: 0.9375rem;
 
-    z-index: 1;
+    &:nth-child(1) {
+      width: calc(~"100% * 2 / 12");
+    }
+    &:nth-child(2) {
+      width: calc(~"100% * 4 / 12");
+    }
+    &:nth-child(3) {
+      width: calc(~"100% * 4 / 12");
+    }
+    &:nth-child(4) {
+      width: calc(~"100% * 2 / 12");
+    }
 
-    top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent)
-    right: 10px;
+    &:last-child {
+      position: absolute;
+      background-color: #FFF;
 
-    // border: 1px solid black;
-    box-shadow: 0 0 20px -6px black;
+      padding: 0; // Counter-act the column-esque padding from before
 
-    div {
-      padding: 0 5px;
+      z-index: 1;
+
+      top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent)
+      right: 10px;
+
+      // border: 1px solid black;
+      box-shadow: 0 0 20px -6px black;
+
+      div {
+        padding: 0 5px;
+      }
     }
   }
 
-  &:not(.expanded) .secondary-info {
+  &:not(.expanded) > div:last-child {
     display: none;
   }
 }

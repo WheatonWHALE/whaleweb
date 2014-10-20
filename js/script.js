@@ -199,9 +199,9 @@ $(function() {
             toggleIndividuals(name, selector);
         });
 
-        $('.course i.exp').click(function(evt) {
-            $(this).parents('.courseContainer').find('.course').removeClass('expanded');
-            $(this).parents('.course').toggleClass('expanded');
+        $('i.exp').click(function(evt) {
+            // $(this).parents('.courseContainer').find('.course').removeClass('expanded');
+            $(this).parent().parent().toggleClass('expanded');
         });
 
         $('select[name=year]').val($('input#year').val());
