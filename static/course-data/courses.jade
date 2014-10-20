@@ -15,16 +15,17 @@ each semesterData, semesterName in courseData
             div
               i.exp.fi-list
             div
-              div= course.crn
-              div= course.meetingPlace
-              div= course.professors
-              div= course.foundation
-              div= course.division
-              div= course.area
-              div: a(href=course.connectionsLink)= course.connections
-              div: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
-              div: a(href=course.textbookLink) here
-              //- div= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
-              div= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
-              if course.courseNotes
-                div= course.courseNotes
+              ul
+                li= course.crn
+                li= course.meetingPlace
+                li= course.professors
+                li= course.foundation
+                li= course.liision
+                li= course.area
+                li: a(href=course.connectionsLink)= course.connections
+                li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
+                li: a(href=course.textbookLink) here
+                //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
+                li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
+                if course.courseNotes
+                  li= course.courseNotes
