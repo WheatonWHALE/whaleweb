@@ -6,13 +6,13 @@
 // ====================== LESS Classes ================================
 
 .cf {
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     content: " ";
     display: table;
   }
 
-  &:after {
+  &::after {
     clear: both;
   }
 }
@@ -310,6 +310,10 @@ nav.top-bar.expanded .title-area {
     }
     &:nth-child(3) {
       width: calc(~"100% * 4 / 12");
+
+      &::before {
+        content: "Time: ";
+      }
     }
     &:nth-child(4) {
       width: calc(~"100% * 2 / 12");
@@ -331,6 +335,25 @@ nav.top-bar.expanded .title-area {
 
       div {
         padding: 0 5px;
+
+        &:nth-child(1)::before {
+          content: "CRN: ";
+        }
+        &:nth-child(2)::before {
+          content: "Place: ";
+        }
+        &:nth-child(3)::before {
+          content: "Professor: ";
+        }
+        &:nth-child(4)::before {
+          content: "Foundation: ";
+        }
+        &:nth-child(5)::before {
+          content: "Division: ";
+        }
+        &:nth-child(6)::before {
+          content: "Area: ";
+        }
       }
     }
   }
