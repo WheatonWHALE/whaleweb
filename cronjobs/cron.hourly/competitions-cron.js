@@ -3,24 +3,25 @@ var Firebase = require('firebase'),
     request = require('request');
 
 var listOfPeople = Array(
-    { id: 'akuisara',       name: 'Sara' },
-    { id: 'bawjensen',      name: 'Bryan' },
-    { id: 'cjrieck',        name: 'Clayton' },
-    { id: 'dshelts',        name: 'Drew' },
-    { id: 'devindelfino',   name: 'Devin' },
-    { id: 'evan1590',       name: 'Evan' },
-    { id: 'iopaluch',       name: 'Ian' },
-    { id: 'jge94',          name: 'Jinnan' },
-    { id: 'jmorneau',       name: 'Julia' },
-    { id: 'kimballan',      name: '(?)' },
-    { id: 'lithiah',        name: 'Lithia' },
-    { id: 'MichaelKristy',  name: 'Michael' },
-    { id: 'omigayy',        name: 'Yingying' },
-    { id: 'rubinz',         name: 'Zevi' },
-    { id: 'tarmstro',       name: 'Tom' },
-    { id: 'tkicks',         name: 'Tyler' },
-    { id: 'tnguyen14',      name: 'Tri' },
-    { id: 'zahrarikan',     name: 'Zahra' }
+    { id: 'akuisara',       name: 'Sara', 		year: '2016' },
+    { id: 'bawjensen',      name: 'Bryan', 		year: '2016' },
+    { id: 'cjrieck',        name: 'Clayton', 	year: '2014' },
+    { id: 'dshelts',        name: 'Drew', 		year: '2015' },
+    { id: 'devindelfino',   name: 'Devin', 		year: '2015' },
+    { id: 'evan1590',       name: 'Evan', 		year: '2015' },
+    { id: 'iopaluch',       name: 'Ian', 		year: '2018' },
+    { id: 'jge94',          name: 'Jinnan', 	year: '2016' },
+    { id: 'jmorneau',       name: 'Julia', 		year: '2016' },
+    // { id: 'kimballan',      name: '(?)', 		year: '' },
+    { id: 'lithiah',        name: 'Lithia', 	year: '2016' },
+    { id: 'MichaelKristy',  name: 'Michael', 	year: '2018' },
+    { id: 'omigayy',        name: 'Yingying', 	year: '2017' },
+    { id: 'rubinz',         name: 'Zevi', 		year: '2016' },
+    { id: 'tarmstro',       name: 'Tom', 		/*year: ''*/ },
+    { id: 'tkicks',         name: 'Tyler', 		year: '2016' },
+    { id: 'tnguyen14',      name: 'Tri', 		year: '2014' },
+    { id: 'xeaza',      	name: 'Taylor', 	year: '2013' },
+    { id: 'zahrarikan',     name: 'Zahra', 		year: '2017' }
 );
 
 function get(url) {
