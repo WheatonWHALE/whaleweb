@@ -6,11 +6,11 @@ block page-title
 block contents
   .row
     each member in members
-      .member.column.small-3
+      .member.column.small-6.medium-3
         .row: .name= member.name
         .row: a(href='https://github.com/' + member.github) GitHub Profile
         .row: a(href=member.website) Personal Website
 
-    .member.column.small-3
+    .member.column.small-6.medium-3
       .row: .name Missing?
       .row: .text Write your name, github and website on the board in the Whale Lab!
