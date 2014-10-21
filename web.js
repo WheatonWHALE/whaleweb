@@ -96,7 +96,7 @@ app.get('/:route', function(req, res) {
 app.use(logfmt.requestLogger());
 
 // Static serving files from specific folders
-app.use('/foundation-custom', express.static(__dirname + '/foundation'));
+app.use('/foundation-custom', express.static(__dirname + '/foundation-custom'));
 app.use('/foundation', express.static(__dirname + '/foundation'));
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/js', express.static(__dirname + '/js'));
