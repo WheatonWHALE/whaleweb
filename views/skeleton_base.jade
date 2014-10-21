@@ -18,10 +18,13 @@ html
 
 
     //- Make sure to defer all possible scripts, so they don't block page load
+    
 
     //- Seems to slow page load, and cause a small flash of unstyled content
     //- Issue seems to be that only once page is loaded does this script fire off, and is required before all others.
     //- script(defer type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/es5-shim/4.0.3/es5-shim.min.js')
+    
+    script(defer type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/es6-shim/0.18.0/es6-shim.min.js')
     
     script(defer type='text/javascript', src='https://code.jquery.com/jquery-1.11.1.min.js')
     block skele-script
