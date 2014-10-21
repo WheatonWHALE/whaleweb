@@ -1,6 +1,6 @@
 // ============================= General =======================================
 
-function get(url) {
+function get(url, progressFunc) {
     return new Promise(function(resolve, reject) {
         var req = new XMLHttpRequest();
         req.open('GET', url);
@@ -13,6 +13,10 @@ function get(url) {
                 reject(Error(req.statusText));
             }
         };
+
+        if (progressFunc) {
+            req.addEventListener("progress", progressFunc, false);
+        }
 
         req.onerror = function() {
             reject(Error("Network Error"));
@@ -193,7 +197,7 @@ function toggleIndividuals(type, selector) {
     if (type in activeFilters) {
         $('.departmentContainer > div:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
     }
-    
+
     if (selector == 'all') {
         delete activeFilters[type];
     }
@@ -203,11 +207,17 @@ function toggleIndividuals(type, selector) {
     }
 }
 
+function updateProgress(oEvent) {
+    if (oEvent.lengthComputable) {
+        $('#progress-value').html(Math.floor(100 * oEvent.loaded / oEvent.total) + '%');
+    }
+}
+
 function getWAVEData() {
     var year = $('input#year').val();
 
-    get('/wave-data?year=' + year).then(function appendToPage(html) {
-        $('.dataContainer img').remove();
+    get('/wave-data?year=' + year, updateProgress).then(function appendToPage(html) {
+        $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').append(html);
     }).then(function setUpOtherCallbacks() {
         $(function() {

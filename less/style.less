@@ -276,9 +276,14 @@ nav.top-bar.expanded .title-area {
   display: none;
 }
 
-.dataContainer img {
-  display: block;
+#loading-placeholder {
+  display: table; // Because logic
   margin: 0 auto;
+
+  div {
+    font-weight: bold;
+    text-align: center;
+  }
 }
 
 // A lot of this styling is really ugly, to avoid any and all classes on the course divs
