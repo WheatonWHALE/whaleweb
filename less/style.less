@@ -295,6 +295,12 @@ nav.top-bar.expanded .title-area {
   margin-bottom: 0;
   max-width: none;
 
+  &.foundation-hidden,
+  &.division-hidden,
+  &.area-hidden {
+    display: none;
+  }
+
   .cf;
 
   i.exp {
@@ -393,10 +399,4 @@ nav.top-bar.expanded .title-area {
   &:not(.expanded) > div:last-child {
     display: none;
   }
-}
-
-.course.foundation-hidden,
-.course.division-hidden,
-.course.area-hidden {
-  display: none;
 }
