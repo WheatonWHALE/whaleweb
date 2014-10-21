@@ -43,53 +43,37 @@ app.get('/refresh-competitions', function(req, res) {
 });
 
 app.get('/wave-data', function(req, res) {
-    var year = req.query.year;
-    var currentYear = '2014-2015';
+    var year = req.query.year || '2014-2015';
     var errorMessage = '';
 
     var expectedFilePath = 'static/course-data/compiled/' + year + '.html';
 
-    fs.exists(expectedFilePath, function(exists) {
-        if (!exists) {
-            if (year != undefined) {
-                errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
-            }
-
-            year = currentYear; // Default to the current year
-            expectedFilePath = 'static/course-data/compiled/' + year + '.html';
+    fs.readFile(expectedFilePath, function(err, data) {
+        if (err) {
+            console.log(err);
         }
-
-        fs.readFile(expectedFilePath, function(err, data) {
-            if (err) {
-                console.log(err);
-            }
-            else {
-                res.send(data);
-            }
-        });
+        else {
+            res.send(data);
+        }
     });
 });
 
 // Special route for everything to do with WAVE
 app.get('/wave', function(req, res) {
-    var year = req.query.year || '2014-2015';
-
-    res.render('wave.jade', { /*dynamicData: data,*/ year: year, /*errorMessage: errorMessage*/ });
+    res.render('wave.jade', { year: req.query.year || '2014-2015' });
 });
 
 // General route for any pages that're static/fully front-end, and just need their jade file parsed and served
 app.get('/:route', function(req, res) {
     console.log('Request at: ' + req.params.route);
-    var code = 200;
     var requestRoute = req.params.route,
         rerouted = routeMap[requestRoute];
 
     if (rerouted == undefined) {
         rerouted = '404';
-        code = 404;
     }
     
-    res.render(rerouted + '.jade', code);
+    res.render(rerouted + '.jade');
 });
 
 // Configure the static folders that're ok to serve to anyone who asks (a.k.a. most browsers looking for javascript files, etc.)
