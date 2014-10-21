@@ -7,11 +7,9 @@ var exec        = require("child_process").exec,
 // Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
 var routeMap =  {
     'printing':     'selling',
-    // 'members':      'members',
     'projects':     'projects',
     'makerspaces':  'generalinfo',
     'github':       'compete'
-    // 'wave':         'wave'
 };
 
 // Stolen from StackOverflow for its compactness. Seems to be Knuth shuffle.
