@@ -20,16 +20,12 @@ block body
   div.fixed
     nav(data-topbar role='navigation').top-bar
       ul.title-area
-        li.name: h1: a(href='/') Wh.A.Le.
+        li.name: h1: a(href='/') WHALE
         li(class='toggle-topbar menu-icon'): a(href='#'): span Menu
       section.top-bar-section
         ul.left
-          li: a(href='/github') GitHub Competition
-          li: a(href='/wave') WAVE
-          //- li: a(href='/projects') Projects
-          //- li: a(href='/printing') 3D Printing
-          //- li: a(href='/makerspaces') About Makerspaces
-          li: a(href='/members') About Us
+          each link in links
+            li: a(href=link.href)= link.display
 
   .row: header
     block page-title
@@ -37,6 +33,6 @@ block body
   #container
     block contents
 
-  footer Site created and maintained by members of Wheaton's Autonomous Learning Lab.
+  footer Site created and maintained by members of Wheaton's Autonomous Learning Experience Lab.
 
   script(defer src='/foundation.custom/js/init.js')

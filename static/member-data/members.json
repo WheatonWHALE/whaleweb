@@ -1,9 +1,49 @@
 [
   {
-    "name": "Bryan"
-
+    "name": "Bryan Jensen",
+    "year": "2015",
+    "website": "http://bawjensen.me",
+    "github": "bawjensen"
   },
   {
-    "name": "Tom"
+    "name": "Tom Armstrong",
+    "website": "http://tarmstro.com/",
+    "github": "tarmstro"
+  },
+  {
+    "name": "Evan Chessman",
+    "year": "2015",
+    "website": "http://evan1590.github.io/",
+    "github": "evan1590"
+  },
+  {
+    "name": "Andrew Shelton",
+    "year": "2015",
+    "website": "http://imaginarytraffic.com/",
+    "github": "dshelts"
+  },
+  {
+    "name": "Clayton Rieck",
+    "year": "2014",
+    "website": "http://claytonrieck.com",
+    "github": "cjrieck"
+  },
+  {
+    "name": "Tri Nguyen",
+    "year": "2014",
+    "website": "http://tridnguyen.com",
+    "github": "tnguyen14"
+  },
+  {
+    "name": "Devin Delfino",
+    "year": "2015",
+    "website": "http://devindelfino.me/",
+    "github": "devindelfino"
+  },
+  {
+    "name": "Zevi Rubin",
+    "year": "2016",
+    "website": "http://zevirubin.com/",
+    "github": "rubinz"
   }
 ]

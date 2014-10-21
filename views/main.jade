@@ -1,16 +1,12 @@
 extends skeleton_base
 
 block body
-	#mainpage-container
-		#background
-		img.whale-logo.centered-logo#logo(alt='whale_logo' src='images/whale_logo_small.png')
-		a.iconlinks#twitter(href='https://twitter.com/W_H_A_L_E' class='flaticon-social38')
-		a.iconlinks#facebook(href='https://www.facebook.com/whalelab' class='flaticon-facebook29')
-		#sidebar
-			ul
-				li: a(href='/github') GitHub Competition
-				li: a(href='/wave') WAVE Course Schedule
-				//- li: a(href='/projects') Whale Projects
-				//- li: a(href='/printing') 3D Prints For Sale
-				//- li: a(href='/makerspaces') About Makerspaces
-				li: a(href='/members') About the Members
+  #mainpage-container
+    #background
+    img.whale-logo.centered-logo#logo(alt='whale_logo' src='images/whale_logo_small.png')
+    a.iconlinks#twitter(href='https://twitter.com/W_H_A_L_E' class='flaticon-social38')
+    a.iconlinks#facebook(href='https://www.facebook.com/whalelab' class='flaticon-facebook29')
+    #sidebar
+      ul
+        each link in links
+          li: a(href=link.href)= link.display

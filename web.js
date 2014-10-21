@@ -14,11 +14,25 @@ var routeMap =  {
     // 'wave':         'wave'
 };
 
+// Stolen from StackOverflow for its compactness. Seems to be Knuth shuffle.
+function shuffle(o) {
+    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
+
 var app = express();
 
 // Middleware to save the current url, from the request, to the responses' local variables, for use in jade
 app.use(function(req, res, next) {
     res.locals.url = req.url;
+    res.locals.links = [
+        { href: '/github',       display: 'GitHub Competition' },
+        { href: '/wave',         display: 'WAVE Course Schedule' },
+        // { href: '/projects',    , display: 'Projects' },
+        // { href: '/printing',    , display: '3D Printing' },
+        // { href: '/makerspaces', , display: 'About Makerspaces' },
+        { href: '/members',      display: 'About Us' }
+    ];
     next();
 });
 
@@ -71,9 +85,10 @@ app.get('/members', function(req, res) {
         }
         else {
             console.log(json);
-            res.render('members.jade', { members: JSON.parse(json) });
+            res.render('members.jade', { members: shuffle(JSON.parse(json)) }); // Shuffled (for production)
+            // res.render('members.jade', { members: JSON.parse(json) }); // Unshuffled (for debugging)
         }
-    })
+    });
 });
 
 // General route for any pages that're static/fully front-end, and just need their jade file parsed and served
@@ -99,7 +114,7 @@ app.use('/js', express.static(__dirname + '/js'));
 app.use('/images', express.static(__dirname + '/images'));
 app.use('/static', express.static(__dirname + '/static'));
 
-// app.get('*', function(req, res){
+// app.all('*', function(req, res){
 //     res.render('404.jade');
 // });
 
