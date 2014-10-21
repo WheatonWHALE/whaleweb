@@ -7,7 +7,7 @@ var exec        = require("child_process").exec,
 // Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
 var routeMap =  {
     'printing':     'selling',
-    'members':      'members',
+    // 'members':      'members',
     'projects':     'projects',
     'makerspaces':  'generalinfo',
     'github':       'compete'
@@ -61,6 +61,19 @@ app.get('/wave-data', function(req, res) {
 // Special route for everything to do with WAVE
 app.get('/wave', function(req, res) {
     res.render('wave.jade', { year: req.query.year || '2014-2015' });
+});
+
+app.get('/members', function(req, res) {
+    fs.readFile('static/member-data/members.json', function renderPageWithJSON(err, json) {
+        if (err) {
+            console.error(err);
+            res.render('404.jade');
+        }
+        else {
+            console.log(json);
+            res.render('members.jade', { members: JSON.parse(json) });
+        }
+    })
 });
 
 // General route for any pages that're static/fully front-end, and just need their jade file parsed and served

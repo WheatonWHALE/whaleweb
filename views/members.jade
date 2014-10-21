@@ -1,12 +1,11 @@
 extends skeleton_general
 
-block members
-	|This page is a lie!
-	//- dynamic template
-	//- need to send json of members
-	//- back and populate fields
-	#members-container
-		.member
-			.profile-picture
-			.name
-			.grade
+block page-title
+  |WHALE Makerspace Members
+
+block contents
+  .column.small-12
+    each member in members
+      .member
+        .name
+          = member.name

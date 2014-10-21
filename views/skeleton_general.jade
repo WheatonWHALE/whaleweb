@@ -26,12 +26,13 @@ block body
         ul.left
           li: a(href='/github') GitHub Competition
           li: a(href='/wave') WAVE
-          li: a(href='/projects') Projects
-          li: a(href='/printing') 3D Printing
-          li: a(href='/makerspaces') About Makerspaces
+          //- li: a(href='/projects') Projects
+          //- li: a(href='/printing') 3D Printing
+          //- li: a(href='/makerspaces') About Makerspaces
           li: a(href='/members') About Us
 
-  .row: header WHALE Lab
+  .row: header
+    block page-title
 
   #container
     block contents
