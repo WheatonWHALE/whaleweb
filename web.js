@@ -24,11 +24,11 @@ var app = express();
 
 
 // Static serving files from specific folders
-app.use('/foundation.custom', express.static(__dirname + '/foundation.custom'));
-app.use('/css', express.static(__dirname + '/css'));
-app.use('/js', express.static(__dirname + '/js'));
-app.use('/images', express.static(__dirname + '/images'));
-app.use('/static', express.static(__dirname + '/static'));
+app.use('/foundation',  express.static(__dirname + '/foundation'));
+app.use('/css',         express.static(__dirname + '/css'));
+app.use('/js',          express.static(__dirname + '/js'));
+app.use('/images',      express.static(__dirname + '/images'));
+app.use('/static',      express.static(__dirname + '/static'));
 app.use(logfmt.requestLogger());
 
 
