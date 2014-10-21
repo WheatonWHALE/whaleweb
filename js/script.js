@@ -269,8 +269,6 @@ function setUpWAVEPage() {
 // ============================= OnLoad ========================================
 
 $(function() {
-    console.log('Script loaded');
-    
     if (window.location.pathname == '/github') { // Test for "github" page
         setUpGitHubPage();
     }
