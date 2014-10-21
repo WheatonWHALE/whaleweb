@@ -190,18 +190,15 @@ function toggleContainer(container, selector) {
 var activeFilters = {};
 
 function toggleIndividuals(type, selector) {
-    console.log(type);
+    if (type in activeFilters) {
+        $('.departmentContainer > div:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
+    }
+    
     if (selector == 'all') {
-        if (type in activeFilters)
-            $('.course:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
-
         delete activeFilters[type];
     }
     else {
-        if (type in activeFilters)
-            $('.course:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
-
-        $('.course:not(.' + selector + ')').addClass(type+'-hidden');
+        $('.departmentContainer > div:not(.' + selector + ')').addClass(type+'-hidden');
         activeFilters[type] = selector;
     }
 }
@@ -225,6 +222,8 @@ function getWAVEData() {
 }
 
 function setUpWAVEPage() {
+    getWAVEData();
+
     $('select[name=semester], select[name=department]').change(function() {
         var name = $(this).attr('name');
         var selector = $(this).val();
@@ -251,6 +250,4 @@ $(function() {
     }
 });
 
-getWAVEData();
-
-// ========================================================================================================================
+// =============================================================================
