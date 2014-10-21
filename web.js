@@ -42,8 +42,7 @@ app.get('/refresh-competitions', function(req, res) {
     res.end('Success!');
 });
 
-// Special route for everything to do with WAVE
-app.get('/wave', function(req, res) {
+app.get('/wave-data', function(req, res) {
     var year = req.query.year;
     var currentYear = '2014-2015';
     var errorMessage = '';
@@ -52,18 +51,30 @@ app.get('/wave', function(req, res) {
 
     fs.exists(expectedFilePath, function(exists) {
         if (!exists) {
-            if (year != undefined)
+            if (year != undefined) {
                 errorMessage = 'Error loading the requested year (' + year + '). Defaulted to ' + currentYear + '.';
+            }
 
             year = currentYear; // Default to the current year
             expectedFilePath = 'static/course-data/compiled/' + year + '.html';
         }
 
         fs.readFile(expectedFilePath, function(err, data) {
-            if (err) console.log(err);
-            else res.render('wave.jade', { dynamicData: data, year: year, errorMessage: errorMessage });
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.send(data);
+            }
         });
     });
+});
+
+// Special route for everything to do with WAVE
+app.get('/wave', function(req, res) {
+    var year = req.query.year || '2014-2015';
+
+    res.render('wave.jade', { /*dynamicData: data,*/ year: year, /*errorMessage: errorMessage*/ });
 });
 
 // General route for any pages that're static/fully front-end, and just need their jade file parsed and served
@@ -85,6 +96,7 @@ app.get('/:route', function(req, res) {
 app.use(logfmt.requestLogger());
 
 // Static serving files from specific folders
+app.use('/foundation-custom', express.static(__dirname + '/foundation'));
 app.use('/foundation', express.static(__dirname + '/foundation'));
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/js', express.static(__dirname + '/js'));
