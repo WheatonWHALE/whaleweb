@@ -1,29 +1,46 @@
 // ============================= General =======================================
 
+// function get(url, progressFunc) {
+//     return new Promise(function(resolve, reject) {
+//         var req = new XMLHttpRequest();
+//         req.open('GET', url);
+
+//         req.onload = function() {
+//             if (req.status == 200) {
+//                 resolve(req.response);
+//             }
+//             else {
+//                 reject(Error(req.statusText));
+//             }
+//         };
+
+//         if (progressFunc) {
+//             req.addEventListener("progress", progressFunc, false);
+//         }
+
+//         req.onerror = function() {
+//             reject(Error("Network Error"));
+//         };
+
+//         req.send();
+//     });
+// }
+
 function get(url, progressFunc) {
-    return new Promise(function(resolve, reject) {
-        var req = new XMLHttpRequest();
-        req.open('GET', url);
+    return Promise.resolve(
+        $.ajax({
+            type: 'GET',
+            url: url,
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
 
-        req.onload = function() {
-            if (req.status == 200) {
-                resolve(req.response);
+                //Download progress
+                xhr.addEventListener("progress", progressFunc, false);
+
+                return xhr;
             }
-            else {
-                reject(Error(req.statusText));
-            }
-        };
-
-        if (progressFunc) {
-            req.addEventListener("progress", progressFunc, false);
-        }
-
-        req.onerror = function() {
-            reject(Error("Network Error"));
-        };
-
-        req.send();
-    });
+        })
+    );
 }
 
 // ============================= GitHub ========================================
