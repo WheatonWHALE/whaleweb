@@ -230,6 +230,7 @@ function updateProgress(oEvent) {
     }
 }
 
+var expanderThis;
 function getWAVEData() {
     var year = $('input#year').val();
 
@@ -239,8 +240,31 @@ function getWAVEData() {
     }).then(function setUpOtherCallbacks() {
         $(function() {
             $('i.exp').click(function(evt) {
-                // $(this).parents('.courseContainer').find('.course').removeClass('expanded');
-                $(this).parent().parent().toggleClass('expanded');
+                expanderThis = $(this);
+                // clickOnExpander = true;
+                // console.log('Click on one');
+                // $(this).parent().parent().toggleClass('expanded');
+            });
+
+            $('body').click(function(evt) {
+                // console.log($(this));
+                if (expanderThis) {
+                    console.log('Clicked on an expander icon');
+                    if (expanderThis.parent().parent().hasClass('expanded')) {
+                        console.log('Closing it');
+                        expanderThis.parent().parent().removeClass('expanded');
+                    }
+                    else {
+                        console.log('Closing others and expanding');
+                        $('div.expanded').removeClass('expanded');
+                        expanderThis.parent().parent().addClass('expanded');
+                    }
+                    expanderThis = undefined;
+                }
+                else {
+                    console.log('Clicked somewhere else, closing all');
+                    $('div.expanded').removeClass('expanded');
+                }
             });
         });
     }).catch(function handleError(err) {
