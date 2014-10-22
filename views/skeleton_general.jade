@@ -25,6 +25,7 @@ block body
       section.top-bar-section
         ul.left
           each link in links
+            //- Target self to override the hacky method for WAVE opening every page in a new tab
             li: a(href=link.href target='_self')= link.display
 
   .row: header
