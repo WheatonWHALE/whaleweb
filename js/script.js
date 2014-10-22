@@ -233,7 +233,7 @@ function updateProgress(oEvent) {
 function getWAVEData() {
     var year = $('input#year').val();
 
-    get('/wave-data?year=' + year, updateProgress).then(function appendToPage(html) {
+    get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').append(html);
     }).then(function setUpOtherCallbacks() {
@@ -250,6 +250,10 @@ function getWAVEData() {
 
 function setUpWAVEPage() {
     getWAVEData();
+
+    $('select[name=year]').change(function() {
+        $(this).parents('form').submit();
+    });
 
     $('select[name=semester], select[name=department]').change(function() {
         var name = $(this).attr('name');

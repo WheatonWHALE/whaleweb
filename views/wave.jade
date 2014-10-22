@@ -3,6 +3,8 @@ extends skeleton_general
 block scripts
   meta(name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no')
 
+  base(target='_blank')
+
 block page-title
   |WAVE
 
@@ -13,10 +15,13 @@ block contents
   input#year(type='hidden' value=year)
   = errorMessage
   .row
-    .columns.small-12.large-5
+    .columns.small-12.large-4
       include ../static/course-data/compiled/filters.html
       .row
         //- Schedule preview goes here
+      .row
+        a(href='/wave/feedback') Feedback?
+
 
     .columns.small-12.large-7.dataContainer
       #loading-placeholder

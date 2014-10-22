@@ -1,11 +1,9 @@
 .row
   form
-    .columns.small-6
+    .columns.small-12
       select(name='year')
         each year in filterData['year']
           option(value=year.val)= year.display
-    .columns.small-6
-      input(type='submit' value='Change Year').button.radius.small
 
 
 .row.filters

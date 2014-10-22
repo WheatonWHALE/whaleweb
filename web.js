@@ -67,7 +67,12 @@ app.get('/refresh-competitions', function(req, res) {
 });
 
 
-app.get('/wave-data', function(req, res) {
+app.get('/wave/feedback', function(req, res) {
+    res.render('wave-feedback.jade');
+});
+
+
+app.get('/wave/data', function(req, res) {
     var year = req.query.year || '2014-2015';
     var errorMessage = '';
 
