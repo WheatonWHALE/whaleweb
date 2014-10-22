@@ -230,6 +230,8 @@ function updateProgress(oEvent) {
     }
 }
 
+var closedIconClass = 'fi-plus';
+var openedIconClass = 'fi-minus';
 var expanderThis;
 function getWAVEData() {
     var year = $('input#year').val();
@@ -241,28 +243,29 @@ function getWAVEData() {
         $(function() {
             $('i.exp').click(function(evt) {
                 expanderThis = $(this);
-                // clickOnExpander = true;
-                // console.log('Click on one');
-                // $(this).parent().parent().toggleClass('expanded');
             });
 
             $('body').click(function(evt) {
-                // console.log($(this));
+                // If the click was originally on a expander icon
                 if (expanderThis) {
-                    console.log('Clicked on an expander icon');
+                    // if the icon that was clicked on was expanded already
                     if (expanderThis.parent().parent().hasClass('expanded')) {
-                        console.log('Closing it');
+                        expanderThis.removeClass(openedIconClass);
+                        expanderThis.addClass(closedIconClass);
                         expanderThis.parent().parent().removeClass('expanded');
                     }
                     else {
-                        console.log('Closing others and expanding');
-                        $('div.expanded').removeClass('expanded');
+                        var alreadyExpanded = $('div.expanded');
+                        alreadyExpanded.removeClass('expanded');
+                        alreadyExpanded.find(openedIconClass).removeClass(openedIconClass).addClass(closedIconClass);
+
+                        expanderThis.removeClass(closedIconClass);
+                        expanderThis.addClass(openedIconClass);
                         expanderThis.parent().parent().addClass('expanded');
                     }
                     expanderThis = undefined;
                 }
                 else {
-                    console.log('Clicked somewhere else, closing all');
                     $('div.expanded').removeClass('expanded');
                 }
             });
