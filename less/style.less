@@ -236,6 +236,13 @@ img#logo-competition {
 
 // ====================== WAVE Styling =========================================
 
+// Foundation's 'medium' screen media query
+@media only screen and (max-width: 64em) {
+  body {
+    cursor: pointer;
+  }
+} /* max-width 640px, mobile-only styles, use when QAing mobile issues */
+
 @new-top-bar-color: #007095;
 
 // Changing color of the top bar
@@ -326,10 +333,10 @@ nav.top-bar.expanded .title-area {
       width: 23%;
     }
     &:nth-child(2) {
-      width: 33%;
+      width: 41%;
     }
     &:nth-child(3) {
-      width: 34%;
+      width: 26%;
 
       // &::before {
       //   content: "Time: ";
