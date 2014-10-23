@@ -16,15 +16,23 @@ block contents
   input#year(type='hidden' value=year)
   = errorMessage
   .row
-    .columns.small-11.large-4.small-centered.medium-uncentered
-      include ../static/course-data/compiled/filters.html
+    .column.small-12.large-5.small-centered.medium-uncentered
       .row
-        //- Schedule preview goes here
+        .column.small-11
+          include ../static/course-data/compiled/filters.html
+      .row#schedule
+        .column.small-12
+          //- include ../static/jade-includes/week-schedule.jade
+          each time in [800, 830, 900, 930, 1000, 1030, 1100, 1130, 1200, 1230, 100, 130, 200, 230, 300, 330, 400, 430, 500, 530]
+            div.sched-row(id=time class= (time % 100) ? 'underlined' : '')
+              div.sched-col.row-label
+              each day in ['mon', 'tues', 'wed', 'thurs', 'fri']
+                div.sched-col(class=day)
       //- .row
       //-   a(href='/wave/feedback') Feedback?
 
 
-    .columns.small-12.large-7.dataContainer
+    .column.small-12.large-7.dataContainer
       #loading-placeholder
         #progress-value
         img(src='images/spinner.gif')
