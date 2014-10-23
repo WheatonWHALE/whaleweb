@@ -67,7 +67,7 @@ function sortByMaxStreak(a, b) {
 }
 
 function sortByYearData(a, b) {
-    return sortByKeyAndSubkey(a, b, 'year', 'max');
+    return sortByKeyAndSubkey(a, b, 'total', 'max');
 }
 
 function extractData(entrants, key) {
@@ -240,6 +240,7 @@ function getWAVEData() {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').append(html);
     }).then(function setUpOtherCallbacks() {
+        // Set up callbacks taht have to do with course data
         $(function() {
             $('i.exp').click(function(evt) {
                 expanderThis = $(this);
@@ -250,8 +251,7 @@ function getWAVEData() {
                 if (expanderThis) {
                     // if the icon that was clicked on was expanded already
                     if (expanderThis.parent().parent().hasClass('expanded')) {
-                        expanderThis.removeClass(openedIconClass);
-                        expanderThis.addClass(closedIconClass);
+                        expanderThis.removeClass(openedIconClass).addClass(closedIconClass);
                         expanderThis.parent().parent().removeClass('expanded');
                     }
                     else {
@@ -259,14 +259,14 @@ function getWAVEData() {
                         alreadyExpanded.removeClass('expanded');
                         alreadyExpanded.find(openedIconClass).removeClass(openedIconClass).addClass(closedIconClass);
 
-                        expanderThis.removeClass(closedIconClass);
-                        expanderThis.addClass(openedIconClass);
+                        expanderThis.removeClass(closedIconClass).addClass(openedIconClass);
                         expanderThis.parent().parent().addClass('expanded');
                     }
+                    // Reset back to undefined, for testing against click events on body or on i.exp
                     expanderThis = undefined;
                 }
                 else {
-                    $('div.expanded').removeClass('expanded');
+                    $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
                 }
             });
         });
