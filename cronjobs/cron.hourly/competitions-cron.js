@@ -68,14 +68,15 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
             var myFirebaseRef = new Firebase('https://whalesite.firebaseio.com/Competitions/GitHub%20Streak/Entrants/' + person.id);
 
             myFirebaseRef.update({
-                current:   entrantData.currStreak,
-                max:       entrantData.maxStreak,
-                year:      entrantData.yearContrib,
-                name:      person.name,
-                id:        person.id
+                current:    entrantData.currStreak,
+                max:        entrantData.maxStreak,
+                total:      entrantData.yearContrib,
+                name:       person.name,
+                id:         person.id,
+                year:       person.year || ''
             }, function firebaseCallback(err) {
                 if (err) {
-                    reject(err)
+                    reject(Error(err));
                 }
                 else {
                     resolve('success');
@@ -85,6 +86,9 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
             console.log('Handled ' + person.name + ': ' +
                 entrantData.yearContrib + ' and ' +
                 entrantData.currStreak + '/' + entrantData.maxStreak);
+        }).catch(function handleError(err) {
+            console.error(err);
+            throw err;
         });
     });
 })).then(function forceExit() {
