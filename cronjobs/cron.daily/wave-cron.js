@@ -275,13 +275,13 @@ function parseCourseData(allRows, i) {
         area:               $(firstRowElements[8]).text(),
         connections:        $(firstRowElements[9]).text(),
         connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
-        examSlot:           $(firstRowElements[1]).text(),
+        examSlot:           $(firstRowElements[1]).text().replace(/\./, ''),
         examSlotLink:       $(firstRowElements[1]).find('a').attr('href'),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
-        maxEnroll:          parseInt($(enrollmentRowElements[1]).text().replace(/Max Enroll:/, '')),
-        currentEnroll:      parseInt($(enrollmentRowElements[2]).text().replace(/Seats Taken:/, '')),
-        seatsAvailable:     parseInt($(enrollmentRowElements[3]).text().replace(/Seats Avail:/, '')),
-        waitList:           parseInt($(enrollmentRowElements[4]).text().replace(/Wait List:/, ''))
+        maxEnroll:          $(enrollmentRowElements[1]).text().replace(/Max Enroll:/, ''),
+        currentEnroll:      $(enrollmentRowElements[2]).text().replace(/Seats Taken:/, ''),
+        seatsAvailable:     $(enrollmentRowElements[3]).text().replace(/Seats Avail:/, ''),
+        waitList:           $(enrollmentRowElements[4]).text().replace(/Wait List:/, '')
     };
 
     if (classHasPrereqs) {
