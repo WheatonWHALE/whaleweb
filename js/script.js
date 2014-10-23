@@ -84,7 +84,7 @@ function extractData(entrants, key) {
     else if (key == 'max') {
         processedEntrants.sort(sortByMaxStreak);
     }
-    else if (key == 'year') {
+    else if (key == 'total') {
         processedEntrants.sort(sortByYearData);
     }
     else {
@@ -103,7 +103,7 @@ function extractCurrentStreak(entrants) {
 }
 
 function extractYearData(entrants) {
-    return extractData(entrants, 'year');
+    return extractData(entrants, 'total');
 }
 
 function markTopThree(element) {
@@ -162,7 +162,7 @@ function setUpGitHubPage() {
             postProcessAndAppend);
         
         dust.render("competition", {title: 'Contributions (Past Year)',
-            compId: 'year',
+            compId: 'total',
             label: 'total',
             entrants: extractYearData(entrants)},
             postProcessAndAppend);
@@ -180,8 +180,8 @@ function setUpGitHubPage() {
                 else if (entrantElement.parents('.competition#current').length) {
                     entrantElement.find('.score').html(changedEntrant.current + ' days');
                 }
-                else if (entrantElement.parents('.competition#year').length) {
-                    entrantElement.find('.score').html(changedEntrant.year + ' total');
+                else if (entrantElement.parents('.competition#total').length) {
+                    entrantElement.find('.score').html(changedEntrant.total + ' total');
                 }
             });
         });
