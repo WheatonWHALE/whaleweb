@@ -7,7 +7,7 @@ each semesterData, semesterName in courseData
         each course in departmentData
           div(class=course.foundation + ' ' + course.area + ' ' + course.division)
             div
-              = course.courseCode
+              a(href=course.courseLink)= course.courseCode
             div
               = course.courseTitle
             div

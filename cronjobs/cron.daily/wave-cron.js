@@ -360,16 +360,12 @@ function parseSemesterData(semester) {
 
         courseRows.map(
             function mapIndexToPromise(courseRow) {
-                console.log('Course: ' + courseRow.label);
-
                 return parseCourseData(allRows, courseRow.i);
             }
         ).reduce(function(sequenceSoFar, coursePromise) {
                 return sequenceSoFar.then(function dummyReturn() {
                     return coursePromise;
                 }).then(function assignCourseData(courseData) {
-                    console.log('Semester Courses so far: ');
-                    // console.log(semesterCourses);
                     var department = courseData.courseCode.split(/-/)[0];
 
                     if (department in semesterCourses) {
@@ -381,8 +377,6 @@ function parseSemesterData(semester) {
                 });
         }, Promise.resolve())
         .then(function finishUp() {
-            console.log('Done with all courses in ' + semester.code + '... Finishing up.');
-            // process.exit(0);
             semester.data = semesterCourses;
 
             resolve(semester);
