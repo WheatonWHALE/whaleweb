@@ -41,8 +41,8 @@ function get(url) {
     // Return a new promise.
     return new Promise(function requestGet(resolve, reject) {
         request.get(url, function handleGetResponse(err, resp, body) {
-            if (err) {
-                reject(err);
+            if (err || resp.statusCode != 200) {
+                reject(Error(err || ('Status Code was ' + resp.statusCode)));
             }
             else {
                 resolve(body);
@@ -51,19 +51,35 @@ function get(url) {
     });
 }
 
+// Slightly specialized for use in getting for TinyURL API
+function tinyGet(url, key) {
+    // Return a new promise.
+    return new Promise(function requestGet(resolve, reject) {
+        request.get(url, function handleGetResponse(err, resp, newURL) {
+            if (err || resp.statusCode != 200) {
+                reject(Error(err || ('TinyURL unhappy: ' + resp.statusCode)));
+            }
+            else {
+                resolve({ key: key, newURL: newURL });
+            }
+        });
+    });
+}
+
 // Slightly specialized for use in posting for semester data
 function semesterPost(url, formData) {
     // Have to perform a deep copy for the variable to not be overwritten by the time the callback is used.
-    var copiedFormData = JSON.parse(JSON.stringify(formData));
+    // var copiedFormData = JSON.parse(JSON.stringify(formData));
+    var semesterCode = formData.schedule_beginterm;
 
     return new Promise(function requestPost(resolve, reject) {
-        console.log('Posting for ' + copiedFormData.schedule_beginterm);
-        request.post(url, { form: copiedFormData }, function handlePostResponse(err, resp, body) {
+        console.log('Posting for ' + semesterCode);
+        request.post(url, { form: formData }, function handlePostResponse(err, resp, body) {
             if (err) {
-                return reject(err);
+                return reject(Error(err));
             }
             else {
-                return resolve({ code: copiedFormData.schedule_beginterm, body: body });
+                return resolve({ code: semesterCode, body: body });
             }
         });
     });
@@ -71,6 +87,13 @@ function semesterPost(url, formData) {
 
 function formatConvertYear(intYear) {
     return (intYear - 1).toString() + '-' + intYear.toString();
+}
+
+function handlePromiseError(err) {
+    console.error('Errored in a Promise');
+    console.error(err.message);
+    console.error(err.stack);
+    throw err;
 }
 
 
@@ -142,7 +165,7 @@ function saveFilters(filterObj) {
     var promise = new Promise(function getFiltersTemplate(resolve, reject) {
         fs.readFile('static/course-data/filters.jade', function renderUsingTemplateFile(err, data) {
             if (err) {
-                reject(err);
+                reject(Error(err));
             }
             else {
                 var func = jade.compile(data, { pretty: debug, doctype: 'html' });
@@ -170,16 +193,13 @@ function saveFilters(filterObj) {
                 }
             });
         }
-    });
+    }).catch(handlePromiseError);
 }
 
 function getSearchFilters() {
     return fetchSearchPage()
         .then(parseOutFilters)
-        .catch(function handleSearchFiltersError(err) {
-            console.error(err);
-            throw err;
-        });
+        .catch(handlePromiseError);
 }
 
 function preprocessFilters(filterObj) {
@@ -225,9 +245,9 @@ function extractInfoFromCode(semesterCode) {
 
 // Parses one course's data out from the given list of rows
 function parseCourseData(allRows, i) {
-    // 2 Types of formats:
-    //      W/o prereqs: 5 lines long, info on lines 0,    2
-    //      Prereqs:     6 lines long, info on lines 0, 1, 3
+        // 2 Types of formats:
+        //      W/o prereqs: 5 lines long, info on lines 0,    2
+        //      Prereqs:     6 lines long, info on lines 0, 1, 3
 
     var firstRow  = $(allRows[i]);
     var secondRow = $(allRows[i+1]);
@@ -263,8 +283,15 @@ function parseCourseData(allRows, i) {
         timePlaceSplit = ['', ''];
     }
 
+    for (var key in courseData) {
+        if (typeof courseData[key] === 'string') {
+            courseData[key] = courseData[key].trim().replace(/\n/g, '');
+        }
+    }
+
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
+        // courseLink:         $(firstRowElements[0]).find('a').attr('href'),
         courseTitle:        $(firstRowElements[2]).text(),
         crn:                $(firstRowElements[3]).text(),
         meetingTime:        timePlaceSplit[0],
@@ -274,67 +301,100 @@ function parseCourseData(allRows, i) {
         division:           $(firstRowElements[7]).text(),
         area:               $(firstRowElements[8]).text(),
         connections:        $(firstRowElements[9]).text(),
-        connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
+        // connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
         examSlot:           $(firstRowElements[1]).text().replace(/\./, ''),
-        examSlotLink:       $(firstRowElements[1]).find('a').attr('href'),
-        textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
+        // examSlotLink:       $(firstRowElements[1]).find('a').attr('href'),
+        // textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
         maxEnroll:          $(enrollmentRowElements[1]).text().replace(/Max Enroll:/, ''),
         currentEnroll:      $(enrollmentRowElements[2]).text().replace(/Seats Taken:/, ''),
         seatsAvailable:     $(enrollmentRowElements[3]).text().replace(/Seats Avail:/, ''),
-        waitList:           $(enrollmentRowElements[4]).text().replace(/Wait List:/, '')
+        waitList:           $(enrollmentRowElements[4]).text().replace(/Wait List:/, ''),
+        courseNotes:        (classHasPrereqs ? $(secondRow.find('td')[1]).text() : '')
     };
 
-    if (classHasPrereqs) {
-        courseData.courseNotes = $(secondRow.find('td')[1]).text();
-    }
+    var linksArray = {
+        connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
+        examSlotLink:       'https://weblprod1.wheatonma.edu/' + $(firstRowElements[1]).find('a').attr('href'),
+        textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
+        courseLink:         $(firstRowElements[0]).find('a').attr('href')
+    };
 
-    for (var key in courseData) {
-        if (typeof courseData[key] === 'string') {
-            courseData[key] = courseData[key].trim().replace(/\n/g, '');
-        }
-    }
+    // Finish off by making async call to TinyURL's API to condense links, and returning that final data
+    return new Promise(function tinyUrlTheLinks(resolve, reject) {
+        Promise.all(
+            Object.keys(linksArray).map(function mapLinksToTinyUrlAPI(value, index) {
+                return tinyGet('http://tinyurl.com/api-create.php?url=' + linksArray[value], value);
+            })
+        ).then(function handleCondensedLinks(condensedArray) {
+            condensedArray.forEach(function handleElement(value) {
+                courseData[value.key] = value.newURL;
+            });
 
-    return courseData;
+            resolve(courseData);
+        }).catch(handlePromiseError);
+    }).catch(handlePromiseError);
 }
 
 function parseSemesterData(semester) {
-    console.log('Parsing for ' + semester.code);
+    return new Promise(function promiseParseSemesterData(resolve, reject) {
+        console.log('Parsing for ' + semester.code);
 
-    $ = cheerio.load(semester.body);
+        $ = cheerio.load(semester.body);
 
-    var semesterCourses = {};
-    var classLabelMatch = /[A-Z][A-Z][A-Z][A-Z]?\-[0-9][0-9][0-9]/;
+        var semesterCourses = {};
+        var courseLabelPattern = /^\s*([A-Z][A-Z][A-Z][A-Z]?\-[0-9][0-9][0-9])/;
 
-    var allRows = $('tr');
+        var allRows = $('tr');
 
-    allRows.each(function parseRow(index, element) {
-        var possibleClassLabel = $(this).find('td').text().trim();
+        var courseRows = [];
 
-        if (possibleClassLabel.match(classLabelMatch)) {
-            var department = possibleClassLabel.split(/-/)[0];
-            var courseData = parseCourseData(allRows, index);
+        allRows.each(function parseRow(index, element) {
+            var possibleCourseLabel = $(this).find('td').text().trim();
 
-            if (department in semesterCourses) {
-                semesterCourses[department].push(courseData);
+            var match = courseLabelPattern.exec(possibleCourseLabel);
+
+            if (match) {
+                courseRows.push({ i: index, label: match[0] });
             }
-            else {
-                semesterCourses[department] = [courseData];
+        });
+
+        courseRows.map(
+            function mapIndexToPromise(courseRow) {
+                console.log('Course: ' + courseRow.label);
+
+                return parseCourseData(allRows, courseRow.i);
             }
-        }
+        ).reduce(function(sequenceSoFar, coursePromise) {
+                return sequenceSoFar.then(function dummyReturn() {
+                    return coursePromise;
+                }).then(function assignCourseData(courseData) {
+                    console.log('Semester Courses so far: ');
+                    // console.log(semesterCourses);
+                    var department = courseData.courseCode.split(/-/)[0];
+
+                    if (department in semesterCourses) {
+                        semesterCourses[department].push(courseData);
+                    }
+                    else {
+                        semesterCourses[department] = [courseData];
+                    }
+                });
+        }, Promise.resolve())
+        .then(function finishUp() {
+            console.log('Done with all courses in ' + semester.code + '... Finishing up.');
+            // process.exit(0);
+            semester.data = semesterCourses;
+
+            resolve(semester);
+        }).catch(handlePromiseError);
     });
-
-    semester.data = semesterCourses;
-
-    return semester;
 }
 
-function postProcessSemesterData(semester) {
-    // semester.data = semester.data;
+// function postProcessSemesterData(semester) {
+//     return semester;
+// }
 
-    return semester;
-}
-
-function getAndParseSemesterPages(semesterCodes) {
+function getAndParseSemesterHTML(semesterCodes) {
     return Promise.all(
         semesterCodes.map(function mapSemesterCodeToPromise(semesterCode, i, array) {
             var tempFormData = dataValues;
@@ -342,7 +402,7 @@ function getAndParseSemesterPages(semesterCodes) {
 
             return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData)
                 .then(parseSemesterData)
-                .then(postProcessSemesterData)
+                // .then(postProcessSemesterData)
                 .then(function assignSemesterData(processedSemester) {
                     var semesterInfo = extractInfoFromCode(processedSemester.code);
 
@@ -351,10 +411,9 @@ function getAndParseSemesterPages(semesterCodes) {
                     }
 
                     scheduleData[semesterInfo.year][semesterInfo.semester] = processedSemester.data;
-                }
-            );
+                }).catch(handlePromiseError);
         })
-    );
+    ).catch(handlePromiseError);
 }
 
 var dataValues = {
@@ -368,27 +427,22 @@ var dataValues = {
     'crse_numb' : '%',
 };
 function getScheduleData(semesters) {
-    return getAndParseSemesterPages(semesters)
-        .catch(function handleScheduleDataError(err) {
-            console.error('Errored in getAndParse');
-            console.error(err);
-            throw err;
-        }
-    );
+    return getAndParseSemesterHTML(semesters).catch(handlePromiseError);
 }
 
 function saveYearOfData(year) {
     return new Promise(function readTemplateFile(resolve, reject) {
         fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
-            if (err) {
-                reject(err);
-            }
-            else {
-                resolve(data);
-            }
+            err ? reject(Error(err)) : resolve(data);
+            // if (err) {
+                // reject(Error(err));
+            // }
+            // else {
+                // resolve(data);
+            // }
         });
     }).then(function renderUsingTemplateFile(template) {
-        var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
+        var func = jade.compile(template, { pretty: debug/*false*/, doctype: 'html' });
         var html = func({ courseData: scheduleData[year] });
 
         fs.writeFile('static/course-data/compiled/' + year + '.html', html, function handleFileWriteResponse(err) {
@@ -410,18 +464,14 @@ function saveYearOfData(year) {
                 }
             });
         }
-    }).catch(function handleSaveScheduleDataError(err) {
-        console.error('Error in saving schedule data');
-        console.error(err);
-        throw err;
-    });
+    }).catch(handlePromiseError);
 }
 
 function saveScheduleData() {
     // Note: Schedule data will be in the global variable, not passed as a parameter
     for (var year in scheduleData) {
         // This promise will always resolve, and resolve with this key
-        Promise.resolve(year).then(saveYearOfData);
+        Promise.resolve(year).then(saveYearOfData).catch(handlePromiseError);
     }
 }
 
@@ -437,12 +487,7 @@ function fetchAndParseAll() {
         })
         .then(getScheduleData)
         .then(saveScheduleData)
-        .catch(function catchAllErrors(err) {
-            console.error('Error uncaught elsewhere:');
-            console.error(err);
-            throw err;
-        }
-    );
+        .catch(handlePromiseError);
 }
 
 fetchAndParseAll();

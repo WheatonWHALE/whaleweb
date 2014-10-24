@@ -23,7 +23,8 @@ each semesterData, semesterName in courseData
                 li= course.division
                 li= course.area
                 li: a(href=course.connectionsLink)= course.connections
-                li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
+                //- li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
+                li: a(href=course.examSlotLink)= course.examSlot
                 li: a(href=course.textbookLink) here
                 //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
                 li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
