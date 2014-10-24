@@ -249,28 +249,17 @@ function getWAVEData() {
     }).then(function setUpOtherCallbacks() {
         // Set up callbacks taht have to do with course data
         $(function() {
-            $('i.exp').click(function(evt) {
-                var _this = $(this);
-
-                // if the icon that was clicked on was expanded already
-                if (_this.parent().parent().hasClass('expanded')) {
-                    closeExpandedInfo();
+            $(document).click(function handleClick(evt) {
+                if ( $(evt.target).is('.' + closedIconClass) ) {
+                    openCollapsedInfo($(evt.target).parent().parent());
+                }
+                // Test if clicked thing, or one of its ancestors, is the info div
+                else if ( $(evt.target).closest('.expanded > div:last-child').length ) {
+                    // Do nothing
                 }
                 else {
-                    openCollapsedInfo(_this.parent().parent());
+                    closeExpandedInfo();
                 }
-
-                // Stop bubbling up to more general click listeners
-                return false;
-            });
-
-            $('.departmentContainer > div').click(function(evt) {
-                // Stop bubbling up to more general click listeners
-                return false;
-            });
-
-            $('body').click(function(evt) {
-                closeExpandedInfo();
             });
         });
     }).catch(function handleError(err) {
