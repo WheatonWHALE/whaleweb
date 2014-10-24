@@ -325,10 +325,14 @@ function parseCourseData(allRows, i) {
             Object.keys(linksArray).map(function mapLinksToTinyUrlAPI(value, index) {
                 return tinyGet('http://tinyurl.com/api-create.php?url=' + linksArray[value], value);
             })
-        ).then(function handleCondensedLinks(condensedArray) {
+        ).then(function addCondensedLinks(condensedArray) {
             condensedArray.forEach(function handleElement(value) {
                 courseData[value.key] = value.newURL;
             });
+
+            for (key in courseData) {
+                courseData[key] = courseData[key].replace(/\s+/g, ' ').trim();
+            }
 
             resolve(courseData);
         }).catch(handlePromiseError);
@@ -337,7 +341,7 @@ function parseCourseData(allRows, i) {
 
 function parseSemesterData(semester) {
     return new Promise(function promiseParseSemesterData(resolve, reject) {
-        console.log('Parsing for ' + semester.code);
+        console.log('Queuing parsing for ' + semester.code);
 
         $ = cheerio.load(semester.body);
 
@@ -379,6 +383,7 @@ function parseSemesterData(semester) {
         .then(function finishUp() {
             semester.data = semesterCourses;
 
+            console.log('Finished parsing for ' + semester.code);
             resolve(semester);
         }).catch(handlePromiseError);
     });
