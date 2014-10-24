@@ -29,10 +29,12 @@ app.use('/images',      express.static(__dirname + '/images'));
 app.use('/static',      express.static(__dirname + '/static'));
 app.use(logfmt.requestLogger());
 
-
-// Middleware to save the current url, from the request, to the responses' local variables, for use in jade
+// General middleware stuff
 app.use(function(req, res, next) {
+    // Save the current url, from the request, to the response's local variables, for use in jade
     res.locals.url = req.url;
+
+    // Set up a links variable in responses's local variables, for use in jade
     res.locals.links = [
         { href: '/github',       display: 'GitHub Competition' },
         { href: '/wave',         display: 'WAVE Course Schedule' },
@@ -41,6 +43,9 @@ app.use(function(req, res, next) {
         // { href: '/makerspaces', , display: 'About Makerspaces' },
         { href: '/members',      display: 'About Us' }
     ];
+
+    res.setHeader('Last-Modified', (new Date()).toUTCString());
+    
     next();
 });
 
