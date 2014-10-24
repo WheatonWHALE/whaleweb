@@ -44,17 +44,11 @@ app.use(function(req, res, next) {
         { href: '/members',      display: 'About Us' }
     ];
 
+    console.log(req.headers);
+    // res.setHeader('Last-Modified', (new Date()).toUTCString());
 
-    res.setHeader('Last-Modified', (new Date()).toUTCString());
+    next();
 });
-
-app.use('*', function(req, res, next) {
-    console.log('Got');
-  res.setHeader('Last-Modified', (new Date()).toUTCString());
-  
-  next(); 
-});
-
 
 // Special route for the main page
 app.get('/', function(req, res) {
