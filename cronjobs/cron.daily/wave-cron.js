@@ -294,7 +294,7 @@ function parseCourseData(allRows, i) {
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
-        // courseLink:         $(firstRowElements[0]).find('a').attr('href'),
+        courseLink:         $(firstRowElements[0]).find('a').attr('href'),
         courseTitle:        $(firstRowElements[2]).text(),
         crn:                $(firstRowElements[3]).text(),
         meetingTime:        timePlaceSplit[0],
@@ -304,10 +304,10 @@ function parseCourseData(allRows, i) {
         division:           $(firstRowElements[7]).text(),
         area:               $(firstRowElements[8]).text(),
         connections:        $(firstRowElements[9]).text(),
-        // connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
+        connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
         examSlot:           $(firstRowElements[1]).text().replace(/\./, ''),
-        // examSlotLink:       $(firstRowElements[1]).find('a').attr('href'),
-        // textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
+        examSlotLink:       'https://weblprod1.wheatonma.edu/' + $(firstRowElements[1]).find('a').attr('href'),
+        textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
         maxEnroll:          $(enrollmentRowElements[1]).text().replace(/Max Enroll:/, ''),
         currentEnroll:      $(enrollmentRowElements[2]).text().replace(/Seats Taken:/, ''),
         seatsAvailable:     $(enrollmentRowElements[3]).text().replace(/Seats Avail:/, ''),
@@ -323,23 +323,25 @@ function parseCourseData(allRows, i) {
     };
 
     // Finish off by making async call to TinyURL's API to condense links, and returning that final data
-    return new Promise(function tinyUrlTheLinks(resolve, reject) {
-        Promise.all(
-            Object.keys(linksArray).map(function mapLinksToTinyUrlAPI(value, index) {
-                return tinyGet('http://tinyurl.com/api-create.php?url=' + linksArray[value], value);
-            })
-        ).then(function addCondensedLinks(condensedArray) {
-            condensedArray.forEach(function handleElement(value) {
-                courseData[value.key] = value.newURL;
-            });
+    // return new Promise(function tinyUrlTheLinks(resolve, reject) {
+    //     Promise.all(
+    //         Object.keys(linksArray).map(function mapLinksToTinyUrlAPI(value, index) {
+    //             return tinyGet('http://tinyurl.com/api-create.php?url=' + linksArray[value], value);
+    //         })
+    //     ).then(function addCondensedLinks(condensedArray) {
+    //         condensedArray.forEach(function handleElement(value) {
+    //             courseData[value.key] = value.newURL;
+    //         });
 
             for (key in courseData) {
                 courseData[key] = courseData[key].replace(/\s+/g, ' ').trim();
             }
 
-            resolve(courseData);
-        }).catch(handlePromiseError);
-    }).catch(handlePromiseError);
+    //         resolve(courseData);
+    //     }).catch(handlePromiseError);
+    // }).catch(handlePromiseError);
+
+    return Promise.resolve(courseData);
 }
 
 function parseSemesterData(semester) {
