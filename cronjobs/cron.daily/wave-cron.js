@@ -40,7 +40,7 @@ Array.prototype.clean = function clean(deleteValue) {
 function get(url) {
     // Return a new promise.
     return new Promise(function requestGet(resolve, reject) {
-        request.get(url, function handleGetResponse(err, resp, body) {
+        request.get(url, { pool: false }, function handleGetResponse(err, resp, body) {
             if (err || resp.statusCode != 200) {
                 reject(Error(err || ('Status Code was ' + resp.statusCode)));
             }
@@ -55,7 +55,7 @@ function get(url) {
 function tinyGet(url, key) {
     // Return a new promise.
     return new Promise(function requestGet(resolve, reject) {
-        request.get(url, function handleGetResponse(err, resp, newURL) {
+        request.get(url, { pool: false }, function handleGetResponse(err, resp, newURL) {
             if (err || resp.statusCode != 200) {
                 reject(Error(err || ('TinyURL unhappy: ' + resp.statusCode)));
             }
@@ -74,7 +74,7 @@ function semesterPost(url, formData) {
 
     return new Promise(function requestPost(resolve, reject) {
         console.log('Posting for ' + semesterCode);
-        request.post(url, { form: formData }, function handlePostResponse(err, resp, body) {
+        request.post(url, { form: formData, pool: false }, function handlePostResponse(err, resp, body) {
             if (err) {
                 return reject(Error(err));
             }
@@ -91,7 +91,6 @@ function formatConvertYear(intYear) {
 
 function handlePromiseError(err) {
     console.error('Errored in a Promise');
-    console.error(err.message);
     console.error(err.stack);
     throw err;
 }
