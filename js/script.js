@@ -267,6 +267,8 @@ function getWAVEData() {
                     closeExpandedInfo();
                 }
             });
+
+            $('.dataContainer a').attr('target', '_blank');
         });
     }).catch(function handleError(err) {
         console.error(err);
