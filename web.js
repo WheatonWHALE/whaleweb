@@ -44,8 +44,10 @@ app.use(function(req, res, next) {
         { href: '/members',      display: 'About Us' }
     ];
 
+    console.log('Got');
+
     res.setHeader('Last-Modified', (new Date()).toUTCString());
-    
+
     next();
 });
 
