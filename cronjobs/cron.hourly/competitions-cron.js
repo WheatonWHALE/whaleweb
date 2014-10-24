@@ -3,25 +3,25 @@ var Firebase = require('firebase'),
     request = require('request');
 
 var listOfPeople = Array(
-    { id: 'akuisara',       name: 'Sara', 		year: '16' },
-    { id: 'bawjensen',      name: 'Bryan', 		year: '16' },
-    { id: 'cjrieck',        name: 'Clayton', 	year: '14' },
-    { id: 'dshelts',        name: 'Drew', 		year: '15' },
-    { id: 'devindelfino',   name: 'Devin', 		year: '15' },
-    { id: 'evan1590',       name: 'Evan', 		year: '15' },
-    { id: 'iopaluch',       name: 'Ian', 		year: '18' },
-    { id: 'jge94',          name: 'Jinnan', 	year: '16' },
-    { id: 'jmorneau',       name: 'Julia', 		year: '16' },
-    // { id: 'kimballan',      name: '(?)', 		year: '' },
-    { id: 'lithiah',        name: 'Lithia', 	year: '16' },
-    { id: 'MichaelKristy',  name: 'Michael', 	year: '18' },
-    { id: 'omigayy',        name: 'Yingying', 	year: '17' },
-    { id: 'rubinz',         name: 'Zevi', 		year: '16' },
+    { id: 'akuisara',       name: 'Sara', 		year: '\'16' },
+    { id: 'bawjensen',      name: 'Bryan', 		year: '\'16' },
+    { id: 'cjrieck',        name: 'Clayton', 	year: '\'14' },
+    { id: 'dshelts',        name: 'Drew', 		year: '\'15' },
+    { id: 'devindelfino',   name: 'Devin', 		year: '\'15' },
+    { id: 'evan1590',       name: 'Evan', 		year: '\'15' },
+    { id: 'iopaluch',       name: 'Ian', 		year: '\'18' },
+    { id: 'jge94',          name: 'Jinnan', 	year: '\'16' },
+    { id: 'jmorneau',       name: 'Julia', 		year: '\'16' },
+    // { id: 'kimballan',      name: '(?)', 		year: '\'' },
+    { id: 'lithiah',        name: 'Lithia', 	year: '\'16' },
+    { id: 'MichaelKristy',  name: 'Michael', 	year: '\'18' },
+    { id: 'omigayy',        name: 'Yingying', 	year: '\'17' },
+    { id: 'rubinz',         name: 'Zevi', 		year: '\'16' },
     { id: 'tarmstro',       name: 'Tom', 		/*year: ''*/ },
-    { id: 'tkicks',         name: 'Tyler', 		year: '16' },
-    { id: 'tnguyen14',      name: 'Tri', 		year: '14' },
-    { id: 'xeaza',      	name: 'Taylor', 	year: '13' },
-    { id: 'zahrarikan',     name: 'Zahra', 		year: '17' }
+    { id: 'tkicks',         name: 'Tyler', 		year: '\'16' },
+    { id: 'tnguyen14',      name: 'Tri', 		year: '\'14' },
+    { id: 'xeaza',      	name: 'Taylor', 	year: '\'13' },
+    { id: 'zahrarikan',     name: 'Zahra', 		year: '\'17' }
 );
 
 function get(url) {
