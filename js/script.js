@@ -240,12 +240,18 @@ function openCollapsedInfo(collapsedCourseDiv) {
     collapsedCourseDiv.addClass('expanded').find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
 }
 
+var loadingContents;
 function getWAVEData() {
     var year = $('input#year').val();
 
+    // If first time, grab placeholder "while loading" contents
+    loadingContents = loadingContents || $('.dataContainer').html();
+    // Set up loading contents
+    $('.dataContainer').html(loadingContents);
+
     get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
-        $('.dataContainer').append(html);
+        $('.dataContainer').html(html);
     }).then(function setUpOtherCallbacks() {
         // Set up callbacks taht have to do with course data
         $(function() {
@@ -271,7 +277,10 @@ function setUpWAVEPage() {
     getWAVEData();
 
     $('select[name=year]').change(function() {
-        $(this).parents('form').submit();
+        // $(this).parents('form').submit();
+        $('input#year').val($(this).val());
+
+        getWAVEData();
     });
 
     $('select[name=semester], select[name=department]').change(function() {
