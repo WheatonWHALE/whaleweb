@@ -1,5 +1,6 @@
 each semesterData, semesterName in courseData
   .semesterContainer(class=semesterName)
+    h1= semesterName
 
     each departmentData, departmentName in semesterData
       .departmentContainer(class=departmentName)

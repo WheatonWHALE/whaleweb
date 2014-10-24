@@ -242,6 +242,13 @@ img#logo-competition {
   body {
     cursor: pointer;
   }
+} /* max-width 1024px, use when QAing tablet and mobile issues */
+
+// Foundation's 'small' screen media query
+@media only screen and (max-width: 40em) {
+  i.exp {
+    margin-left: -12px;
+  }
 } /* max-width 640px, mobile-only styles, use when QAing mobile issues */
 
 @new-top-bar-color: #007095;
@@ -348,7 +355,7 @@ nav.top-bar.expanded .title-area {
     }
 
     &:last-child {
-      position: absolute;
+      // position: absolute;
       background-color: #FFF;
       max-width: 300px;
 
@@ -356,11 +363,13 @@ nav.top-bar.expanded .title-area {
 
       z-index: 1;
 
-      top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent) plus a bit
-      right: 10px;
+      // top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent) plus a bit
+      // right: 10px;
 
       // border: 1px solid black;
       box-shadow: 0 0 20px -6px black;
+      // border-left: 1px solid gray;
+      float: right;
 
       ul {
         margin: 0;
