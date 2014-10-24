@@ -232,7 +232,14 @@ function updateProgress(oEvent) {
 
 var closedIconClass = 'fi-plus';
 var openedIconClass = 'fi-minus';
-var expanderThis;
+function closeExpandedInfo() {
+    $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
+}
+function openCollapsedInfo(collapsedCourseDiv) {
+    closeExpandedInfo();
+    collapsedCourseDiv.addClass('expanded').find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
+}
+
 function getWAVEData() {
     var year = $('input#year').val();
 
@@ -243,31 +250,27 @@ function getWAVEData() {
         // Set up callbacks taht have to do with course data
         $(function() {
             $('i.exp').click(function(evt) {
-                expanderThis = $(this);
+                var _this = $(this);
+
+                // if the icon that was clicked on was expanded already
+                if (_this.parent().parent().hasClass('expanded')) {
+                    closeExpandedInfo();
+                }
+                else {
+                    openCollapsedInfo(_this.parent().parent());
+                }
+
+                // Stop bubbling up to more general click listeners
+                return false;
+            });
+
+            $('.departmentContainer > div').click(function(evt) {
+                // Stop bubbling up to more general click listeners
+                return false;
             });
 
             $('body').click(function(evt) {
-                // If the click was originally on a expander icon
-                if (expanderThis) {
-                    // if the icon that was clicked on was expanded already
-                    if (expanderThis.parent().parent().hasClass('expanded')) {
-                        expanderThis.removeClass(openedIconClass).addClass(closedIconClass);
-                        expanderThis.parent().parent().removeClass('expanded');
-                    }
-                    else {
-                        var alreadyExpanded = $('div.expanded');
-                        alreadyExpanded.removeClass('expanded');
-                        alreadyExpanded.find(openedIconClass).removeClass(openedIconClass).addClass(closedIconClass);
-
-                        expanderThis.removeClass(closedIconClass).addClass(openedIconClass);
-                        expanderThis.parent().parent().addClass('expanded');
-                    }
-                    // Reset back to undefined, for testing against click events on body or on i.exp
-                    expanderThis = undefined;
-                }
-                else {
-                    $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
-                }
+                closeExpandedInfo();
             });
         });
     }).catch(function handleError(err) {
