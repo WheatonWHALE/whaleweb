@@ -78,7 +78,7 @@ function semesterPost(url, formData) {
 
     return new Promise(function requestPost(resolve, reject) {
         console.log('Posting for ' + semesterCode);
-        request.post(url, /*{ form: formData, pool: poolForRequests },*/ function handlePostResponse(err, resp, body) {
+        request.post(url, { form: formData/*, pool: poolForRequests*/ }, function handlePostResponse(err, resp, body) {
             if (err) {
                 return reject(Error(err));
             }
