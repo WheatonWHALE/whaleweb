@@ -249,7 +249,6 @@ img#logo-competition {
   i.exp {
     // Fixing for iPhone 4S screen - remove as needed
     margin-left: -22px;
-    // margin-top: -12px;
     font-size: 25px;
   }
 } /* max-width 640px, mobile-only styles, use when QAing mobile issues */
@@ -358,21 +357,23 @@ nav.top-bar.expanded .title-area {
     }
 
     &:last-child {
-      // position: absolute;
+      float: right;
       background-color: #FFF;
       max-width: 300px;
 
+      margin-right: 10px;
       padding: 0; // Counter-act the column-esque padding from before
+
+      box-shadow: 0 0 20px -6px black;
 
       z-index: 1;
 
+      // position: absolute;
       // top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent) plus a bit
       // right: 10px;
 
       // border: 1px solid black;
-      box-shadow: 0 0 20px -6px black;
       // border-left: 1px solid gray;
-      float: right;
 
       ul {
         margin: 0;
