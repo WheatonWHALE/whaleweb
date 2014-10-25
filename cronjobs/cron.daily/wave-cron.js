@@ -4,6 +4,13 @@ var request = require('request'),
     jade    = require('jade');
 
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
+var semesterNumLimit;
+if (debug) {
+    semesterNumLimit = process.argv[3] || 4;
+}
+else {
+    semesterNumLimit = Infinity;
+}
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function clean(deleteValue) {
@@ -487,7 +494,7 @@ function fetchAndParseAll() {
         .then(function saveFiltersAndStartScheduleGet(filterObj) {
             saveFilters(filterObj); // Fire off async call, don't care when it finishes
 
-            return debug ? filterObj.semester.slice(0, 4) : filterObj.semester;
+            return debug ? filterObj.semester.slice(0, semesterNumLimit) : filterObj.semester;
         })
         .then(getScheduleData)
         .then(saveScheduleData)

@@ -1,33 +1,36 @@
-each semesterData, semesterName in courseData
-  .semesterContainer(class=semesterName)
-    h1= semesterName
+each semesterName in ['fall', 'winter', 'spring', 'summer']
+  //- each semesterData, semesterName in courseData
+  - var semesterData = courseData[semesterName]
+  if semesterData
+    .semesterContainer(class=semesterName)
+      h1= semesterName
 
-    each departmentData, departmentName in semesterData
-      .departmentContainer(class=departmentName)
+      each departmentData, departmentName in semesterData
+        .departmentContainer(class=departmentName)
 
-        each course in departmentData
-          div(class=course.foundation + ' ' + course.area + ' ' + course.division)
-            div
-              a(href=course.courseLink)= course.courseCode
-            div
-              = course.courseTitle
-            div
-              = course.meetingTime
-            div
-              i.exp.fi-plus
-            div
-              ul
-                li= course.crn
-                li= course.meetingPlace
-                li= course.professors
-                li= course.foundation
-                li= course.division
-                li= course.area
-                li: a(href=course.connectionsLink)= course.connections
-                //- li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
-                li: a(href=course.examSlotLink)= course.examSlot
-                li: a(href=course.textbookLink) here
-                //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
-                li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
-                if course.courseNotes
-                  li= course.courseNotes
+          each course in departmentData
+            div(class=course.foundation + ' ' + course.area + ' ' + course.division)
+              div
+                a(href=course.courseLink)= course.courseCode
+              div
+                = course.courseTitle
+              div
+                = course.meetingTime
+              div
+                i.exp.fi-plus
+              div
+                ul
+                  li= course.crn
+                  li= course.meetingPlace
+                  li= course.professors
+                  li= course.foundation
+                  li= course.division
+                  li= course.area
+                  li: a(href=course.connectionsLink)= course.connections
+                  //- li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
+                  li: a(href=course.examSlotLink)= course.examSlot
+                  li: a(href=course.textbookLink) here
+                  //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
+                  li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
+                  if course.courseNotes
+                    li= course.courseNotes
