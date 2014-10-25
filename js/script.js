@@ -252,32 +252,6 @@ function getWAVEData() {
     get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').html(html);
-    }).then(function setUpOtherCallbacks() {
-        // Set up callbacks taht have to do with course data
-        $(function() {
-            $(document).click(function handleClick(evt) {
-                var evtTarget = $(evt.target);
-                if ( evtTarget.is('.' + closedIconClass) ) {
-                    console.log('Type 1');
-                    openCollapsedInfo(evtTarget.parent().parent());
-                }
-                else if ( evtTarget.children().is('.' + closedIconClass)) {
-                    console.log('Type 2');
-                    openCollapsedInfo(evtTarget.parent());
-                }
-                // Test if clicked thing, or one of its ancestors, is the info div
-                else if ( evtTarget.closest('.expanded > div:last-child').length ) {
-                    console.log('Type 3');
-                    // Do nothing
-                }
-                else {
-                    console.log('Type 4');
-                    closeExpandedInfo();
-                }
-            });
-
-            $('.dataContainer a').attr('target', '_blank');
-        });
     }).catch(function handleError(err) {
         console.error(err);
     });
@@ -285,6 +259,29 @@ function getWAVEData() {
 
 function setUpWAVEPage() {
     getWAVEData();
+
+    $(document).click(function handleClick(evt) {
+        var evtTarget = $(evt.target);
+        if ( evtTarget.is('.' + closedIconClass) ) {
+            console.log('Type 1');
+            openCollapsedInfo(evtTarget.parent().parent());
+        }
+        else if ( evtTarget.children().is('.' + closedIconClass)) {
+            console.log('Type 2');
+            openCollapsedInfo(evtTarget.parent());
+        }
+        // Test if clicked thing, or one of its ancestors, is the info div
+        else if ( evtTarget.closest('.expanded > div:last-child').length ) {
+            console.log('Type 3');
+            // Do nothing
+        }
+        else {
+            console.log('Type 4');
+            closeExpandedInfo();
+        }
+    });
+
+    $('.dataContainer a').attr('target', '_blank');
 
     $('select[name=year]').change(function() {
         // $(this).parents('form').submit();
