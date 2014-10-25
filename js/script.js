@@ -252,6 +252,9 @@ function getWAVEData() {
     get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').html(html);
+    }).then(function triggerFilters() {
+        $('select[name=semester], select[name=department]').change();
+        $('select[name=foundation], select[name=division], select[name=area]').change();
     }).catch(function handleError(err) {
         console.error(err);
     });
