@@ -1,10 +1,11 @@
 each semesterName in ['fall', 'winter', 'spring', 'summer']
   //- each semesterData, semesterName in courseData
   - var semesterData = courseData[semesterName]
-  if semesterData
-    .semesterContainer(class=semesterName)
-      h1= semesterName
 
+  //- Print out header title no matter what
+  .semesterContainer(class=semesterName)
+    h1= semesterName
+    if semesterData
       each departmentData, departmentName in semesterData
         .departmentContainer(class=departmentName)
 
