@@ -24,9 +24,9 @@ each semesterName in ['fall', 'winter', 'spring', 'summer']
                   li= course.crn
                   li= course.meetingPlace
                   li= course.professors
-                  li= course.foundation
-                  li= course.division
-                  li= course.area
+                  li= prettifyDivAreaFound(course.foundation)
+                  li= prettifyDivAreaFound(course.division)
+                  li= prettifyDivAreaFound(course.area)
                   li: a(href=course.connectionsLink)= course.connections
                   //- li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
                   li: a(href=course.examSlotLink)= course.examSlot

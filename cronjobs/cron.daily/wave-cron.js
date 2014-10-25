@@ -253,6 +253,35 @@ function extractInfoFromCode(semesterCode) {
     return returnObj;
 }
 
+var divAreaFoundTranslator;
+function prettifyDivAreaFound(raw) {
+    divAreaFoundTranslator = divAreaFoundTranslator || {
+        'ARCA': 'Creative Arts',
+        'ARHS': 'History',
+        'ARHM': 'Humanities',
+        'ARMC': 'Math and Computer Science',
+        'ARNS': 'Natural Science',
+        'ARSS': 'Social Sciences',
+
+        'DVAH': 'Arts and Humanities',
+        'DVNS': 'Natural Sciences',
+        'DVSS': 'Social Sciences',
+
+        'BW':   'Beyond the West',
+        'FS':   'First Year Seminar',
+        'WR':   'First Year Writing',
+        'FL':   'Foreign Language',
+        'QA':   'Quantitative Analysis'
+    }
+
+    var translated = divAreaFoundTranslator[raw];
+    if (translated === undefined) {
+        translated = raw;
+    }
+
+    return translated;
+}
+
 // Parses one course's data out from the given list of rows
 function parseCourseData(allRows, i) {
         // 2 Types of formats:
@@ -445,16 +474,10 @@ function saveYearOfData(year) {
     return new Promise(function readTemplateFile(resolve, reject) {
         fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
             err ? reject(Error(err)) : resolve(data);
-            // if (err) {
-                // reject(Error(err));
-            // }
-            // else {
-                // resolve(data);
-            // }
         });
     }).then(function renderUsingTemplateFile(template) {
         var func = jade.compile(template, { pretty: debug/*false*/, doctype: 'html' });
-        var html = func({ courseData: scheduleData[year] });
+        var html = func({ courseData: scheduleData[year], prettifyDivAreaFound: prettifyDivAreaFound });
 
         fs.writeFile('static/course-data/compiled/' + year + '.html', html, function handleFileWriteResponse(err) {
             if (err) {
