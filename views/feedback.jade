@@ -1,0 +1,44 @@
+extends skeleton_general
+
+block page-title
+  |Feedback
+
+block header
+  |Feedback
+
+block contents
+  .row
+    .column.small-8.small-centered
+      span#feedback-desc If there's anything broken about the site, please let us know below. Also feel free to let us know about anything we could be doing better, etc.
+    .column.small-12.small-centered
+      span#error-message
+  form(method="post")
+    .row
+      .column.small-6.text-right
+        label Your Name:
+      .column.small-6.text-right
+        input(type='text' name='name')
+    .row
+      .column.small-6.text-right
+        label Email (if you wish):
+      .column.small-6.text-right
+        input(type='email' name='email' data-optional)
+    .row
+      .column.small-6.text-right
+        label What's broken/could use improvement:
+      .column.small-6.medium-4.end
+        select(name='subject')
+          each link in siteWideLinks
+            option(value=link.href.replace(/\//, ''))= link.display
+          option(value='other') Other
+
+    .row
+      .column.small-6.text-right
+        label What you want to say:
+      .column.small-6.text-right
+        textarea(name='feedback')
+    .row
+      .column.small-6
+        //- Empty padding Column
+      .column.small-6
+        input.button.small.radius(type='submit')

@@ -308,14 +308,35 @@ function setUpWAVEPage() {
     $('select[name=year]').val($('input#year').val());
 }
 
+// ============================= Feedback ======================================
+
+function setUpFeedbackPage() {
+    $('form').submit(function validateForm() {
+        var $this = $(this);
+
+        var emptyInputs = $this.find('input:not([type=submit]), textarea').filter(function findIfEmpty() {
+            return !( $(this).data('optional') !== undefined || $(this).val() );
+        });
+
+        if (emptyInputs.length) {
+            $('#error-message').html(emptyInputs.length + ' required area(s) currently missing');
+            return false;
+        }
+    })
+}
+
 // ============================= OnLoad ========================================
 
 $(function() {
-    if (window.location.pathname == '/github') { // Test for "github" page
+    var route = window.location.pathname;
+    if (route == '/github') { // Test for "github" page
         setUpGitHubPage();
     }
-    else if (window.location.pathname == '/wave') {
+    else if (route == '/wave') {
         setUpWAVEPage();
+    }
+    else if (route == '/feedback') {
+        setUpFeedbackPage();
     }
 });
 

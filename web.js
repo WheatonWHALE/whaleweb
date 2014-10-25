@@ -35,13 +35,14 @@ app.use(function(req, res, next) {
     res.locals.url = req.url;
 
     // Set up a links variable in responses's local variables, for use in jade
-    res.locals.links = [
-        { href: '/github',       display: 'GitHub Competition' },
+    res.locals.siteWideLinks = [
         { href: '/wave',         display: 'WAVE Course Schedule' },
         // { href: '/projects',    , display: 'Projects' },
         // { href: '/printing',    , display: '3D Printing' },
         // { href: '/makerspaces', , display: 'About Makerspaces' },
-        { href: '/members',      display: 'About Us' }
+        { href: '/github',       display: 'GitHub Competition' },
+        { href: '/members',      display: 'About Us' },
+        { href: '/feedback',         display: 'Feedback/Bugs' }
     ];
 
     // console.log(req.headers);
@@ -72,8 +73,12 @@ app.get('/refresh-competitions', function(req, res) {
 });
 
 
-app.get('/wave/feedback', function(req, res) {
-    res.render('wave-feedback.jade');
+app.get('/feedback', function(req, res) {
+    res.render('feedback.jade');
+});
+
+app.post('/feedback', function(req, res) {
+    res.render('thanks.jade');
 });
 
 
