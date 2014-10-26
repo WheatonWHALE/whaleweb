@@ -8,6 +8,7 @@ each semesterName in ['fall', 'winter', 'spring', 'summer']
     if semesterData
       each departmentData, departmentName in semesterData
         .departmentContainer(class=departmentName)
+          h4= departmentName
 
           each course in departmentData
             div(class=course.foundation + ' ' + course.area + ' ' + course.division)
