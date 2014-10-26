@@ -306,6 +306,60 @@ function setUpWAVEPage() {
     });
 
     $('select[name=year]').val($('input#year').val());
+
+    // var timer;
+
+    // var filtersStuck = false;
+
+    // var navBar = $('nav');
+    // var filters = $('#filters');
+    // var header = $('header');
+
+    // $(window).scroll(function(){
+    //     // Timer stuff
+    //     if (timer) {
+    //         clearTimeout(timer);
+    //     }
+    //     // Timer to throttle the scroll event so it doesn't happen too often
+    //     timer = setTimeout(function fixOrUnfixFilters() {
+    //         // var scrollBottom = $(window).scrollTop() + $(window).height();
+    //         var scrollTop = $(window).scrollTop();
+    //         var navBarBottom = navBar.offset().top + navBar.height();
+
+    //         var headerBottom = header.offset().top + header.height();
+
+    //         // var optionsBottom = (navBar.height()+navBar.offset().top);
+    //         var filtersTop = filters.offset().top;
+
+    //         if (!filtersStuck && filtersTop < navBarBottom) {
+    //             console.log('Yay')
+    //             filters.addClass('stuck');
+    //             filtersStuck = true;
+    //             // console.log('Yay');
+    //         }
+    //         if (filtersStuck && headerBottom > navBarBottom) {
+    //             console.log('Nope')
+    //             filters.removeClass('stuck');
+    //             filtersStuck = false;
+    //         }
+
+    //         // // if bottom of scroll window at the footer, allow buttons to rejoin page as it goes by
+    //         // if (filtersStuck && (scrollBottom >= ($('footer').offset().top))) {
+    //         //     // console.log("Scroll bottom hit footer! On the way down");
+    //         //     filters.removeClass("fixed");
+    //         //     filtersStuck = false;
+    //         // }
+
+    //         // // if bottom of scroll window at the footer, fix button to the screen
+    //         // if (!filtersStuck && (scrollBottom < ($('footer').offset().top))) {
+    //         //     // console.log("Scroll bottom hit footer! On the way up");
+    //         //     filters.addClass("fixed");
+    //         //     filtersStuck = true;
+    //         // }
+    //     }, 10);
+    // });
+
+    // $(window).scroll(); // Call a dummy scroll event after everything is loaded.
 }
 
 // ============================= Feedback ======================================

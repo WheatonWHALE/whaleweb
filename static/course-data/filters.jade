@@ -1,12 +1,10 @@
 .row
-  form
-    .columns.small-12
-      select(name='year')
-        each year in filterData['year']
-          option(value=year.val)= year.display
+  .columns.small-12
+    select(name='year')
+      each year in filterData['year']
+        option(value=year.val)= year.display
 
 
-.row.filters
   .columns.small-6
     select(name='semester')
       option(value='all') - Semester -

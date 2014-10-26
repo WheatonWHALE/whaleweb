@@ -281,25 +281,42 @@ nav.top-bar.expanded .title-area {
   background: #005A77;
 }
 
-.filters {
+#wave-container {
+  .cf;
+
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+#filters {
   clear: both;
+  max-width: 62.5em;
+
+  // &.stuck {
+  //   position: fixed;
+  //   // left: 0;
+  //   // top: 0;
+  // }
+
+  i.fi-info.has-tip {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    color: #5A98AD; // Slightly lighter version of the header color
+    border-bottom: none;
+
+    // Style both to remove flicker of cursor to help
+    &:hover,
+    & {
+      cursor: default; // Overriding the 'help' as assigned by foundation
+      border-bottom: none;
+    }
+  }
 }
 
-.filters i.fi-info.has-tip {
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  color: #5A98AD; // Slightly lighter version of the header color
-  border-bottom: none;
-}
-
-// Style both to remove flicker of cursor to help
-.filters i.fi-info.has-tip:hover,
-.filters i.fi-info.has-tip {
-  cursor: default; // Overriding the 'help' as assigned by foundation
-  border-bottom: none;
-}
 
 .semesterContainer.hidden,
 .departmentContainer.hidden {
