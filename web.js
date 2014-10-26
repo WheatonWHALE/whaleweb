@@ -191,7 +191,7 @@ app.get('*', function(req, res){
 
 
 // Server on port 7500
-var port = 7500;
+var port = process.argv[2] || 7500;
 // Start up the server
 app.listen(port, function() {
     console.log("Listening on " + port);
