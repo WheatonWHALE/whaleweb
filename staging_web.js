@@ -3,7 +3,7 @@ var child_process = require('child_process'),
 
 staging_server = {
     start: function() {
-        this.process = child_process.spawn(process.argv[0], ['web.js', '7501']);
+        this.process = child_process.spawn(process.argv[0], ['web.js', 7501]);
 
         this.process.stdout.addListener('data', function (data) {
             process.stdout.write(data);
