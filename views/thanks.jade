@@ -9,38 +9,5 @@ block header
 block contents
   .row
     .column.small-6.small-centered
-      |thanks!
-  //- .row
-  //-   .column.small-8.small-centered
-  //-     span#feedback-desc If there's anything broken about the site, please let us know below. Also feel free to let us know about anything we could be doing better, etc.
-  //- form
-  //-   .row
-  //-     .column.small-6.text-right
-  //-       label Your Name:
-  //-     .column.small-6.text-right
-  //-       input(type='text' name='name')
-  //-   .row
-  //-     .column.small-6.text-right
-  //-       label Email (if you want):
-  //-     .column.small-6.text-right
-  //-       input(type='email' name='email')
-  //-   .row
-  //-     .column.small-6.text-right
-  //-       label What's broken/could use improvement:
-  //-     .column.small-6.medium-4.end
-  //-       select(name='subject')
-  //-         each link in siteWideLinks
-  //-           if link.href != '/feedback'
-  //-             option(value=link.href.replace(/\//, ''))= link.display
-  //-         option(value='other') Other
-
-  //-   .row
-  //-     .column.small-6.text-right
-  //-       label What you want to say:
-  //-     .column.small-6.text-right
-  //-       textarea(name='feedback')
-  //-   .row
-  //-     .column.small-6
-  //-       //- Empty padding Column
-  //-     .column.small-6
-  //-       input.button.small.radius(type='submit')
+      span Thanks for the feedback! Your issue can be seen 
+        a(href=issueURL) here.

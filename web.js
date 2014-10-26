@@ -86,27 +86,10 @@ app.post('/feedback', function(req, res) {
     var url = 'https://api.github.com/repos/WheatonWHALE/whaleweb/issues';
     var headers = {
         'User-Agent': 'bawjensen'
-        // 'Authorization': 'token a3db061e48f534e35b620e6bb8b5abb0800e0618',
-        // 'Content-Type': 'application/json'
     }
-
-    // console.log(req.body.name);
-    // console.log(req.body.email);
-    // console.log(req.body.subject);
-    // console.log(req.body.feedback);
 
     var title = req.body.subject + ': ' + req.body.title;
     var body = 'Posted by ' + req.body.name + ':\n\n' + req.body.feedback;
-
-    // request({ url: url, method: 'POST', headers: headers, title: title, body: body }, function handleResponse(err, resp, body) {
-    //     if (err) {
-    //         console.error(err + ' - ' + resp.statusCode);
-    //     }
-    //     else {
-    //         console.log(body);
-    //         console.log(resp.statusCode);
-    //     }
-    // })
 
     var github = new githubAPI({
         version: '3.0.0'
@@ -123,19 +106,17 @@ app.post('/feedback', function(req, res) {
         body:       body,
         user:       'WheatonWHALE',
         repo:       'whaleweb',
-        labels:     [],
-
-    },
-    function handleResponse(err, data) {
+        labels:     []
+    }, function handleResponse(err, data) {
         if (err) {
             console.error(err);
         }
         else {
-            console.log(data);
+            res.locals.issueURL = data.html_url;
+            res.render('thanks.jade');
         }
     });
 
-    res.render('thanks.jade');
 });
 
 
@@ -191,7 +172,7 @@ app.get('*', function(req, res){
 
 
 // Server on port 7500
-var port = process.argv[2] || 7500;
+var port = (process.argv[2] != "undefined" ? process.argv[2] : undefined) || 7500;
 // Start up the server
 app.listen(port, function() {
     console.log("Listening on " + port);
