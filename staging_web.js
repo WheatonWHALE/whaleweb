@@ -1,5 +1,5 @@
-var child_process = require('child_process'),
-    sys = require("sys");
+var child_process   = require('child_process'),
+    sys             = require("sys");
 
 staging_server = {
     start: function() {
@@ -17,7 +17,16 @@ staging_server = {
             console.error('Staging Server: Child process exited: ' + code);
             process.exit(code);
         });
+    },
+
+    beforeExit: function() {
+        staging_server.process.kill();
     }
 }
+
+process.on('SIGINT', staging_server.beforeExit);
+process.on('SIGKILL', staging_server.beforeExit);
+process.on('exit', staging_server.beforeExit);
+process.on('uncaughtException', staging_server.beforeExit);
 
 staging_server.start();
