@@ -25,7 +25,7 @@ staging_server = {
 }
 
 process.on('SIGINT', staging_server.beforeExit);
-process.on('SIGKILL', staging_server.beforeExit);
+// process.on('SIGKILL', staging_server.beforeExit);
 process.on('exit', staging_server.beforeExit);
 process.on('uncaughtException', staging_server.beforeExit);
 
