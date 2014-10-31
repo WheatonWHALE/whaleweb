@@ -231,34 +231,6 @@ function updateProgress(oEvent) {
 }
 
 function setUpWAVECourseCallbacks() {
-    $('i.exp').click(function(evt) {
-        expanderThis = $(this);
-    });
-
-    $('body').click(function(evt) {
-        // If the click was originally on a expander icon
-        if (expanderThis) {
-            // if the icon that was clicked on was expanded already
-            if (expanderThis.parent().parent().hasClass('expanded')) {
-                expanderThis.removeClass(openedIconClass).addClass(closedIconClass);
-                expanderThis.parent().parent().removeClass('expanded');
-            }
-            else {
-                var alreadyExpanded = $('div.expanded');
-                alreadyExpanded.removeClass('expanded');
-                alreadyExpanded.find(openedIconClass).removeClass(openedIconClass).addClass(closedIconClass);
-
-                expanderThis.removeClass(closedIconClass).addClass(openedIconClass);
-                expanderThis.parent().parent().addClass('expanded');
-            }
-            // Reset back to undefined, for testing against click events on body or on i.exp
-            expanderThis = undefined;
-        }
-        else {
-            $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
-        }
-    });
-
     $('.departmentContainer > div').hover(function mouseIn(evt) {
         console.log(evt.target);
     }, function mouseOut(evt) {
