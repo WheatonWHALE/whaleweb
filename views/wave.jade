@@ -18,18 +18,21 @@ block contents
   .row
     #filters.columns.small-11.large-4.small-centered.medium-uncentered
       .row#heads-up All changes are applied immediately.
+
+
       include ../static/course-data/compiled/filters.html
+
+
       .row#schedule
         .column.small-12
           //- include ../static/jade-includes/week-schedule.jade
-          each day in ['mon', 'tues', 'wed', 'thurs', 'fri']
+          each day in ['label-col', 'mon', 'tue', 'wed', 'thu', 'fri']
             //- Saving: class= (time % 100) ? 'underlined' : ''
-            div.sched-col(class=day)
-              div.sched-col.row-label
+            div.sched-col(id=day)
               each time in [800, 830, 900, 930, 1000, 1030, 1100, 1130, 1200, 1230, 1300, 1330, 1400, 1430, 1500, 1530, 1600, 1630, 1700, 1730]
-                div.sched-row(id=time)
-      //- .row
-      //-   a(href='/wave/feedback') Feedback?
+                div.sched-row(data-timeslot=time)
+                  if (day == 'label-col')
+                    = time
 
 
     .column.small-12.large-7.dataContainer

@@ -230,68 +230,80 @@ function updateProgress(oEvent) {
     }
 }
 
-function previewCourseInSchedule(days, time) {
-    console.log(days);
-    console.log(time);
+function previewCourseInSchedule(days, times, adding) {
+    // console.log(days);
+    // console.log(times);
+
+    for (key in days) {
+        if (days[key]) {
+            var $day = $('#' + key);
+
+            $day.find('.sched-row').each(function eachTime(index, entry) {
+                // var $entry = ;
+                var timeslot = parseInt($(entry).data('timeslot'));
+                // console.log(entry);
+                // var time = parseInt()
+                if (timeslot >= times.start && timeslot <= times.end) {
+                    if (adding) $(entry).addClass('previewing');
+                    else $(entry).removeClass('previewing')
+                }
+                // else {
+                //     console.log($entry);
+                //     console.log(times.start);
+                //     console.log(times.end);
+                // }
+                // if (adding) $(entry).css('background-color', 'black')
+                // else $(entry).css('background-color', 'transparent')
+            });
+
+            // if (adding) $('#' + key).css('background-color', 'black');
+            // else $('#' + key).css('background-color', 'transparent');
+        }
+    }
 }
 
-function encodeTime(strTime) {
+function decodeTime(strTime) {
     // parse out the time, and mod by 1200 to remove issue with 12:30 PM becoming 2430. Add 1200 if PM.
     return (parseInt(strTime.replace(/:| /g, '')) % 1200) + (strTime.slice(-2) == "PM" ? 1200 : 0);
 }
 
+var currPreview;
 function setUpWAVECourseCallbacks() {
     $('.departmentContainer > div').hover(function mouseIn(evt) {
-        var evtTarget = $(evt.target);
-        var courseDiv = evtTarget.closest('.course');
+        var timeText = $(evt.target).closest('.course').find('div:nth-child(3)').text();
+
+        if (timeText.match(/TBA/)) return;
 
         var monMatch = /^\s*M\s*T?\s+W?\s+R?\s+F?/;
         var tueMatch = /^\s*M?\s*T\s+W?\s+R?\s+F?/;
         var wedMatch = /^\s*M?\s*T?\s+W\s+R?\s+F?/;
         var thuMatch = /^\s*M?\s*T?\s+W?\s+R\s+F?/;
         var friMatch = /^\s*M?\s*T?\s+W?\s+R?\s+F/;
-        // var tueMatch = /^\s*T\s+R/;
-        // var wedMatch = /^\s*T\s+R/;
-        // var thuMatch = /^\s*T\s+R/;
-        // var friMatch = /^\s*T\s+R/;
 
         var startTimeMatch = /(\d?\d\:\d\d\s+[A|P]M)\s+\-/;
         var endTimeMatch = /\-\s+(\d?\d\:\d\d\s+[A|P]M)/;
 
-        var timeText = courseDiv.find('div:nth-child(3)').text();
+        currPreview = {
+            days: {
+                mon: !!(timeText.match(monMatch)),
+                tue: !!(timeText.match(tueMatch)),
+                wed: !!(timeText.match(wedMatch)),
+                thu: !!(timeText.match(thuMatch)),
+                fri: !!(timeText.match(friMatch))
+            },
 
-        var days = {
-            mon: !!(timeText.match(monMatch)),
-            tue: !!(timeText.match(tueMatch)),
-            wed: !!(timeText.match(wedMatch)),
-            thu: !!(timeText.match(thuMatch)),
-            fri: !!(timeText.match(friMatch))
+            times: {
+                start: decodeTime(timeText.match(startTimeMatch)[1]),
+                end: decodeTime(timeText.match(endTimeMatch)[1])
+            }
         }
 
-        var times = {
-            // 830: 
-            start: encodeTime(timeText.match(startTimeMatch)[1]),
-            end: encodeTime(timeText.match(endTimeMatch)[1])
-        }
-
-        console.log(days);
-        console.log(times);
-
-        // if (timeText.match(mwfMatch)) {
-        //     // console.log('mwf');
-        //     previewCourseInSchedule({ mon: true, wed: true, fri: true }, timeText.match(timeMatch));
-        // }
-        // else if (timeText.match(trMatch)) {
-        //     // console.log('tr');
-        // }
-        // else {
-        //     console.log(timeText);
-        // }
-
-
-        // console.log(evt.target);
+        previewCourseInSchedule(currPreview.days, currPreview.times, true);
     }, function mouseOut(evt) {
-        // console.log(evt);
+        if (currPreview) {
+            previewCourseInSchedule(currPreview.days, currPreview.times, false);
+            currPreview = undefined;
+        }
     });
 }
 
