@@ -5,7 +5,7 @@ each semesterData, semesterName in courseData
       .departmentContainer(class=departmentName)
 
         each course in departmentData
-          div(class=course.foundation + ' ' + course.area + ' ' + course.division)
+          div(class="course" class=course.foundation + ' ' + course.area + ' ' + course.division)
             div
               = course.courseCode
             div
