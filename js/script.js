@@ -230,11 +230,68 @@ function updateProgress(oEvent) {
     }
 }
 
+function previewCourseInSchedule(days, time) {
+    console.log(days);
+    console.log(time);
+}
+
+function encodeTime(strTime) {
+    // parse out the time, and mod by 1200 to remove issue with 12:30 PM becoming 2430. Add 1200 if PM.
+    return (parseInt(strTime.replace(/:| /g, '')) % 1200) + (strTime.slice(-2) == "PM" ? 1200 : 0);
+}
+
 function setUpWAVECourseCallbacks() {
     $('.departmentContainer > div').hover(function mouseIn(evt) {
-        console.log(evt.target);
+        var evtTarget = $(evt.target);
+        var courseDiv = evtTarget.closest('.course');
+
+        var monMatch = /^\s*M\s*T?\s+W?\s+R?\s+F?/;
+        var tueMatch = /^\s*M?\s*T\s+W?\s+R?\s+F?/;
+        var wedMatch = /^\s*M?\s*T?\s+W\s+R?\s+F?/;
+        var thuMatch = /^\s*M?\s*T?\s+W?\s+R\s+F?/;
+        var friMatch = /^\s*M?\s*T?\s+W?\s+R?\s+F/;
+        // var tueMatch = /^\s*T\s+R/;
+        // var wedMatch = /^\s*T\s+R/;
+        // var thuMatch = /^\s*T\s+R/;
+        // var friMatch = /^\s*T\s+R/;
+
+        var startTimeMatch = /(\d?\d\:\d\d\s+[A|P]M)\s+\-/;
+        var endTimeMatch = /\-\s+(\d?\d\:\d\d\s+[A|P]M)/;
+
+        var timeText = courseDiv.find('div:nth-child(3)').text();
+
+        var days = {
+            mon: !!(timeText.match(monMatch)),
+            tue: !!(timeText.match(tueMatch)),
+            wed: !!(timeText.match(wedMatch)),
+            thu: !!(timeText.match(thuMatch)),
+            fri: !!(timeText.match(friMatch))
+        }
+
+        var times = {
+            // 830: 
+            start: encodeTime(timeText.match(startTimeMatch)[1]),
+            end: encodeTime(timeText.match(endTimeMatch)[1])
+        }
+
+        console.log(days);
+        console.log(times);
+
+        // if (timeText.match(mwfMatch)) {
+        //     // console.log('mwf');
+        //     previewCourseInSchedule({ mon: true, wed: true, fri: true }, timeText.match(timeMatch));
+        // }
+        // else if (timeText.match(trMatch)) {
+        //     // console.log('tr');
+        // }
+        // else {
+        //     console.log(timeText);
+        // }
+
+
+        // console.log(evt.target);
     }, function mouseOut(evt) {
-        console.log(evt);
+        // console.log(evt);
     });
 }
 

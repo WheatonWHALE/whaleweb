@@ -22,12 +22,12 @@ block contents
       .row#schedule
         .column.small-12
           //- include ../static/jade-includes/week-schedule.jade
-          each time in [800, 830, 900, 930, 1000, 1030, 1100, 1130, 1200, 1230, 100, 130, 200, 230, 300, 330, 400, 430, 500, 530]
+          each day in ['mon', 'tues', 'wed', 'thurs', 'fri']
             //- Saving: class= (time % 100) ? 'underlined' : ''
-            div.sched-row(id=time)
+            div.sched-col(class=day)
               div.sched-col.row-label
-              each day in ['mon', 'tues', 'wed', 'thurs', 'fri']
-                div.sched-col(class=day)
+              each time in [800, 830, 900, 930, 1000, 1030, 1100, 1130, 1200, 1230, 1300, 1330, 1400, 1430, 1500, 1530, 1600, 1630, 1700, 1730]
+                div.sched-row(id=time)
       //- .row
       //-   a(href='/wave/feedback') Feedback?
 
