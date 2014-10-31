@@ -387,7 +387,7 @@ function parseSemesterData(semester) {
         $ = cheerio.load(semester.body);
 
         var semesterCourses = {};
-        var courseLabelPattern = /^\s*([A-Z][A-Z][A-Z][A-Z]?\-[0-9][0-9][0-9])/;
+        var courseLabelPattern = /^\s*([A-Z][A-Z][A-Z]?[A-Z]?\-[0-9][0-9][0-9])/;
 
         var allRows = $('tr');
 
