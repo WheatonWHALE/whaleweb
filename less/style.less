@@ -347,7 +347,7 @@ nav.top-bar.expanded .title-area {
 }
 
 // A lot of this styling is really ugly, to avoid any and all classes on the course divs
-.departmentContainer > div {
+.course {
   border-bottom: 1px solid #E6E6E6;
   position: relative;
   clear: left;
@@ -359,6 +359,10 @@ nav.top-bar.expanded .title-area {
   margin-top: 0;
   margin-bottom: 0;
   max-width: none;
+
+  &.saved {
+    background-color: rgba(83, 215, 83, 0.42);
+  }
 
   &.foundation-hidden,
   &.division-hidden,
@@ -492,7 +496,13 @@ nav.top-bar.expanded .title-area {
       border: 1px dotted #E7E7E7;
 
       &.previewing {
-        @previewing-color: #000000;
+        @previewing-color: #BCE2B8;
+        border: 1px solid @previewing-color;
+        background-color: @previewing-color;
+      }
+
+      &.added {
+        @previewing-color: #6BA5B6;
         border: 1px solid @previewing-color;
         background-color: @previewing-color;
       }

@@ -212,14 +212,14 @@ var activeFilters = {};
 
 function toggleIndividuals(type, selector) {
     if (type in activeFilters) {
-        $('.departmentContainer > div:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
+        $('.course:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
     }
 
     if (selector == 'all') {
         delete activeFilters[type];
     }
     else {
-        $('.departmentContainer > div:not(.' + selector + ')').addClass(type+'-hidden');
+        $('.course:not(.' + selector + ')').addClass(type+'-hidden');
         activeFilters[type] = selector;
     }
 }
@@ -230,34 +230,46 @@ function updateProgress(oEvent) {
     }
 }
 
-function previewCourseInSchedule(days, times, adding) {
-    // console.log(days);
-    // console.log(times);
-
+function toggleClassOnSchedule(className, days, times, adding, toggling) {
     for (key in days) {
         if (days[key]) {
             var $day = $('#' + key);
 
             $day.find('.sched-row').each(function eachTime(index, entry) {
-                // var $entry = ;
                 var timeslot = parseInt($(entry).data('timeslot'));
-                // console.log(entry);
-                // var time = parseInt()
-                if (timeslot >= times.start && timeslot <= times.end) {
-                    if (adding) $(entry).addClass('previewing');
-                    else $(entry).removeClass('previewing')
-                }
-                // else {
-                //     console.log($entry);
-                //     console.log(times.start);
-                //     console.log(times.end);
-                // }
-                // if (adding) $(entry).css('background-color', 'black')
-                // else $(entry).css('background-color', 'transparent')
-            });
 
-            // if (adding) $('#' + key).css('background-color', 'black');
-            // else $('#' + key).css('background-color', 'transparent');
+                if (timeslot >= times.start && timeslot <= times.end) {
+                    if (adding) $(entry).addClass(className);
+                    else if (toggling) $(entry).toggleClass(className);
+                    else $(entry).removeClass(className);
+                }
+            });
+        }
+    }
+}
+
+function extractDaysAndTimes(timeText) {
+    var monMatch = /^\s*M\s*T?\s*W?\s*R?\s*F?/,
+        tueMatch = /^\s*M?\s*T\s*W?\s*R?\s*F?/,
+        wedMatch = /^\s*M?\s*T?\s*W\s*R?\s*F?/,
+        thuMatch = /^\s*M?\s*T?\s*W?\s*R\s*F?/,
+        friMatch = /^\s*M?\s*T?\s*W?\s*R?\s*F/;
+
+    var startTimeMatch = /(\d?\d\:\d\d\s+[A|P]M)\s+\-/,
+        endTimeMatch = /\-\s+(\d?\d\:\d\d\s+[A|P]M)/;
+
+    return {
+        days: {
+            mon: !!(timeText.match(monMatch)),
+            tue: !!(timeText.match(tueMatch)),
+            wed: !!(timeText.match(wedMatch)),
+            thu: !!(timeText.match(thuMatch)),
+            fri: !!(timeText.match(friMatch))
+        },
+
+        times: {
+            start: decodeTime(timeText.match(startTimeMatch)[1]),
+            end: decodeTime(timeText.match(endTimeMatch)[1])
         }
     }
 }
@@ -269,41 +281,28 @@ function decodeTime(strTime) {
 
 var currPreview;
 function setUpWAVECourseCallbacks() {
-    $('.departmentContainer > div').hover(function mouseIn(evt) {
+    $('.course').hover(function mouseIn(evt) {
         var timeText = $(evt.target).closest('.course').find('div:nth-child(3)').text();
-
         if (timeText.match(/TBA/)) return;
 
-        var monMatch = /^\s*M\s*T?\s+W?\s+R?\s+F?/;
-        var tueMatch = /^\s*M?\s*T\s+W?\s+R?\s+F?/;
-        var wedMatch = /^\s*M?\s*T?\s+W\s+R?\s+F?/;
-        var thuMatch = /^\s*M?\s*T?\s+W?\s+R\s+F?/;
-        var friMatch = /^\s*M?\s*T?\s+W?\s+R?\s+F/;
+        currPreview = extractDaysAndTimes(timeText);
 
-        var startTimeMatch = /(\d?\d\:\d\d\s+[A|P]M)\s+\-/;
-        var endTimeMatch = /\-\s+(\d?\d\:\d\d\s+[A|P]M)/;
-
-        currPreview = {
-            days: {
-                mon: !!(timeText.match(monMatch)),
-                tue: !!(timeText.match(tueMatch)),
-                wed: !!(timeText.match(wedMatch)),
-                thu: !!(timeText.match(thuMatch)),
-                fri: !!(timeText.match(friMatch))
-            },
-
-            times: {
-                start: decodeTime(timeText.match(startTimeMatch)[1]),
-                end: decodeTime(timeText.match(endTimeMatch)[1])
-            }
-        }
-
-        previewCourseInSchedule(currPreview.days, currPreview.times, true);
+        toggleClassOnSchedule('previewing', currPreview.days, currPreview.times, true);
     }, function mouseOut(evt) {
         if (currPreview) {
-            previewCourseInSchedule(currPreview.days, currPreview.times, false);
+            toggleClassOnSchedule('previewing', currPreview.days, currPreview.times, false);
             currPreview = undefined;
         }
+    });
+
+    $('.course').dblclick(function addCourseToSchedule(evt) {
+        var timeText = $(evt.target).closest('.course').find('div:nth-child(3)').text();
+        if (timeText.match(/TBA/)) return;
+
+        $(evt.target).closest('.course').toggleClass('saved');
+
+        var currAdded = extractDaysAndTimes(timeText);
+        toggleClassOnSchedule('added', currAdded.days, currAdded.times, false, true);
     });
 }
 
