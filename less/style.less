@@ -32,8 +32,10 @@ body {
     width: 100%;
     text-align: center;
 
-    color: rgba(255, 255, 255, 1.0); // White
-    text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; // Stack text-shadows until it looks dark
+    color: #348CA9;
+    font-weight: bold;
+    // color: rgba(255, 255, 255, 1.0); // White
+    // text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; // Stack text-shadows until it looks dark
 
     clear: both;
   }
@@ -47,6 +49,19 @@ body {
     padding: 10px 0;
   }
 }
+
+input[type=email] {
+  transition: border 0.45s ease-in-out;
+}
+
+input[type=email]:focus:invalid {
+  border: 1px solid yellow;
+}
+input[type=email]:focus:valid {
+  border: 1px solid green;
+}
+
+// ====================== Mainpage Styling =====================================
 
 @logo-width: 350px;
 img.whale-logo {
@@ -63,26 +78,6 @@ img.whale-logo {
 
   // z-index: -1;
 }
-
-@new-top-bar-color: #007095;
-
-// Changing color of the top bar
-nav.top-bar.expanded,
-nav.top-bar.expanded .title-area {
-  background: @new-top-bar-color;
-}
-.top-bar,
-.top-bar ul li:not(.has-form) a:not(.button) {
-  background: @new-top-bar-color;
-  transition-duration: .3s;
-}
-
-.top-bar ul li:not(.has-form) a:not(.button):hover {
-  background: #005A77;
-}
-
-// ====================== Mainpage Styling =====================================
-
 img#logo-competition {
   cursor: pointer;
 }
@@ -175,7 +170,13 @@ img#logo-competition {
   }
 }
 
-// ====================== Competitions Styling =================================
+// ====================== GitHub Styling =======================================
+
+#gh-title {
+  cursor: pointer;
+  display: table;
+  margin: 0 auto;
+}
 
 #competition-container {
   .cf;
@@ -259,27 +260,76 @@ img#logo-competition {
   body {
     cursor: pointer;
   }
+} /* max-width 1024px, use when QAing tablet and mobile issues */
+
+// Foundation's 'small' screen media query
+@media only screen and (max-width: 40em) {
+  i.exp {
+    // Fixing for iPhone 4S screen - remove as needed
+    margin-left: -22px;
+    font-size: 25px;
+  }
 } /* max-width 640px, mobile-only styles, use when QAing mobile issues */
 
-.filters {
+@new-top-bar-color: #007095;
+
+// Changing color of the top bar
+nav.top-bar.expanded,
+nav.top-bar.expanded .title-area {
+  background: @new-top-bar-color;
+}
+.top-bar,
+.top-bar ul li:not(.has-form) a:not(.button) {
+  background: @new-top-bar-color;
+  transition-duration: .3s;
+}
+
+.top-bar ul li:not(.has-form) a:not(.button):hover {
+  background: #005A77;
+}
+
+#wave-container {
+  .cf;
+
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+}
+
+#heads-up {
+  color: #2CB62C;
+  text-align: center;
+  margin-bottom: 5px;
+}
+
+#filters {
   clear: both;
+  max-width: 62.5em;
+
+  // &.stuck {
+  //   position: fixed;
+  //   // left: 0;
+  //   // top: 0;
+  // }
+
+  i.fi-info.has-tip {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    color: #5A98AD; // Slightly lighter version of the header color
+    border-bottom: none;
+
+    // Style both to remove flicker of cursor to help
+    &:hover,
+    & {
+      cursor: default; // Overriding the 'help' as assigned by foundation
+      border-bottom: none;
+    }
+  }
 }
 
-.filters i.fi-info.has-tip {
-  position: absolute;
-  top: 0;
-  right: 0;
-
-  color: #5A98AD; // Slightly lighter version of the header color
-  border-bottom: none;
-}
-
-// Style both to remove flicker of cursor to help
-.filters i.fi-info.has-tip:hover,
-.filters i.fi-info.has-tip {
-  cursor: default; // Overriding the 'help' as assigned by foundation
-  border-bottom: none;
-}
 
 .semesterContainer.hidden,
 .departmentContainer.hidden {
@@ -348,19 +398,26 @@ img#logo-competition {
     }
 
     &:last-child {
-      position: absolute;
+      float: right;
       background-color: #FFF;
       max-width: 300px;
 
+      margin-top: 5px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      
       padding: 0; // Counter-act the column-esque padding from before
+
+      box-shadow: 0 0 20px -6px black;
 
       z-index: 1;
 
-      top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent) plus a bit
-      right: 10px;
+      // position: absolute;
+      // top: calc(~"100% + 5px"); // Align top to top, then down by 100% (of parent) plus a bit
+      // right: 10px;
 
       // border: 1px solid black;
-      box-shadow: 0 0 20px -6px black;
+      // border-left: 1px solid gray;
 
       ul {
         margin: 0;
@@ -436,6 +493,21 @@ img#logo-competition {
       }
     }
   }
+}
+
+// ====================== Feedback Styling =====================================
+
+#error-message {
+  color: red;
+
+  display: block;
+  padding-bottom: 20px;
+
+  text-align: center;
+}
+
+textarea[name=feedback] {
+  min-height: 150px;
 }
 
 // ====================== Members Styling ======================================

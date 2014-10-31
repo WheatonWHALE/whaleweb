@@ -2,7 +2,7 @@
 	<div class="title">{title}</div>
 	{#entrants}
 	<div class="entrant {id}">
-		<div class="name"><a href="https://github.com/{id}" class="competition-link">{name} '{year} <span class="user-id">({id})</span></a></div>
+		<div class="name"><a href="https://github.com/{id}" class="competition-link">{name} {year} <span class="user-id">({id})</span></a></div>
 		<div class="score">{streakVal} {label}</div>
 	</div>{~n}
 	{/entrants}

@@ -1,8 +1,11 @@
-var exec        = require("child_process").exec,
+var bodyParser  = require("body-parser"),
+    exec        = require("child_process").exec,
     express     = require("express"),
     Firebase    = require("firebase"),
-    logfmt      = require("logfmt"),
-    fs          = require("fs");
+    fs          = require("fs"),
+    githubAPI   = require("github"),
+    logfmt      = require("logfmt")
+    request     = require("request");
 
 // Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
 var routeMap =  {
@@ -27,23 +30,32 @@ app.use('/css',         express.static(__dirname + '/css'));
 app.use('/js',          express.static(__dirname + '/js'));
 app.use('/images',      express.static(__dirname + '/images'));
 app.use('/static',      express.static(__dirname + '/static'));
+
 app.use(logfmt.requestLogger());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-
-// Middleware to save the current url, from the request, to the responses' local variables, for use in jade
+// General middleware stuff
 app.use(function(req, res, next) {
+    // Save the current url, from the request, to the response's local variables, for use in jade
     res.locals.url = req.url;
-    res.locals.links = [
-        { href: '/github',       display: 'GitHub Competition' },
+
+    // Set up a links variable in responses's local variables, for use in jade
+    res.locals.siteWideLinks = [
         { href: '/wave',         display: 'WAVE Course Schedule' },
         // { href: '/projects',    , display: 'Projects' },
         // { href: '/printing',    , display: '3D Printing' },
         // { href: '/makerspaces', , display: 'About Makerspaces' },
-        { href: '/members',      display: 'About Us' }
+        { href: '/github',       display: 'GitHub Competition' },
+        { href: '/members',      display: 'About Us' },
+        { href: '/feedback',         display: 'Feedback/Bugs' }
     ];
+
+    // console.log(req.headers);
+    // res.setHeader('Last-Modified', (new Date()).toUTCString());
+
     next();
 });
-
 
 // Special route for the main page
 app.get('/', function(req, res) {
@@ -67,8 +79,44 @@ app.get('/refresh-competitions', function(req, res) {
 });
 
 
-app.get('/wave/feedback', function(req, res) {
-    res.render('wave-feedback.jade');
+app.get('/feedback', function(req, res) {
+    res.render('feedback.jade');
+});
+app.post('/feedback', function(req, res) {
+    var url = 'https://api.github.com/repos/WheatonWHALE/whaleweb/issues';
+    var headers = {
+        'User-Agent': 'bawjensen'
+    }
+
+    var title = req.body.subject + ': ' + req.body.title;
+    var body = 'Posted by ' + req.body.name + ':\n\n' + req.body.feedback;
+
+    var github = new githubAPI({
+        version: '3.0.0'
+    });
+
+    github.authenticate({
+        type: "basic",
+        username: 'bawjensen',
+        password: 'a3db061e48f534e35b620e6bb8b5abb0800e0618'
+    });
+
+    github.issues.create({
+        title:      title,
+        body:       body,
+        user:       'WheatonWHALE',
+        repo:       'whaleweb',
+        labels:     []
+    }, function handleResponse(err, data) {
+        if (err) {
+            console.error(err);
+        }
+        else {
+            res.locals.issueURL = data.html_url;
+            res.render('thanks.jade');
+        }
+    });
+
 });
 
 
@@ -124,7 +172,7 @@ app.get('*', function(req, res){
 
 
 // Server on port 7500
-var port = 7500;
+var port = (process.argv[2] != "undefined" ? process.argv[2] : undefined) || 7500;
 // Start up the server
 app.listen(port, function() {
     console.log("Listening on " + port);

@@ -268,15 +268,31 @@ function setUpWAVECourseCallbacks() {
 
 var closedIconClass = 'fi-plus';
 var openedIconClass = 'fi-minus';
-var expanderThis;
+function closeExpandedInfo() {
+    $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
+}
+function openCollapsedInfo(collapsedCourseDiv) {
+    closeExpandedInfo();
+    collapsedCourseDiv.addClass('expanded').find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
+}
+
+var loadingContents;
 function getWAVEData() {
     var year = $('input#year').val();
 
+    // If first time, grab placeholder "while loading" contents
+    loadingContents = loadingContents || $('.dataContainer').html();
+    // Set up loading contents
+    $('.dataContainer').html(loadingContents);
+
     get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
-        $('.dataContainer').append(html);
+        $('.dataContainer').html(html);
     }).then(setUpWAVECourseCallbacks)
-    .catch(function handleError(err) {
+    .then(function triggerFilters() {
+        $('select[name=semester], select[name=department]').change();
+        $('select[name=foundation], select[name=division], select[name=area]').change();
+    }).catch(function handleError(err) {
         console.error(err);
     });
 }
@@ -284,8 +300,34 @@ function getWAVEData() {
 function setUpWAVEPage() {
     getWAVEData();
 
+    $(document).click(function handleClick(evt) {
+        var evtTarget = $(evt.target);
+        if ( evtTarget.is('.' + closedIconClass) ) {
+            console.log('Type 1');
+            openCollapsedInfo(evtTarget.parent().parent());
+        }
+        else if ( evtTarget.children().is('.' + closedIconClass)) {
+            console.log('Type 2');
+            openCollapsedInfo(evtTarget.parent());
+        }
+        // Test if clicked thing, or one of its ancestors, is the info div
+        else if ( evtTarget.closest('.expanded > div:last-child').length ) {
+            console.log('Type 3');
+            // Do nothing
+        }
+        else {
+            console.log('Type 4');
+            closeExpandedInfo();
+        }
+    });
+
+    $('.dataContainer a').attr('target', '_blank');
+
     $('select[name=year]').change(function() {
-        $(this).parents('form').submit();
+        // $(this).parents('form').submit();
+        $('input#year').val($(this).val());
+
+        getWAVEData();
     });
 
     $('select[name=semester], select[name=department]').change(function() {
@@ -301,16 +343,91 @@ function setUpWAVEPage() {
     });
 
     $('select[name=year]').val($('input#year').val());
+
+    // var timer;
+
+    // var filtersStuck = false;
+
+    // var navBar = $('nav');
+    // var filters = $('#filters');
+    // var header = $('header');
+
+    // $(window).scroll(function(){
+    //     // Timer stuff
+    //     if (timer) {
+    //         clearTimeout(timer);
+    //     }
+    //     // Timer to throttle the scroll event so it doesn't happen too often
+    //     timer = setTimeout(function fixOrUnfixFilters() {
+    //         // var scrollBottom = $(window).scrollTop() + $(window).height();
+    //         var scrollTop = $(window).scrollTop();
+    //         var navBarBottom = navBar.offset().top + navBar.height();
+
+    //         var headerBottom = header.offset().top + header.height();
+
+    //         // var optionsBottom = (navBar.height()+navBar.offset().top);
+    //         var filtersTop = filters.offset().top;
+
+    //         if (!filtersStuck && filtersTop < navBarBottom) {
+    //             console.log('Yay')
+    //             filters.addClass('stuck');
+    //             filtersStuck = true;
+    //             // console.log('Yay');
+    //         }
+    //         if (filtersStuck && headerBottom > navBarBottom) {
+    //             console.log('Nope')
+    //             filters.removeClass('stuck');
+    //             filtersStuck = false;
+    //         }
+
+    //         // // if bottom of scroll window at the footer, allow buttons to rejoin page as it goes by
+    //         // if (filtersStuck && (scrollBottom >= ($('footer').offset().top))) {
+    //         //     // console.log("Scroll bottom hit footer! On the way down");
+    //         //     filters.removeClass("fixed");
+    //         //     filtersStuck = false;
+    //         // }
+
+    //         // // if bottom of scroll window at the footer, fix button to the screen
+    //         // if (!filtersStuck && (scrollBottom < ($('footer').offset().top))) {
+    //         //     // console.log("Scroll bottom hit footer! On the way up");
+    //         //     filters.addClass("fixed");
+    //         //     filtersStuck = true;
+    //         // }
+    //     }, 10);
+    // });
+
+    // $(window).scroll(); // Call a dummy scroll event after everything is loaded.
+}
+
+// ============================= Feedback ======================================
+
+function setUpFeedbackPage() {
+    $('form').submit(function validateForm() {
+        var $this = $(this);
+
+        var emptyInputs = $this.find('input:not([type=submit]), textarea').filter(function findIfEmpty() {
+            return !( $(this).data('optional') !== undefined || $(this).val() );
+        });
+
+        if (emptyInputs.length) {
+            $('#error-message').html(emptyInputs.length + ' required area(s) currently missing');
+            return false;
+        }
+    })
 }
 
 // ============================= OnLoad ========================================
 
 $(function() {
-    if (window.location.pathname == '/github') { // Test for "github" page
+    var route = window.location.pathname;
+    if (route == '/github') { // Test for "github" page
         setUpGitHubPage();
     }
-    else if (window.location.pathname == '/wave') {
+    else if (route == '/wave') {
         setUpWAVEPage();
+    }
+    else if (route == '/feedback') {
+        setUpFeedbackPage();
     }
 });
 
