@@ -266,20 +266,16 @@ function setUpWAVEPage() {
     $(document).click(function handleClick(evt) {
         var evtTarget = $(evt.target);
         if ( evtTarget.is('.' + closedIconClass) ) {
-            console.log('Type 1');
             openCollapsedInfo(evtTarget.parent().parent());
         }
         else if ( evtTarget.children().is('.' + closedIconClass)) {
-            console.log('Type 2');
             openCollapsedInfo(evtTarget.parent());
         }
         // Test if clicked thing, or one of its ancestors, is the info div
         else if ( evtTarget.closest('.expanded > div:last-child').length ) {
-            console.log('Type 3');
             // Do nothing
         }
         else {
-            console.log('Type 4');
             closeExpandedInfo();
         }
     });
