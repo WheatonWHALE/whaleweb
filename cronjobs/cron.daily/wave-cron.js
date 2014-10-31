@@ -151,7 +151,13 @@ function fetchSearchPage() {
     return get('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_ListSection');
 }
 
+var filterBlacklist;
 function parseOutFilters(searchPageBody) {
+    var filterBlacklist = filterBlacklist || {
+        '%': true,
+        'CONX': true
+    };
+
     var $ = cheerio.load(searchPageBody);
 
     var filterObj = {};
@@ -162,7 +168,7 @@ function parseOutFilters(searchPageBody) {
 
         $('select[name=' + filter + ']').find('option').each(function parseSelectOption(entry) {
             var filterValue = $(this).val();
-            if (filterValue != '%') {
+            if (!filterBlacklist[filterValue]) {
                 filterObj[prettifiedFilter].push({ val: filterValue, display: prettifyFilterValue($(this).text()) });
             }
         });
