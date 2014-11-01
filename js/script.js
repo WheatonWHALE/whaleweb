@@ -281,6 +281,8 @@ function decodeTime(strTime) {
 
 var currPreview;
 function setUpWAVECourseCallbacks() {
+    $('.dataContainer a').attr('target', '_blank');
+
     $('.course').hover(function mouseIn(evt) {
         var timeText = $(evt.target).closest('.course').find('div:nth-child(3)').text();
         if (timeText.match(/TBA/)) return;
@@ -295,8 +297,10 @@ function setUpWAVECourseCallbacks() {
         }
     });
 
-    $('.course').dblclick(function addCourseToSchedule(evt) {
-        var timeText = $(evt.target).closest('.course').find('div:nth-child(3)').text();
+    $('.add').click(function addCourseToSchedule(evt) {
+        var $evtTarget = $(evt.target);
+        $evtTarget.toggleClass('fi-plus, fi-minus');
+        var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
         if (timeText.match(/TBA/)) return;
 
         $(evt.target).closest('.course').toggleClass('saved');
@@ -309,11 +313,11 @@ function setUpWAVECourseCallbacks() {
 var closedIconClass = 'fi-plus';
 var openedIconClass = 'fi-minus';
 function closeExpandedInfo() {
-    $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
+    $('div.expanded').removeClass('expanded');//.find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
 }
 function openCollapsedInfo(collapsedCourseDiv) {
     closeExpandedInfo();
-    collapsedCourseDiv.addClass('expanded').find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
+    collapsedCourseDiv.addClass('expanded');//.find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
 }
 
 var loadingContents;
@@ -341,23 +345,27 @@ function setUpWAVEPage() {
     getWAVEData();
 
     $(document).click(function handleClick(evt) {
-        var evtTarget = $(evt.target);
-        if ( evtTarget.is('.' + closedIconClass) ) {
-            openCollapsedInfo(evtTarget.parent().parent());
+        var $evtTarget = $(evt.target);
+        // Clicked on the "more info" element with an non-expanded info div
+        if ( $evtTarget.is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
+            console.log('Type 1');
+            openCollapsedInfo($evtTarget.parent().parent());
         }
-        else if ( evtTarget.children().is('.' + closedIconClass)) {
-            openCollapsedInfo(evtTarget.parent());
+        // Clicked on div containing "more info" element with a non-expanded info div
+        else if ( $evtTarget.children().is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
+            console.log('Type 2');
+            openCollapsedInfo($evtTarget.parent());
         }
         // Test if clicked thing, or one of its ancestors, is the info div
-        else if ( evtTarget.closest('.expanded > div:last-child').length ) {
+        else if ( $evtTarget.closest('.expanded > div:last-child').length ) {
+            console.log('Type 3');
             // Do nothing
         }
         else {
+            console.log('Type 4');
             closeExpandedInfo();
         }
     });
-
-    $('.dataContainer a').attr('target', '_blank');
 
     $('select[name=year]').change(function() {
         // $(this).parents('form').submit();
