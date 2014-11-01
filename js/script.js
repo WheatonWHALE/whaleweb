@@ -308,6 +308,8 @@ function setUpWAVECourseCallbacks() {
 
         var currAdded = extractDaysAndTimes(timeText);
         toggleClassOnSchedule('added', currAdded.days, currAdded.times, false, true);
+
+        $('#')
     });
 }
 
@@ -352,11 +354,11 @@ function setUpWAVEPage() {
             openCollapsedInfo($evtTarget.parent().parent());
         }
         // Clicked on div containing "more info" element with a non-expanded info div
-        else if ( $evtTarget.children().is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
+        else if ( $evtTarget.children('.exp').length && !$evtTarget.closest('.course').is('.expanded') ) {
             openCollapsedInfo($evtTarget.parent());
         }
         // Test if clicked thing, or one of its ancestors, is the info div
-        else if ( $evtTarget.closest('.expanded > div:last-child').length ) {
+        else if ( $evtTarget.closest('div').is('.expanded > div:last-child') || $evtTarget.is('i.add') ) {
             // Do nothing
         }
         else {
