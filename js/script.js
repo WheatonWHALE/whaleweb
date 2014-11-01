@@ -252,6 +252,7 @@ function getWAVEData() {
     get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').html(html);
+        $('.dataContainer a').attr('target', '_blank');
     }).then(function triggerFilters() {
         $('select[name=semester], select[name=department]').change();
         $('select[name=foundation], select[name=division], select[name=area]').change();
@@ -279,8 +280,6 @@ function setUpWAVEPage() {
             closeExpandedInfo();
         }
     });
-
-    $('.dataContainer a').attr('target', '_blank');
 
     $('select[name=year]').change(function() {
         // $(this).parents('form').submit();
