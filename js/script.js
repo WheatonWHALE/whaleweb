@@ -299,7 +299,8 @@ function setUpWAVECourseCallbacks() {
 
     $('.add').click(function addCourseToSchedule(evt) {
         var $evtTarget = $(evt.target);
-        $evtTarget.toggleClass('fi-plus, fi-minus');
+        console.log($evtTarget);
+        $evtTarget.toggleClass('fi-plus fi-minus');
         var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
         if (timeText.match(/TBA/)) return;
 
@@ -348,27 +349,22 @@ function setUpWAVEPage() {
         var $evtTarget = $(evt.target);
         // Clicked on the "more info" element with an non-expanded info div
         if ( $evtTarget.is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
-            console.log('Type 1');
             openCollapsedInfo($evtTarget.parent().parent());
         }
         // Clicked on div containing "more info" element with a non-expanded info div
         else if ( $evtTarget.children().is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
-            console.log('Type 2');
             openCollapsedInfo($evtTarget.parent());
         }
         // Test if clicked thing, or one of its ancestors, is the info div
         else if ( $evtTarget.closest('.expanded > div:last-child').length ) {
-            console.log('Type 3');
             // Do nothing
         }
         else {
-            console.log('Type 4');
             closeExpandedInfo();
         }
     });
 
     $('select[name=year]').change(function() {
-        // $(this).parents('form').submit();
         $('input#year').val($(this).val());
 
         getWAVEData();
