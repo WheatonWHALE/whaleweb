@@ -10,7 +10,7 @@ each semesterName in ['fall', 'winter', 'spring', 'summer']
         .departmentContainer(class=departmentName)
           h4= departmentName
           each course in departmentData
-            div.course(class=course.foundation + ' ' + course.area + ' ' + course.division)
+            div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
               div
                 a(href=course.courseLink)= course.courseCode
               div

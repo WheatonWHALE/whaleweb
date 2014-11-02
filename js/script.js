@@ -230,7 +230,8 @@ function updateProgress(oEvent) {
     }
 }
 
-function toggleClassOnSchedule(className, days, times, adding, toggling) {
+function toggleClassOnSchedule(days, times, adding, crn) {
+    var className = adding ? 'added' : 'previewing';
     for (key in days) {
         if (days[key]) {
             var $day = $('#' + key);
@@ -239,9 +240,16 @@ function toggleClassOnSchedule(className, days, times, adding, toggling) {
                 var timeslot = parseInt($(entry).data('timeslot'));
 
                 if (timeslot >= times.start && timeslot <= times.end) {
-                    if (adding) $(entry).addClass(className);
-                    else if (toggling) $(entry).toggleClass(className);
-                    else $(entry).removeClass(className);
+                    var $entry = $(entry);
+                    // console.log(entry);
+                    // console.log(crn);
+                    console.log($entry);
+                    console.log($entry.is('.' + crn));
+                    if ($entry.is('.' + crn)) $entry.removeClass(className).removeClass(crn);
+                    else if ($entry.is('.' + crn + ':not(.' + className + ')')) $entry.toggleClass('conflicted');
+                    else $entry.addClass(className).addClass(crn);
+                    // if ($entry.is('.' + className)) $entry.toggleClass('conflicted');
+                    // else $entry.toggleClass(className);
                 }
             });
         }
@@ -284,30 +292,36 @@ function setUpWAVECourseCallbacks() {
     $('.dataContainer a').attr('target', '_blank');
 
     $('.course').hover(function mouseIn(evt) {
-        var timeText = $(evt.target).closest('.course').find('div:nth-child(3)').text();
+        var courseDiv = $(evt.target).closest('.course');
+        var timeText = courseDiv.find('div:nth-child(3)').text();
         if (timeText.match(/TBA/)) return;
 
         currPreview = extractDaysAndTimes(timeText);
+        currPreview.crn = courseDiv.attr('id');
 
-        toggleClassOnSchedule('previewing', currPreview.days, currPreview.times, true);
+        toggleClassOnSchedule(currPreview.days, currPreview.times, false, currPreview.crn);
     }, function mouseOut(evt) {
         if (currPreview) {
-            toggleClassOnSchedule('previewing', currPreview.days, currPreview.times, false);
+            toggleClassOnSchedule(currPreview.days, currPreview.times, false, currPreview.crn);
             currPreview = undefined;
         }
     });
 
     $('.add').click(function addCourseToSchedule(evt) {
         var $evtTarget = $(evt.target);
-        console.log($evtTarget);
         $evtTarget.toggleClass('fi-plus fi-minus');
+
         var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
+
         if (timeText.match(/TBA/)) return;
 
-        $(evt.target).closest('.course').toggleClass('saved');
+        // Display that the course is currently actively 'saved'
+        $evtTarget.closest('.course').toggleClass('saved');
 
         var currAdded = extractDaysAndTimes(timeText);
-        toggleClassOnSchedule('added', currAdded.days, currAdded.times, false, true);
+        currAdded.crn = $evtTarget.closest('.course').attr('id');
+
+        toggleClassOnSchedule(currAdded.days, currAdded.times, true, currAdded.crn);
 
         $('#')
     });
