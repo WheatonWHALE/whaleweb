@@ -1,31 +1,5 @@
 // ============================= General =======================================
 
-// function get(url, progressFunc) {
-//     return new Promise(function(resolve, reject) {
-//         var req = new XMLHttpRequest();
-//         req.open('GET', url);
-
-//         req.onload = function() {
-//             if (req.status == 200) {
-//                 resolve(req.response);
-//             }
-//             else {
-//                 reject(Error(req.statusText));
-//             }
-//         };
-
-//         if (progressFunc) {
-//             req.addEventListener("progress", progressFunc, false);
-//         }
-
-//         req.onerror = function() {
-//             reject(Error("Network Error"));
-//         };
-
-//         req.send();
-//     });
-// }
-
 function get(url, progressFunc) {
     return Promise.resolve(
         $.ajax({
@@ -230,8 +204,8 @@ function updateProgress(oEvent) {
     }
 }
 
-function toggleClassOnSchedule(days, times, adding, crn) {
-    var className = adding ? 'added' : 'previewing';
+function setCourseOnSchedule(days, times, permanent, crn) {
+    var className = permanent ? 'added' : 'previewing';
     for (key in days) {
         if (days[key]) {
             var $day = $('#' + key);
@@ -253,6 +227,85 @@ function toggleClassOnSchedule(days, times, adding, crn) {
                 }
             });
         }
+    }
+}
+
+function setTimeDivClasses(days, times, classes) {
+    for (key in days) {
+        if (!days[key]) continue;
+    
+        var $day = $('#' + key);
+
+        $day.find('.sched-row').each(function eachTime(index, entry) {
+            var timeslot = parseInt($(entry).data('timeslot'));
+            if (timeslot >= times.start && timeslot <= times.end) {
+                for (className in classes) $(entry).addClass(className);
+            }
+        });
+    }
+}
+
+function addCourseOnSchedule(days, times, permanent, crn) {
+    var className = permanent ? 'added' : 'previewing';
+
+    console.log('Adding: ' + crn + ' - ' + className);
+
+    for (key in days) {
+        if (!days[key]) continue;
+    
+        var $day = $('#' + key);
+
+        $day.find('.sched-row').each(function eachTime(index, entry) {
+            $entry = $(entry);
+            var timeslot = parseInt($entry.data('timeslot'));
+            if (timeslot >= times.start && timeslot <= times.end) {
+                if ( !($entry.hasClass('added')) ) {
+                    $entry.addClass(className).addClass(crn);
+                }
+                // If adding a course
+                else if (permanent) {
+                    if ( !($entry.hasClass(crn)) ) {
+                        $entry.addClass('add-conflicted');
+                    }
+                }
+                // If previewing a course
+                else {
+                    if ( !($entry.hasClass(crn)) ) {
+                        $entry.addClass('prev-conflicted');
+                    }
+                }
+            }
+        });
+    }
+}
+
+function removeCourseOnSchedule(days, times, permanent, crn) {
+    var className = permanent ? 'added' : 'previewing';
+
+    for (key in days) {
+        if (!days[key]) continue;
+    
+        var $day = $('#' + key);
+
+        $day.find('.sched-row').each(function eachTime(index, entry) {
+            $entry = $(entry);
+            var timeslot = parseInt($entry.data('timeslot'));
+            if (timeslot >= times.start && timeslot <= times.end) {
+                if ( $entry.hasClass(className) && $entry.hasClass(crn) ) {
+                    $entry.removeClass(className).removeClass(crn);
+                }
+                // // If adding a course
+                // else if (permanent) {
+                //     if ( !($entry.is('.' + crn)) ) {
+                //         $entry.addClass('conflicted');
+                //     }
+                // }
+                // // If previewing a course
+                // else {
+                //     // Do nothing(?)
+                // }
+            }
+        });
     }
 }
 
@@ -299,15 +352,15 @@ function setUpWAVECourseCallbacks() {
         currPreview = extractDaysAndTimes(timeText);
         currPreview.crn = courseDiv.attr('id');
 
-        toggleClassOnSchedule(currPreview.days, currPreview.times, false, currPreview.crn);
+        addCourseOnSchedule(currPreview.days, currPreview.times, false, currPreview.crn);
     }, function mouseOut(evt) {
         if (currPreview) {
-            toggleClassOnSchedule(currPreview.days, currPreview.times, false, currPreview.crn);
+            removeCourseOnSchedule(currPreview.days, currPreview.times, false, currPreview.crn);
             currPreview = undefined;
         }
     });
 
-    $('.add').click(function addCourseToSchedule(evt) {
+    $('.add').click(function handleCourseOnSchedule(evt) {
         var $evtTarget = $(evt.target);
         $evtTarget.toggleClass('fi-plus fi-minus');
 
@@ -321,9 +374,7 @@ function setUpWAVECourseCallbacks() {
         var currAdded = extractDaysAndTimes(timeText);
         currAdded.crn = $evtTarget.closest('.course').attr('id');
 
-        toggleClassOnSchedule(currAdded.days, currAdded.times, true, currAdded.crn);
-
-        $('#')
+        addCourseOnSchedule(currAdded.days, currAdded.times, true, currAdded.crn);
     });
 }
 
