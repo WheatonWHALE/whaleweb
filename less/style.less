@@ -483,18 +483,22 @@ nav.top-bar.expanded .title-area {
 
 #schedule {
   .cf;
+  
+  font-size: 15px;
+  line-height: 1em;
 
   .sched-col {
     float: left;
     height: 100%;
     width: calc(~"100% / 6");
 
-    // &:not(.row-label) {
-    // }
+    &#label-col :not(.col-title) {
+      text-align: right;
+    }
 
-    &#label-col {
-      font-size: 15px;
-      line-height: 1em;
+    .col-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .sched-row {
@@ -510,44 +514,28 @@ nav.top-bar.expanded .title-area {
                   border-color @transition-speed ease-in;
 
       &.previewing {
-        @previewing-color: #A9EAA9;
+        @previewing-color: rgba(43, 166, 203, 0.5);
         border: 1px solid @previewing-color;
         background-color: @previewing-color;
       }
 
       &.added {
-        @added-color: #09C209;
+        @added-color: rgba(43, 166, 203, 0.8);
         border: 1px solid @added-color;
         background-color: @added-color;
       }
 
       &.added.previewing.conflicted {
-        @conflicted-color: orange;
+        @conflicted-color: rgba(255, 165, 0, 0.8);
         border: 1px solid @conflicted-color;
         background-color: @conflicted-color;
       }
 
       &.added:not(.previewing).conflicted {
-        @conflicted-color: red;
+        @conflicted-color: rgba(255, 0, 0, 0.5);
         border: 1px solid @conflicted-color;
         background-color: @conflicted-color;
       }
-
-      // &.prev-conflicted {
-      //   @conflicted-color: orange;
-      //   border: 1px solid @conflicted-color;
-      //   background-color: @conflicted-color;
-      // }
-
-      // &.add-conflicted {
-      //   @conflicted-color: red;
-      //   border: 1px solid @conflicted-color;
-      //   background-color: @conflicted-color;
-      // }
-
-      // &.underlined {
-      //   border-bottom: 1px solid gray;
-      // }
     }
   }
 }
