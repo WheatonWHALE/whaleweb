@@ -521,21 +521,33 @@ nav.top-bar.expanded .title-area {
         background-color: @added-color;
       }
 
-      &.prev-conflicted {
+      &.added.previewing.conflicted {
         @conflicted-color: orange;
         border: 1px solid @conflicted-color;
         background-color: @conflicted-color;
       }
 
-      &.add-conflicted {
+      &.added:not(.previewing).conflicted {
         @conflicted-color: red;
         border: 1px solid @conflicted-color;
         background-color: @conflicted-color;
       }
 
-      &.underlined {
-        border-bottom: 1px solid gray;
-      }
+      // &.prev-conflicted {
+      //   @conflicted-color: orange;
+      //   border: 1px solid @conflicted-color;
+      //   background-color: @conflicted-color;
+      // }
+
+      // &.add-conflicted {
+      //   @conflicted-color: red;
+      //   border: 1px solid @conflicted-color;
+      //   background-color: @conflicted-color;
+      // }
+
+      // &.underlined {
+      //   border-bottom: 1px solid gray;
+      // }
     }
   }
 }
