@@ -484,16 +484,17 @@ nav.top-bar.expanded .title-area {
 #schedule {
   .cf;
   
-  font-size: 15px;
+  font-size: 12px;
   line-height: 1em;
 
   .sched-col {
     float: left;
-    height: 100%;
     width: calc(~"100% / 6");
 
-    &#label-col :not(.col-title) {
+    &#label-col div:not(.col-title) {
       text-align: right;
+      position: relative;
+      top: -3px;
     }
 
     .col-title {
