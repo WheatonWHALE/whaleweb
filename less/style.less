@@ -78,7 +78,6 @@ img.whale-logo {
 
   // z-index: -1;
 }
-
 img#logo-competition {
   cursor: pointer;
 }
@@ -265,10 +264,13 @@ img#logo-competition {
 
 // Foundation's 'small' screen media query
 @media only screen and (max-width: 40em) {
-  i.exp {
+  i.add {
     // Fixing for iPhone 4S screen - remove as needed
     margin-left: -22px;
     font-size: 25px;
+  }
+  .exp {
+    margin-left: -30px;
   }
 } /* max-width 640px, mobile-only styles, use when QAing mobile issues */
 
@@ -348,7 +350,7 @@ nav.top-bar.expanded .title-area {
 }
 
 // A lot of this styling is really ugly, to avoid any and all classes on the course divs
-.departmentContainer > div {
+.course {
   border-bottom: 1px solid #E6E6E6;
   position: relative;
   clear: left;
@@ -361,6 +363,10 @@ nav.top-bar.expanded .title-area {
   margin-bottom: 0;
   max-width: none;
 
+  &.saved {
+    background-color: rgba(83, 215, 83, 0.42);
+  }
+
   &.foundation-hidden,
   &.division-hidden,
   &.area-hidden {
@@ -369,7 +375,8 @@ nav.top-bar.expanded .title-area {
 
   .cf;
 
-  i.exp {
+  .exp,
+  i.add {
     cursor: pointer;
     // font-size: 20px;
     color: #5A98AD;
@@ -474,6 +481,67 @@ nav.top-bar.expanded .title-area {
   }
 }
 
+#schedule {
+  .cf;
+  
+  font-size: 12px;
+  line-height: 1em;
+  text-align: center;
+
+  .sched-col {
+    float: left;
+    width: calc(~"100% / 6");
+
+    &#label-col div:not(.col-title) {
+      text-align: right;
+      position: relative;
+      top: -3px;
+    }
+
+    .col-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sched-row {
+      width: 100%;
+      height: 15px;
+      // background-color: gray;
+
+      border: 1px dotted #E7E7E7;
+
+      @transition-speed: 0.15s;
+
+      transition: background-color @transition-speed ease-in,
+                  border-color @transition-speed ease-in;
+
+      &.previewing {
+        @previewing-color: rgba(43, 166, 203, 0.5);
+        border: 1px solid @previewing-color;
+        background-color: @previewing-color;
+      }
+
+      &.added {
+        @added-color: rgba(43, 166, 203, 0.8);
+        border: 1px solid @added-color;
+        background-color: @added-color;
+      }
+
+      &.added.previewing.conflicted {
+        @conflicted-color: rgba(255, 165, 0, 0.8);
+        border: 1px solid @conflicted-color;
+        background-color: @conflicted-color;
+      }
+
+      &.added:not(.previewing).conflicted {
+        @conflicted-color: rgba(255, 0, 0, 0.5);
+        border: 1px solid @conflicted-color;
+        background-color: @conflicted-color;
+      }
+    }
+  }
+}
+
 // ====================== Feedback Styling =====================================
 
 #error-message {
@@ -488,7 +556,6 @@ nav.top-bar.expanded .title-area {
 textarea[name=feedback] {
   min-height: 150px;
 }
-
 
 // ====================== Members Styling ======================================
 

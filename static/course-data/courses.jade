@@ -9,9 +9,8 @@ each semesterName in ['fall', 'winter', 'spring', 'summer']
       each departmentData, departmentName in semesterData
         .departmentContainer(class=departmentName)
           h4= departmentName
-
           each course in departmentData
-            div(class=course.foundation + ' ' + course.area + ' ' + course.division)
+            div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
               div
                 a(href=course.courseLink)= course.courseCode
               div
@@ -19,7 +18,8 @@ each semesterName in ['fall', 'winter', 'spring', 'summer']
               div
                 = course.meetingTime
               div
-                i.exp.fi-plus
+                i.add.fi-plus
+                .exp more
               div
                 ul
                   li= course.crn

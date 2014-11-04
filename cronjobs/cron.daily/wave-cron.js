@@ -184,7 +184,7 @@ function saveFilters(filterObj) {
                 reject(Error(err));
             }
             else {
-                var func = jade.compile(data, { pretty: debug, doctype: 'html' });
+                var func = jade.compile(data, { pretty: /*debug*/false, doctype: 'html' });
                 var html = func({ filterData: filterObj });
                 resolve(html);
             }
@@ -482,7 +482,7 @@ function saveYearOfData(year) {
             err ? reject(Error(err)) : resolve(data);
         });
     }).then(function renderUsingTemplateFile(template) {
-        var func = jade.compile(template, { pretty: debug/*false*/, doctype: 'html' });
+        var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
         var html = func({ courseData: scheduleData[year], prettifyDivAreaFound: prettifyDivAreaFound });
 
         fs.writeFile('static/course-data/compiled/' + year + '.html', html, function handleFileWriteResponse(err) {

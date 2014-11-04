@@ -1,31 +1,5 @@
 // ============================= General =======================================
 
-// function get(url, progressFunc) {
-//     return new Promise(function(resolve, reject) {
-//         var req = new XMLHttpRequest();
-//         req.open('GET', url);
-
-//         req.onload = function() {
-//             if (req.status == 200) {
-//                 resolve(req.response);
-//             }
-//             else {
-//                 reject(Error(req.statusText));
-//             }
-//         };
-
-//         if (progressFunc) {
-//             req.addEventListener("progress", progressFunc, false);
-//         }
-
-//         req.onerror = function() {
-//             reject(Error("Network Error"));
-//         };
-
-//         req.send();
-//     });
-// }
-
 function get(url, progressFunc) {
     return Promise.resolve(
         $.ajax({
@@ -198,6 +172,8 @@ function setUpGitHubPage() {
 
 // ============================= WAVE ==========================================
 
+var wavePage = wavePage || {};
+
 function toggleContainer(container, selector) {
     if (selector == 'all') {
         $(container).removeClass('hidden');
@@ -212,14 +188,14 @@ var activeFilters = {};
 
 function toggleIndividuals(type, selector) {
     if (type in activeFilters) {
-        $('.departmentContainer > div:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
+        $('.course:not(.' + activeFilters[type] + ')').removeClass(type+'-hidden');
     }
 
     if (selector == 'all') {
         delete activeFilters[type];
     }
     else {
-        $('.departmentContainer > div:not(.' + selector + ')').addClass(type+'-hidden');
+        $('.course:not(.' + selector + ')').addClass(type+'-hidden');
         activeFilters[type] = selector;
     }
 }
@@ -230,18 +206,209 @@ function updateProgress(oEvent) {
     }
 }
 
+function Schedule($div) {
+    this.$div = $div;
+
+    // Initialize schedule data structure
+    this.sched = {};
+    var _this = this;
+
+    this.$div.find('.sched-col').each(function handleColumn(index, entry) {
+        if (this.id == 'label-col') return;
+
+        var dayId = this.id;
+
+        _this.sched[dayId] = {};
+
+        $(this).find('.sched-row').each(function handleRow(index, entry) {
+            _this.sched[dayId][parseInt($(entry).data('timeslot'))] = {};
+        });
+    });
+}
+
+function setCourseOnSchedule(days, times, permanent, crn) {
+    var className = permanent ? 'added' : 'previewing';
+    for (key in days) {
+        if (days[key]) {
+            var $day = $('#' + key);
+
+            $day.find('.sched-row').each(function eachTime(index, entry) {
+                var timeslot = parseInt($(entry).data('timeslot'));
+
+                if (timeslot >= times.start && timeslot <= times.end) {
+                    var $entry = $(entry);
+                    // console.log(entry);
+                    // console.log(crn);
+                    console.log($entry);
+                    console.log($entry.is('.' + crn));
+                    if ($entry.is('.' + crn)) $entry.removeClass(className).removeClass(crn);
+                    else if ($entry.is('.' + crn + ':not(.' + className + ')')) $entry.toggleClass('conflicted');
+                    else $entry.addClass(className).addClass(crn);
+                    // if ($entry.is('.' + className)) $entry.toggleClass('conflicted');
+                    // else $entry.toggleClass(className);
+                }
+            });
+        }
+    }
+}
+
+Schedule.prototype.handleLogic = function handleLogic(day, timeslot, $entry, className, crn, permanent, adding) {
+    var removing = !adding;
+
+    var thisTimeslot = this.sched[day][timeslot];
+
+    if (permanent) {
+        console.log('adding: ' + adding);
+        if (adding) {
+            $entry.addClass('added');
+            if (crn in thisTimeslot)
+                thisTimeslot[crn] += 1;
+            else
+                thisTimeslot[crn] = 1;
+        }
+        else {
+            if (Object.keys(thisTimeslot).length <= 1)
+                $entry.removeClass('added');
+            thisTimeslot[crn] -= 1;
+        }
+    }
+    else {
+        if (adding) {
+            $entry.addClass('previewing');
+            if (crn in thisTimeslot)
+                thisTimeslot[crn] += 1;
+            else
+                thisTimeslot[crn] = 1;
+        }
+        else {
+            $entry.removeClass('previewing');
+            thisTimeslot[crn] -= 1;
+        }
+    }
+
+    if (thisTimeslot[crn] == 0)
+        delete thisTimeslot[crn];
+
+    console.log('Showing: ' + day + ' - ' + timeslot + ': ' + JSON.stringify(thisTimeslot));
+
+    if (Object.keys(thisTimeslot).length > 1) {
+        $entry.addClass('conflicted');
+    }
+    else {
+        $entry.removeClass('conflicted');
+    }
+}
+
+Schedule.prototype.handleCourse = function handleCourse(days, times, crn, permanent, adding) {
+    var className = permanent ? 'added' : 'previewing';
+    var _this = this;
+
+    console.log((adding ? 'Adding: ' : 'Removing: ') + crn + ' - ' + className);
+
+    for (day in days) {
+        if (!days[day]) continue;
+    
+        var $day = $('#' + day);
+
+        $day.find('.sched-row').each(function eachTime(index, entry) {
+            $entry = $(entry);
+            var timeslot = parseInt($entry.data('timeslot'));
+            if (timeslot >= times.start && timeslot <= times.end) {
+                _this.handleLogic(day, timeslot, $entry, className, crn, permanent, adding);
+            }
+        });
+    }
+}
+
+Schedule.prototype.addCourse = function addCourse(days, times, crn, permanent) {
+    this.handleCourse(days, times, crn, permanent, true);
+}
+
+Schedule.prototype.removeCourse = function removeCourse(days, times, crn, permanent) {
+    this.handleCourse(days, times, crn, permanent, false);
+}
+
+Schedule.prototype.extractDaysAndTimes = function extractDaysAndTimes(timeText) {
+    var monMatch = /^\s*M\s*T?\s*W?\s*R?\s*F?/,
+        tueMatch = /^\s*M?\s*T\s*W?\s*R?\s*F?/,
+        wedMatch = /^\s*M?\s*T?\s*W\s*R?\s*F?/,
+        thuMatch = /^\s*M?\s*T?\s*W?\s*R\s*F?/,
+        friMatch = /^\s*M?\s*T?\s*W?\s*R?\s*F/;
+
+    var startTimeMatch = /(\d?\d\:\d\d\s+[A|P]M)\s+\-/,
+        endTimeMatch = /\-\s+(\d?\d\:\d\d\s+[A|P]M)/;
+
+    return {
+        days: {
+            mon: !!(timeText.match(monMatch)),
+            tue: !!(timeText.match(tueMatch)),
+            wed: !!(timeText.match(wedMatch)),
+            thu: !!(timeText.match(thuMatch)),
+            fri: !!(timeText.match(friMatch))
+        },
+
+        times: {
+            start: this.decodeTime(timeText.match(startTimeMatch)[1]),
+            end: this.decodeTime(timeText.match(endTimeMatch)[1])
+        }
+    }
+}
+
+Schedule.prototype.decodeTime = function decodeTime(strTime) {
+    // parse out the time, and mod by 1200 to remove issue with 12:30 PM becoming 2430. Add 1200 if PM.
+    return (parseInt(strTime.replace(/:| /g, '')) % 1200) + (strTime.slice(-2) == "PM" ? 1200 : 0);
+}
+
+var currPreview;
+function setUpWAVECourseCallbacks() {
+    $('.dataContainer a').attr('target', '_blank');
+
+    $('.course').hover(function mouseIn(evt) {
+        var courseDiv = $(evt.target).closest('.course');
+        var timeText = courseDiv.find('div:nth-child(3)').text();
+        if (timeText.match(/TBA/)) return;
+
+        currPreview = wavePage.schedule.extractDaysAndTimes(timeText);
+        currPreview.crn = courseDiv.attr('id');
+
+        wavePage.schedule.addCourse(currPreview.days, currPreview.times, currPreview.crn, false);
+    }, function mouseOut(evt) {
+        if (currPreview) {
+            wavePage.schedule.removeCourse(currPreview.days, currPreview.times, currPreview.crn, false);
+            currPreview = undefined;
+        }
+    });
+
+    $('.add').click(function handleCourseOnSchedule(evt) {
+        var $evtTarget = $(evt.target);
+        $evtTarget.toggleClass('fi-plus fi-minus');
+
+        var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
+
+        if (timeText.match(/TBA/)) return;
+
+        // Display that the course is currently actively 'saved'
+        $evtTarget.closest('.course').toggleClass('saved');
+
+        var currAdded = wavePage.schedule.extractDaysAndTimes(timeText);
+        currAdded.crn = $evtTarget.closest('.course').attr('id');
+
+        wavePage.schedule.handleCourse(currAdded.days, currAdded.times, currAdded.crn, true, $evtTarget.hasClass('fi-minus'));
+    });
+}
+
 var closedIconClass = 'fi-plus';
 var openedIconClass = 'fi-minus';
 function closeExpandedInfo() {
-    $('div.expanded').removeClass('expanded').find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
+    $('div.expanded').removeClass('expanded');//.find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
 }
 function openCollapsedInfo(collapsedCourseDiv) {
     closeExpandedInfo();
-    collapsedCourseDiv.addClass('expanded').find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
+    collapsedCourseDiv.addClass('expanded');//.find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
 }
 
 var loadingContents;
-function getWAVEData() {
+function getAndSetupWAVEData() {
     var year = $('input#year').val();
 
     // If first time, grab placeholder "while loading" contents
@@ -249,11 +416,13 @@ function getWAVEData() {
     // Set up loading contents
     $('.dataContainer').html(loadingContents);
 
-    get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
+    return get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').html(html);
         $('.dataContainer a').attr('target', '_blank');
-    }).then(function triggerFilters() {
+    }).then(setUpWAVECourseCallbacks)
+    .then(function triggerFilters() {
+        console.log('Triggering filters');
         $('select[name=semester], select[name=department]').change();
         $('select[name=foundation], select[name=division], select[name=area]').change();
     }).catch(function handleError(err) {
@@ -262,18 +431,20 @@ function getWAVEData() {
 }
 
 function setUpWAVEPage() {
-    getWAVEData();
+    getAndSetupWAVEData();
 
     $(document).click(function handleClick(evt) {
-        var evtTarget = $(evt.target);
-        if ( evtTarget.is('.' + closedIconClass) ) {
-            openCollapsedInfo(evtTarget.parent().parent());
+        var $evtTarget = $(evt.target);
+        // Clicked on the "more info" element with an non-expanded info div
+        if ( $evtTarget.is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
+            openCollapsedInfo($evtTarget.parent().parent());
         }
-        else if ( evtTarget.children().is('.' + closedIconClass)) {
-            openCollapsedInfo(evtTarget.parent());
+        // Clicked on div containing "more info" element with a non-expanded info div
+        else if ( $evtTarget.children('.exp').length && !$evtTarget.closest('.course').is('.expanded') ) {
+            openCollapsedInfo($evtTarget.parent());
         }
         // Test if clicked thing, or one of its ancestors, is the info div
-        else if ( evtTarget.closest('.expanded > div:last-child').length ) {
+        else if ( $evtTarget.closest('div').is('.expanded > div:last-child') || $evtTarget.is('i.add') ) {
             // Do nothing
         }
         else {
@@ -282,7 +453,6 @@ function setUpWAVEPage() {
     });
 
     $('select[name=year]').change(function() {
-        // $(this).parents('form').submit();
         $('input#year').val($(this).val());
 
         getWAVEData();
@@ -382,6 +552,7 @@ $(function() {
         setUpGitHubPage();
     }
     else if (route == '/wave') {
+        wavePage.schedule = new Schedule($('#schedule'));
         setUpWAVEPage();
     }
     else if (route == '/feedback') {
