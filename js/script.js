@@ -455,7 +455,7 @@ function setUpWAVEPage() {
     $('select[name=year]').change(function() {
         $('input#year').val($(this).val());
 
-        getWAVEData();
+        getAndSetupWAVEData();
     });
 
     $('select[name=semester], select[name=department]').change(function() {

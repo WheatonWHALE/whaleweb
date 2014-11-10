@@ -31,6 +31,7 @@ app.use('/js',          express.static(__dirname + '/js'));
 app.use('/images',      express.static(__dirname + '/images'));
 app.use('/static',      express.static(__dirname + '/static'));
 
+// Other stuff to use
 app.use(logfmt.requestLogger());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -50,9 +51,6 @@ app.use(function(req, res, next) {
         { href: '/members',      display: 'About Us' },
         { href: '/feedback',         display: 'Feedback/Bugs' }
     ];
-
-    // console.log(req.headers);
-    // res.setHeader('Last-Modified', (new Date()).toUTCString());
 
     next();
 });
@@ -78,10 +76,11 @@ app.get('/refresh-competitions', function(req, res) {
     res.end('Success!');
 });
 
-
+// Simple feedback page
 app.get('/feedback', function(req, res) {
     res.render('feedback.jade');
 });
+// Posts on the feedback are recreated as GitHub issues
 app.post('/feedback', function(req, res) {
     var url = 'https://api.github.com/repos/WheatonWHALE/whaleweb/issues';
     var headers = {
@@ -116,10 +115,9 @@ app.post('/feedback', function(req, res) {
             res.render('thanks.jade');
         }
     });
-
 });
 
-
+// URL for fetching data for the wave page. 
 app.get('/wave/data', function(req, res) {
     var year = req.query.year || '2014-2015';
     var errorMessage = '';
