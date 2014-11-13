@@ -1,0 +1,2 @@
+#!/bin/bash
+(cd /home/whale_site/ && for i in ./cronjobs/cron.daily/*.js; do node $i; done)
