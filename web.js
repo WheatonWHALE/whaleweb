@@ -12,7 +12,7 @@ var routeMap =  {
     'printing':     'selling',
     'projects':     'projects',
     'makerspaces':  'generalinfo',
-    'github':       'compete'
+    'github':       'github'
 };
 
 // Stolen from StackOverflow for its compactness. Seems to be Knuth shuffle.
