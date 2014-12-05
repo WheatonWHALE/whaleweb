@@ -7,3 +7,6 @@ node_modules/
 
 # Ignore all OSX directory config files
 .DS_Store
+
+# Ignore logs
+log/
