@@ -134,11 +134,7 @@ app.get('/wave/data', function(req, res) {
     });
 });
 
-
-app.get('/wave', function(req, res) {
-    res.render('wave.jade', { year: req.query.year || '2014-2015' });
-});
-
+app.use('/wave', require('./sub-projects/wave/route.js'));
 
 app.get('/members', function(req, res) {
     fs.readFile('static/member-data/members.json', function renderPageWithJSON(err, json) {
