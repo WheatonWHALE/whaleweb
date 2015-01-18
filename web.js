@@ -3,8 +3,7 @@ var bodyParser  = require("body-parser"),
     express     = require("express"),
     Firebase    = require("firebase"),
     fs          = require("fs"),
-    githubAPI   = require("github"),
-    logfmt      = require("logfmt")
+    logfmt      = require("logfmt"),
     request     = require("request");
 
 // Note: This is a map of route, as in the URL after the domain, to the name of the jade file, so they don't have to be the same
@@ -13,12 +12,6 @@ var routeMap =  {
     'projects':     'projects',
     'makerspaces':  'generalinfo',
     'github':       'github'
-};
-
-// Stolen from StackOverflow for its compactness. Seems to be Knuth shuffle.
-function shuffle(o) {
-    for (var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
-    return o;
 };
 
 var app = express();
@@ -43,23 +36,19 @@ app.use(function(req, res, next) {
 
     // Set up a links variable in responses's local variables, for use in jade
     res.locals.siteWideLinks = [
-        { href: '/wave',         display: 'WAVE Course Schedule' },
+        { href: '/wave/',         display: 'WAVE Course Schedule' },
         // { href: '/projects',    , display: 'Projects' },
         // { href: '/printing',    , display: '3D Printing' },
         // { href: '/makerspaces', , display: 'About Makerspaces' },
-        { href: '/github',       display: 'GitHub Competition' },
-        { href: '/members',      display: 'About Us' },
-        { href: '/feedback',         display: 'Feedback/Bugs' }
+        { href: '/github/',       display: 'GitHub Competition' },
+        { href: '/members/',      display: 'About Us' },
+        { href: '/feedback/',     display: 'Feedback/Bugs' }
     ];
 
     next();
 });
 
 app.use('/', require('./sub-projects/main-page/route.js'));
-// app.get('/', function(req, res) {
-//     res.render('main.jade');
-// });
-
 
 // Special route for requesting an update to the competitions database
 app.get('/refresh-competitions', function(req, res) {
@@ -77,45 +66,7 @@ app.get('/refresh-competitions', function(req, res) {
 });
 
 // Simple feedback page
-app.get('/feedback', function(req, res) {
-    res.render('feedback.jade');
-});
-// Posts on the feedback are recreated as GitHub issues
-app.post('/feedback', function(req, res) {
-    var url = 'https://api.github.com/repos/WheatonWHALE/whaleweb/issues';
-    var headers = {
-        'User-Agent': 'bawjensen'
-    }
-
-    var title = req.body.subject + ': ' + req.body.title;
-    var body = 'Posted by ' + req.body.name + ':\n\n' + req.body.feedback;
-
-    var github = new githubAPI({
-        version: '3.0.0'
-    });
-
-    github.authenticate({
-        type: "basic",
-        username: 'bawjensen',
-        password: 'a3db061e48f534e35b620e6bb8b5abb0800e0618'
-    });
-
-    github.issues.create({
-        title:      title,
-        body:       body,
-        user:       'WheatonWHALE',
-        repo:       'whaleweb',
-        labels:     []
-    }, function handleResponse(err, data) {
-        if (err) {
-            console.error(err);
-        }
-        else {
-            res.locals.issueURL = data.html_url;
-            res.render('thanks.jade');
-        }
-    });
-});
+app.use('/feedback', require('./sub-projects/feedback/route.js'));
 
 // URL for fetching data for the wave page. 
 app.get('/wave/data', function(req, res) {
@@ -136,19 +87,7 @@ app.get('/wave/data', function(req, res) {
 
 app.use('/wave', require('./sub-projects/wave/route.js'));
 
-app.get('/members', function(req, res) {
-    fs.readFile('static/member-data/members.json', function renderPageWithJSON(err, json) {
-        if (err) {
-            console.error(err);
-            res.render('404.jade');
-        }
-        else {
-            res.render('members.jade', { members: shuffle(JSON.parse(json)) }); // Shuffled (for production)
-            // res.render('members.jade', { members: JSON.parse(json) }); // Unshuffled (for debugging)
-        }
-    });
-});
-
+app.use('/members', require('./sub-projects/members/route.js'));
 
 // General route for any pages that're static/fully front-end, and just need their jade file parsed and served
 app.get('/:route', function(req, res) {
