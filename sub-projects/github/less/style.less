@@ -1,0 +1,102 @@
+// ====================== CSS3 Animation Keyframes =============================
+
+// @keyframes {
+// }
+
+// ====================== LESS Classes =========================================
+
+.cf {
+  &::before,
+  &::after {
+    content: " ";
+    display: table;
+  }
+
+  &::after {
+    clear: both;
+  }
+}
+
+// ====================== LESS Variables =======================================
+
+// ====================== GitHub Styling =======================================
+
+#gh-title {
+  cursor: pointer;
+  display: table;
+  margin: 0 auto;
+}
+
+#competition-container {
+  .cf;
+
+  min-height: 90vh;
+  width: 100%;
+
+  .competition {
+    background-color: white;
+    padding: 0 50px; // only top-bottom padding
+
+    .title {
+      width: 100%;
+      text-align: center;
+      font-size: 35px;
+      font-weight: bold;
+    }
+
+    .entrant {
+      .cf;
+
+      font-size: 20px;
+      line-height: 1.5em;
+      color: #808080;
+
+      .name {
+        font-size: 1em;
+        float: left;
+
+        .competition-link {
+          text-decoration: none;
+          color: inherit;
+
+          .user-id {
+            font-size: .66em;
+          }
+        }
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .score {
+        font-weight: 700;
+        font-size: 1.2em;
+        float: right;
+      }
+
+      &.leader {
+        font-size: 30px;
+
+        &.first {
+          font-size: 30px;
+          color: #FFD700;
+        }
+
+        &.second {
+          font-size: 28px;
+          color: #C0C0C0;
+        }
+
+        &.third {
+          font-size: 26px;
+          color: #CD7F32;
+        }
+      }
+
+      &.streakless {
+        font-size: 1em;
+      }
+    }
+  }
+}
