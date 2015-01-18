@@ -25,11 +25,11 @@ var app = express();
 
 
 // Static serving files from specific folders
-app.use('/foundation',  express.static(__dirname + '/foundation'));
-app.use('/css',         express.static(__dirname + '/css'));
-app.use('/js',          express.static(__dirname + '/js'));
-app.use('/images',      express.static(__dirname + '/images'));
-app.use('/static',      express.static(__dirname + '/static'));
+app.use('/foundation',  express.static(__dirname + '/site-wide-resources/foundation'));
+app.use('/css',         express.static(__dirname + '/site-wide-resources/css'));
+app.use('/js',          express.static(__dirname + '/site-wide-resources/js'));
+app.use('/images',      express.static(__dirname + '/site-wide-resources/images'));
+app.use('/static',      express.static(__dirname + '/site-wide-resources/static'));
 
 // Other stuff to use
 app.use(logfmt.requestLogger());
@@ -55,10 +55,10 @@ app.use(function(req, res, next) {
     next();
 });
 
-// Special route for the main page
-app.get('/', function(req, res) {
-    res.render('main.jade');
-});
+app.use('/', require('./sub-projects/main-page/route.js'));
+// app.get('/', function(req, res) {
+//     res.render('main.jade');
+// });
 
 
 // Special route for requesting an update to the competitions database
