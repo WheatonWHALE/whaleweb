@@ -30,37 +30,34 @@
 #competition-container {
   .cf;
 
-  min-height: 90vh;
-  width: 100%;
-
   .competition {
-    background-color: white;
-    padding: 0 50px; // only top-bottom padding
-
-    .title {
-      width: 100%;
-      text-align: center;
-      font-size: 35px;
-      font-weight: bold;
-    }
-
     .entrant {
-      .cf;
-
-      font-size: 20px;
-      line-height: 1.5em;
       color: #808080;
+      line-height: 32px;
+
+      div {
+        text-align: center;
+        padding-left: 33.75px;
+        padding-right: 33.75px;
+        font-size: 23px;
+      }
 
       .name {
-        font-size: 1em;
-        float: left;
-
-        .competition-link {
+        a {
           text-decoration: none;
           color: inherit;
 
-          .user-id {
-            font-size: .66em;
+          &.has-ttip:hover:after {
+            content: attr(data-tooltip);
+            position: absolute;
+            background-color: gray;
+            color: white;
+            font-size: 15px;
+            padding: 4px 4px;
+            line-height: 1em;
+            max-width: 100px;
+            left: 0;
+            top: 0;
           }
         }
 
@@ -70,32 +67,34 @@
       }
 
       .score {
-        font-weight: 700;
-        font-size: 1.2em;
-        float: right;
+        // font-weight: 700;
       }
 
       &.leader {
-        font-size: 30px;
+        // font-weight: 700;
 
-        &.first {
-          font-size: 30px;
+        &.first div {
+          font-size: 36px;
+          line-height: 1.4em;
           color: #FFD700;
         }
 
-        &.second {
-          font-size: 28px;
+        &.second div {
+          font-size: 30px;
+          line-height: 1.4em;
           color: #C0C0C0;
         }
 
-        &.third {
-          font-size: 26px;
+        &.third div {
+          font-size: 28px;
+          line-height: 1.4em;
           color: #CD7F32;
         }
       }
 
-      &.streakless {
-        font-size: 1em;
+      &.streakless div {
+        font-size: 15px;
+        color: #A9A9A9;
       }
     }
   }

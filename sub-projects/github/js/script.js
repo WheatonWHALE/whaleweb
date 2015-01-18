@@ -86,9 +86,9 @@ function markTopThree(element) {
     */
 
     // Note: 2, 3, 4 because the first child is the title
-    element.find('.entrant:nth-child(2)').addClass('leader').addClass('first');
-    element.find('.entrant:nth-child(3)').addClass('leader').addClass('second');
-    element.find('.entrant:nth-child(4)').addClass('leader').addClass('third');
+    element.find('.entrant:nth-child(1)').addClass('leader').addClass('first');
+    element.find('.entrant:nth-child(2)').addClass('leader').addClass('second');
+    element.find('.entrant:nth-child(3)').addClass('leader').addClass('third');
 }
 
 function markStreakless(element) {
@@ -123,22 +123,13 @@ function setUpGitHubPage() {
             entrants.push(this);
         });
 
-        dust.render("competition", {title: 'Current Streak',       
-            compId: 'current',
-            label: 'days',
-            entrants: extractCurrentStreak(entrants)},
-            postProcessAndAppend);
+        entrants.sort(sortByCurrentStreak);
 
-        dust.render("competition", {title: 'Max Streak',           
-            compId: 'max',
-            label: 'days',
-            entrants: extractMaxStreak(entrants)},
-            postProcessAndAppend);
-        
-        dust.render("competition", {title: 'Contributions (Past Year)',
-            compId: 'total',
-            label: 'total',
-            entrants: extractYearData(entrants)},
+        dust.render("competition", 
+            {
+                label: 'days',
+                entrants: entrants
+            },
             postProcessAndAppend);
 
         // Roundabout method of assigning change listener to every entrant individually

@@ -1,9 +1,10 @@
-<div class="columns large-6 small-centered large-uncentered competition" id="{compId}">
-	<div class="title">{title}</div>
+<div class="column large-12 competition">
 	{#entrants}
-	<div class="entrant {id}">
-		<div class="name"><a href="https://github.com/{id}" class="competition-link">{name} {year} <span class="user-id">({id})</span></a></div>
-		<div class="score">{streakVal} {label}</div>
+	<div class="row entrant {id}">
+		<div class="column large-3 name"><a class="has-ttip" href="https://github.com/{id}" data-tooltip={id}>{name} {year}</a></div>
+        <div class="column large-3 score">{current} days</div>
+        <div class="column large-3 score">{max} days</div>
+		<div class="column large-3 score">{total} total</div>
 	</div>{~n}
 	{/entrants}
 </div>

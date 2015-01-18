@@ -19,48 +19,6 @@
 
 // ====================== LESS Variables =======================================
 
-// ====================== General Styling ======================================
-
-@import url(http://fonts.googleapis.com/css?family=Roboto:400,700,900);
-
-body, html {
-  font-family: Roboto, sans-serif;
-}
-
-body {
-  header, footer {
-    width: 100%;
-    text-align: center;
-
-    color: #348CA9;
-    font-weight: bold;
-    // color: rgba(255, 255, 255, 1.0); // White
-    // text-shadow: 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black, 0 0 1px black; // Stack text-shadows until it looks dark
-
-    clear: both;
-  }
-
-  header {
-    font-size: 55px;
-  }
-
-  footer {
-    font-size: 16px;
-    padding: 10px 0;
-  }
-}
-
-input[type=email] {
-  transition: border 0.45s ease-in-out;
-}
-
-input[type=email]:focus:invalid {
-  border: 1px solid yellow;
-}
-input[type=email]:focus:valid {
-  border: 1px solid green;
-}
-
 // ====================== WAVE Styling =========================================
 
 // Foundation's 'medium' screen media query
@@ -82,23 +40,6 @@ input[type=email]:focus:valid {
     margin-left: -30px;
   }
 } /* max-width 640px, mobile-only styles, use when QAing mobile issues */
-
-@new-top-bar-color: #007095;
-
-// Changing color of the top bar
-nav.top-bar.expanded,
-nav.top-bar.expanded .title-area {
-  background: @new-top-bar-color;
-}
-.top-bar,
-.top-bar ul li:not(.has-form) a:not(.button) {
-  background: @new-top-bar-color;
-  transition-duration: .3s;
-}
-
-.top-bar ul li:not(.has-form) a:not(.button):hover {
-  background: #005A77;
-}
 
 #wave-container {
   .cf;
