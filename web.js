@@ -4,12 +4,16 @@ var bodyParser  = require("body-parser"),
 
 var app = express();
 
+var siteWideDir = 'site-wide-resources/';
+
 // Static serving files from specific folders
-app.use('/foundation',  express.static(__dirname + '/site-wide-resources/foundation'));
-app.use('/css',         express.static(__dirname + '/site-wide-resources/css'));
-app.use('/js',          express.static(__dirname + '/site-wide-resources/js'));
-app.use('/images',      express.static(__dirname + '/site-wide-resources/images'));
-app.use('/static',      express.static(__dirname + '/site-wide-resources/static'));
+app.use('/foundation',  express.static(__dirname + '/' + siteWideDir + 'foundation'));
+app.use('/css',         express.static(__dirname + '/' + siteWideDir + 'css'));
+app.use('/js',          express.static(__dirname + '/' + siteWideDir + 'js'));
+app.use('/images',      express.static(__dirname + '/' + siteWideDir + 'images'));
+app.use('/static',      express.static(__dirname + '/' + siteWideDir + 'static'));
+
+app.set('views',        siteWideDir + 'views');
 
 // Other stuff to use
 app.use(logfmt.requestLogger());
