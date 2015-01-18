@@ -1,10 +1,6 @@
 # Ignore all node modules (rely on npm install to get them)
 node_modules/
 
-# Ignore some course-data stuff
-/static/course-data/compiled/
-/static/course-data/*.json
-
 # Ignore all OSX directory config files
 .DS_Store
 

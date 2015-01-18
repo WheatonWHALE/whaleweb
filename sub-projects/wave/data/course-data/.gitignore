@@ -1,0 +1,3 @@
+# Ignore some course-data stuff
+compiled/
+*.json

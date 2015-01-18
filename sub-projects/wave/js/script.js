@@ -17,7 +17,7 @@ function get(url, progressFunc) {
     );
 }
 
-// ============================= WAVE ==========================================
+// ============================= Wave ==========================================
 
 var wavePage = wavePage || {};
 
@@ -207,7 +207,7 @@ Schedule.prototype.decodeTime = function decodeTime(strTime) {
 }
 
 var currPreview;
-function setUpWAVECourseCallbacks() {
+function setUpWaveCourseCallbacks() {
     $('.dataContainer a').attr('target', '_blank');
 
     $('.course').hover(function mouseIn(evt) {
@@ -255,30 +255,30 @@ function openCollapsedInfo(collapsedCourseDiv) {
 }
 
 var loadingContents;
-function getAndSetupWAVEData() {
-    var year = $('input#year').val();
+function getAndSetupWaveData() {
+    var semester = $('input#semester').val();
 
     // If first time, grab placeholder "while loading" contents
     loadingContents = loadingContents || $('.dataContainer').html();
     // Set up loading contents
     $('.dataContainer').html(loadingContents);
 
-    return get('/wave/data?year=' + year, updateProgress).then(function appendToPage(html) {
+    return get('/wave/data?semester=' + semester, updateProgress).then(function appendToPage(html) {
         $('.dataContainer #loading-placeholder').remove();
         $('.dataContainer').html(html);
         $('.dataContainer a').attr('target', '_blank');
-    }).then(setUpWAVECourseCallbacks)
+    }).then(setUpWaveCourseCallbacks)
     .then(function triggerFilters() {
         // console.log('Triggering filters');
-        $('select[name=semester], select[name=department]').change();
+        $('select[name=department]').change();
         $('select[name=foundation], select[name=division], select[name=area]').change();
     }).catch(function handleError(err) {
         console.error(err);
     });
 }
 
-function setUpWAVEPage() {
-    getAndSetupWAVEData();
+function setUpWavePage() {
+    getAndSetupWaveData();
 
     $(document).click(function handleClick(evt) {
         var $evtTarget = $(evt.target);
@@ -299,13 +299,13 @@ function setUpWAVEPage() {
         }
     });
 
-    $('select[name=year]').change(function() {
-        $('input#year').val($(this).val());
+    $('select[name=semester]').change(function() {
+        $('input#semester').val($(this).val());
 
-        getAndSetupWAVEData();
+        getAndSetupWaveData();
     });
 
-    $('select[name=semester], select[name=department]').change(function() {
+    $('select[name=department]').change(function() {
         var name = $(this).attr('name');
         var selector = $(this).val();
         toggleContainer('.' + name + 'Container', selector);
@@ -317,7 +317,7 @@ function setUpWAVEPage() {
         toggleIndividuals(name, selector);
     });
 
-    $('select[name=year]').val($('input#year').val());
+    $('select[name=semester]').val($('input#semester').val());
 
     // var timer;
 
@@ -377,4 +377,4 @@ function setUpWAVEPage() {
 // ============================= OnLoad ========================================
 
 wavePage.schedule = new Schedule($('#schedule'));
-setUpWAVEPage();
+setUpWavePage();

@@ -1,17 +1,19 @@
 .row
+  //- .columns.small-12
+  //-   select(name='year')
+  //-     each year in filterData['year']
+  //-       option(value=year.val)= year.display
+
+
   .columns.small-12
-    select(name='year')
-      each year in filterData['year']
-        option(value=year.val)= year.display
-
-
-  .columns.small-6
     select(name='semester')
       option(value='all') - Semester -
-      option(value='fall') Fall
-      option(value='winter') Winter
-      option(value='spring') Spring
-      option(value='summer') Summer
+      each semester in filterData.semester
+        option(value=semester.val)= semester.display
+      //- option(value='fall') Fall
+      //- option(value='winter') Winter
+      //- option(value='spring') Spring
+      //- option(value='summer') Summer
     i.fi-info.has-tip(data-tooltip title='Summer belongs with the Spring of the year before. This means that Summer 2014 is in the \'Fall 2013 - Spring 2014\' year')
 
   .columns.small-6
@@ -20,6 +22,14 @@
       each department in filterData['department']
         option(value=department.val)= department.display
     i.fi-info.has-tip(data-tooltip title='Please let me know if any are missing.')
+
+
+  .columns.small-6
+    select(name='area')
+      option(value='all') - Area -
+      each area in filterData['area']
+        option(value=area.val)= area.display
+    i.fi-info.has-tip(data-tooltip title='Areas are useful for self-declaring connections. Requirements such as connections are best clarified with your advisor.')
 
 
   .columns.small-6
@@ -35,11 +45,3 @@
       each division in filterData['division']
         option(value=division.val)= division.display
     i.fi-info.has-tip(data-tooltip title='A course from each division is required to graduate Wheaton. Requirements such as these are best clarified with your advisor.')
-
-
-  .columns.small-6
-    select(name='area')
-      option(value='all') - Area -
-      each area in filterData['area']
-        option(value=area.val)= area.display
-    i.fi-info.has-tip(data-tooltip title='Areas are useful for self-declaring connections. Requirements such as connections are best clarified with your advisor.')

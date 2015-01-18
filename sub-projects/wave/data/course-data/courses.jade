@@ -1,38 +1,36 @@
-each semesterName in ['fall', 'winter', 'spring', 'summer']
-  //- each semesterData, semesterName in courseData
-  - var semesterData = courseData[semesterName]
+- var semesterData = courseData
 
-  //- Print out header title no matter what
-  .semesterContainer(class=semesterName)
-    h1= semesterName
-    if semesterData
-      each departmentData, departmentName in semesterData
-        .departmentContainer(class=departmentName)
-          h4= departmentName
-          each course in departmentData
-            div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
-              div
-                a(href=course.courseLink)= course.courseCode
-              div
-                = course.courseTitle
-              div
-                = course.meetingTime
-              div
-                i.add.fi-plus
-                .exp more
-              div
-                ul
-                  li= course.crn
-                  li= course.meetingPlace
-                  li= course.professors
-                  li= prettifyDivAreaFound(course.foundation)
-                  li= prettifyDivAreaFound(course.division)
-                  li= prettifyDivAreaFound(course.area)
-                  li: a(href=course.connectionsLink)= course.connections
-                  //- li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
-                  li: a(href=course.examSlotLink)= course.examSlot
-                  li: a(href=course.textbookLink) here
-                  //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
-                  li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
-                  if course.courseNotes
-                    li= course.courseNotes
+//- Print out header title no matter what
+.semesterContainer(class=semesterName)
+  h1= semesterName
+  if semesterData
+    each departmentData, departmentName in semesterData
+      .departmentContainer(class=departmentName)
+        h4= departmentName
+        each course in departmentData
+          div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
+            div
+              a(href=course.courseLink)= course.courseCode
+            div
+              = course.courseTitle
+            div
+              = course.meetingTime
+            div
+              i.add.fi-plus
+              .exp more
+            div
+              ul
+                li= course.crn
+                li= course.meetingPlace
+                li= course.professors
+                li= prettifyDivAreaFound(course.foundation)
+                li= prettifyDivAreaFound(course.division)
+                li= prettifyDivAreaFound(course.area)
+                li: a(href=course.connectionsLink)= course.connections
+                //- li: a(href='https://weblprod1.wheatonma.edu/' + course.examSlotLink)= course.examSlot
+                li: a(href=course.examSlotLink)= course.examSlot
+                li: a(href=course.textbookLink) here
+                //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
+                li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
+                if course.courseNotes
+                  li= course.courseNotes
