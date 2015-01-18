@@ -3,14 +3,11 @@ var request = require('request'),
     fs      = require('fs'),
     jade    = require('jade');
 
+var courseDataDir = 'sub-projects/wave/data/course-data/';
+
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
-var semesterNumLimit;
-if (debug) {
-    semesterNumLimit = process.argv[3] || 4;
-}
-else {
-    semesterNumLimit = Infinity;
-}
+
+var semesterNumLimit = debug ? (process.argv[3] || 4) : Infinity;
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function clean(deleteValue) {
@@ -179,7 +176,7 @@ function parseOutFilters(searchPageBody) {
 
 function saveFilters(filterObj) {
     var promise = new Promise(function getFiltersTemplate(resolve, reject) {
-        fs.readFile('static/course-data/filters.jade', function renderUsingTemplateFile(err, data) {
+        fs.readFile(courseDataDir + 'filters.jade', function renderUsingTemplateFile(err, data) {
             if (err) {
                 reject(Error(err));
             }
@@ -190,7 +187,7 @@ function saveFilters(filterObj) {
             }
         });
     }).then(function saveRenderedTemplate(html) {
-        fs.writeFile('static/course-data/compiled/filters.html', html, function handleFileWriteResponse(err) {
+        fs.writeFile(courseDataDir + 'compiled/filters.html', html, function handleFileWriteResponse(err) {
             if (err) {
                 console.error(err);
             }
@@ -200,7 +197,7 @@ function saveFilters(filterObj) {
         });
 
         if (debug) {
-            fs.writeFile('static/course-data/filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
+            fs.writeFile(courseDataDir + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
                 if (err) {
                     console.error(err);
                 }
@@ -478,14 +475,14 @@ function getScheduleData(semesters) {
 
 function saveYearOfData(year) {
     return new Promise(function readTemplateFile(resolve, reject) {
-        fs.readFile('static/course-data/courses.jade', function handleTemplateFileResponse(err, data) {
+        fs.readFile(courseDataDir + 'courses.jade', function handleTemplateFileResponse(err, data) {
             err ? reject(Error(err)) : resolve(data);
         });
     }).then(function renderUsingTemplateFile(template) {
         var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
         var html = func({ courseData: scheduleData[year], prettifyDivAreaFound: prettifyDivAreaFound });
 
-        fs.writeFile('static/course-data/compiled/' + year + '.html', html, function handleFileWriteResponse(err) {
+        fs.writeFile(courseDataDir + 'compiled/' + year + '.html', html, function handleFileWriteResponse(err) {
             if (err) {
                 console.error(err);
             }
@@ -495,7 +492,7 @@ function saveYearOfData(year) {
         });
 
         if (debug) {
-            fs.writeFile('static/course-data/' + year + '.json', JSON.stringify(scheduleData[year], null, 2), function handleFileWriteResponse(err) {
+            fs.writeFile(courseDataDir + year + '.json', JSON.stringify(scheduleData[year], null, 2), function handleFileWriteResponse(err) {
                 if (err) {
                     console.error(err);
                 }

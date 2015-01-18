@@ -1,9 +1,6 @@
 var bodyParser  = require("body-parser"),
     express     = require("express"),
-    Firebase    = require("firebase"),
-    fs          = require("fs"),
-    logfmt      = require("logfmt"),
-    request     = require("request");
+    logfmt      = require("logfmt");
 
 var app = express();
 
@@ -39,17 +36,16 @@ app.use(function(req, res, next) {
 });
 
 // Sub-applications
-app.use('/', require('./sub-projects/main-page/route.js'));
-app.use('/github', require('./sub-projects/github/route.js'));
-app.use('/feedback', require('./sub-projects/feedback/route.js'));
-app.use('/wave', require('./sub-projects/wave/route.js'));
-app.use('/members', require('./sub-projects/members/route.js'));
+app.use('/',            require('./sub-projects/main-page/route.js'));
+app.use('/github',      require('./sub-projects/github/route.js'));
+app.use('/feedback',    require('./sub-projects/feedback/route.js'));
+app.use('/wave',        require('./sub-projects/wave/route.js'));
+app.use('/members',     require('./sub-projects/members/route.js'));
 
 // Catch-all for 404
 app.get('*', function(req, res){
     res.render('404.jade');
 });
-
 
 // Server on port 7500
 var port = (process.argv[2] != "undefined" ? process.argv[2] : undefined) || 7500;

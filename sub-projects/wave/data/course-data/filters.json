@@ -1,0 +1,458 @@
+{
+  "department": [
+    {
+      "val": "AFDS",
+      "display": "African/Afr Am/Diaspora Stdies"
+    },
+    {
+      "val": "ANTH",
+      "display": "Anthropology"
+    },
+    {
+      "val": "ARBC",
+      "display": "Arabic"
+    },
+    {
+      "val": "ARTH",
+      "display": "Art History"
+    },
+    {
+      "val": "ARTS",
+      "display": "Art Studio"
+    },
+    {
+      "val": "AST",
+      "display": "Astronomy"
+    },
+    {
+      "val": "BIO",
+      "display": "Biology"
+    },
+    {
+      "val": "MGMT",
+      "display": "Business and Management"
+    },
+    {
+      "val": "CHEM",
+      "display": "Chemistry"
+    },
+    {
+      "val": "CHIN",
+      "display": "Chinese"
+    },
+    {
+      "val": "CLAS",
+      "display": "Classics"
+    },
+    {
+      "val": "COMP",
+      "display": "Computer Science"
+    },
+    {
+      "val": "CW",
+      "display": "Creative Writing"
+    },
+    {
+      "val": "ECON",
+      "display": "Economics"
+    },
+    {
+      "val": "EDUC",
+      "display": "Education"
+    },
+    {
+      "val": "ENG",
+      "display": "English"
+    },
+    {
+      "val": "ENV",
+      "display": "Environmental Studies"
+    },
+    {
+      "val": "FNMS",
+      "display": "Film and New Media Studies"
+    },
+    {
+      "val": "FSEM",
+      "display": "First Year Seminar"
+    },
+    {
+      "val": "FR",
+      "display": "French"
+    },
+    {
+      "val": "GER",
+      "display": "German"
+    },
+    {
+      "val": "GK",
+      "display": "Greek"
+    },
+    {
+      "val": "HISP",
+      "display": "Hispanic Studies"
+    },
+    {
+      "val": "HIST",
+      "display": "History"
+    },
+    {
+      "val": "INT",
+      "display": "Interdepartmental"
+    },
+    {
+      "val": "IR",
+      "display": "International Relations"
+    },
+    {
+      "val": "ITAS",
+      "display": "Italian Studies"
+    },
+    {
+      "val": "JAPN",
+      "display": "Japanese"
+    },
+    {
+      "val": "LAT",
+      "display": "Latin"
+    },
+    {
+      "val": "MATH",
+      "display": "Mathematics"
+    },
+    {
+      "val": "MUSC",
+      "display": "Music"
+    },
+    {
+      "val": "MUSP",
+      "display": "Music Performance"
+    },
+    {
+      "val": "NEUR",
+      "display": "Neuroscience"
+    },
+    {
+      "val": "PHIL",
+      "display": "Philosophy"
+    },
+    {
+      "val": "PHYS",
+      "display": "Physics"
+    },
+    {
+      "val": "POLS",
+      "display": "Political Science"
+    },
+    {
+      "val": "PSY",
+      "display": "Psychology"
+    },
+    {
+      "val": "PH",
+      "display": "Public Health"
+    },
+    {
+      "val": "REL",
+      "display": "Religion"
+    },
+    {
+      "val": "RUSS",
+      "display": "Russian"
+    },
+    {
+      "val": "SOC",
+      "display": "Sociology"
+    },
+    {
+      "val": "THEA",
+      "display": "Theatre"
+    },
+    {
+      "val": "URB",
+      "display": "Urban Studies"
+    },
+    {
+      "val": "WGS",
+      "display": "Women's and Gender Studies"
+    },
+    {
+      "val": "WMST",
+      "display": "Women's Studies"
+    }
+  ],
+  "foundation": [
+    {
+      "val": "BW",
+      "display": " Beyond the West"
+    },
+    {
+      "val": "FS",
+      "display": " First Year Seminar"
+    },
+    {
+      "val": "WR",
+      "display": " First Year Writing"
+    },
+    {
+      "val": "FL",
+      "display": " Foreign Language"
+    },
+    {
+      "val": "QA",
+      "display": " Quantitative Analysis"
+    }
+  ],
+  "division": [
+    {
+      "val": "DVAH",
+      "display": "Arts and Humanities"
+    },
+    {
+      "val": "DVNS",
+      "display": "Natural Science"
+    },
+    {
+      "val": "DVSS",
+      "display": "Social Sciences"
+    }
+  ],
+  "area": [
+    {
+      "val": "ARCA",
+      "display": "Creative Arts"
+    },
+    {
+      "val": "ARHS",
+      "display": "History"
+    },
+    {
+      "val": "ARHM",
+      "display": "Humanities"
+    },
+    {
+      "val": "ARMC",
+      "display": "Math and Comp Science"
+    },
+    {
+      "val": "ARNS",
+      "display": "Natural Sciences"
+    },
+    {
+      "val": "ARSS",
+      "display": "Social Sciences"
+    }
+  ],
+  "semester": [
+    {
+      "val": "201720",
+      "display": "Spring 2017"
+    },
+    {
+      "val": "201710",
+      "display": "Fall 2016"
+    },
+    {
+      "val": "201620",
+      "display": "Spring 2016"
+    },
+    {
+      "val": "201610",
+      "display": "Fall 2015"
+    },
+    {
+      "val": "201535",
+      "display": "Summer 2015"
+    },
+    {
+      "val": "201520",
+      "display": "Spring 2015"
+    },
+    {
+      "val": "201515",
+      "display": "Winter 2015"
+    },
+    {
+      "val": "201510",
+      "display": "Fall 2014"
+    },
+    {
+      "val": "201435",
+      "display": "Summer 2014"
+    },
+    {
+      "val": "201420",
+      "display": "Spring 2014"
+    },
+    {
+      "val": "201415",
+      "display": "Winter 2014"
+    },
+    {
+      "val": "201410",
+      "display": "Fall 2013"
+    },
+    {
+      "val": "201335",
+      "display": "Summer 2013"
+    },
+    {
+      "val": "201320",
+      "display": "Spring 2013"
+    },
+    {
+      "val": "201315",
+      "display": "Winter 2013"
+    },
+    {
+      "val": "201310",
+      "display": "Fall 2012"
+    },
+    {
+      "val": "201220",
+      "display": "Spring 2012"
+    },
+    {
+      "val": "201215",
+      "display": "Winter 2012"
+    },
+    {
+      "val": "201210",
+      "display": "Fall 2011"
+    },
+    {
+      "val": "201120",
+      "display": "Spring 2011"
+    },
+    {
+      "val": "201115",
+      "display": "Winter 2011"
+    },
+    {
+      "val": "201110",
+      "display": "Fall 2010"
+    },
+    {
+      "val": "201020",
+      "display": "Spring 2010"
+    },
+    {
+      "val": "201015",
+      "display": "Winter 2010"
+    },
+    {
+      "val": "201010",
+      "display": "Fall 2009"
+    },
+    {
+      "val": "200920",
+      "display": "Spring 2009"
+    },
+    {
+      "val": "200910",
+      "display": "Fall 2008"
+    },
+    {
+      "val": "200820",
+      "display": "Spring 2008"
+    },
+    {
+      "val": "200810",
+      "display": "Fall 2007"
+    },
+    {
+      "val": "200720",
+      "display": "Spring 2007"
+    },
+    {
+      "val": "200710",
+      "display": "Fall 2006"
+    },
+    {
+      "val": "200620",
+      "display": "Spring 2006"
+    },
+    {
+      "val": "200610",
+      "display": "Fall 2005"
+    },
+    {
+      "val": "200520",
+      "display": "Spring 2005"
+    },
+    {
+      "val": "200515",
+      "display": "Winter 2005"
+    },
+    {
+      "val": "200510",
+      "display": "Fall 2004"
+    },
+    {
+      "val": "200420",
+      "display": "Spring 2004"
+    },
+    {
+      "val": "200410",
+      "display": "Fall 2003"
+    }
+  ],
+  "year": [
+    {
+      "val": "2016-2017",
+      "display": "Fall 2016 - Spring 2017"
+    },
+    {
+      "val": "2015-2016",
+      "display": "Fall 2015 - Spring 2016"
+    },
+    {
+      "val": "2014-2015",
+      "display": "Fall 2014 - Spring 2015"
+    },
+    {
+      "val": "2013-2014",
+      "display": "Fall 2013 - Spring 2014"
+    },
+    {
+      "val": "2012-2013",
+      "display": "Fall 2012 - Spring 2013"
+    },
+    {
+      "val": "2011-2012",
+      "display": "Fall 2011 - Spring 2012"
+    },
+    {
+      "val": "2010-2011",
+      "display": "Fall 2010 - Spring 2011"
+    },
+    {
+      "val": "2009-2010",
+      "display": "Fall 2009 - Spring 2010"
+    },
+    {
+      "val": "2008-2009",
+      "display": "Fall 2008 - Spring 2009"
+    },
+    {
+      "val": "2007-2008",
+      "display": "Fall 2007 - Spring 2008"
+    },
+    {
+      "val": "2006-2007",
+      "display": "Fall 2006 - Spring 2007"
+    },
+    {
+      "val": "2005-2006",
+      "display": "Fall 2005 - Spring 2006"
+    },
+    {
+      "val": "2004-2005",
+      "display": "Fall 2004 - Spring 2005"
+    },
+    {
+      "val": "2003-2004",
+      "display": "Fall 2003 - Spring 2004"
+    }
+  ]
+}

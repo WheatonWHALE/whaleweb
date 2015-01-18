@@ -14,6 +14,7 @@ var app = express();
 app.set('views', basePath + 'views/');
 
 app.use('/css', express.static(basePath + 'css/'));
+app.use('/js',  express.static(basePath + 'js/'));
 
 app.get('/', function(req, res) {
     fs.readFile(basePath + 'data/member-data/members.json', function renderPageWithJSON(err, json) {

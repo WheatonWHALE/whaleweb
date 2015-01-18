@@ -8,6 +8,7 @@ var app = express();
 app.set('views', basePath + 'views/');
 
 app.use('/css', express.static(basePath + 'css/'));
+app.use('/js',  express.static(basePath + 'js/'));
 
 app.route('/').get(function(req, res) {
         res.render('feedback.jade');
