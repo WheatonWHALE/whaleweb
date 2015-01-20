@@ -1,4 +1,4 @@
-// ============================= General =======================================
+// ============================= Helpers =======================================
 
 function get(url, progressFunc) {
     return Promise.resolve(
@@ -27,9 +27,25 @@ function post(url, data) {
     );
 }
 
-// ============================= Wave ==========================================
+function setStringify(es6SetObj) {
+    var buffObj = {};
 
-var wavePage = wavePage || {};
+    for (var key in es6SetObj) {
+        buffObj[key] = Array.from(es6SetObj[key]);
+    }
+
+    return JSON.stringify(buffObj);
+}
+
+// ============================= General stuff =================================
+
+function closeExpandedInfo() {
+    $('div.expanded').removeClass('expanded');
+}
+function openCollapsedInfo(collapsedCourseDiv) {
+    closeExpandedInfo();
+    collapsedCourseDiv.addClass('expanded');
+}
 
 function toggleContainer(container, selector) {
     if (selector == 'all') {
@@ -62,6 +78,159 @@ function updateProgress(oEvent) {
         $('#progress-value').html(Math.floor(100 * oEvent.loaded / oEvent.total) + '%');
     }
 }
+
+var currPreview;
+function setUpWaveCourseCallbacks() {
+    $('.dataContainer a').attr('target', '_blank');
+
+    // $('.course').hover(function mouseIn(evt) {
+    //     var courseDiv = $(evt.target).closest('.course');
+    //     var timeText = courseDiv.find('div:nth-child(3)').text();
+    //     if (timeText.match(/TBA/)) return;
+
+    //     currPreview = wavePage.schedule.extractDaysAndTimes(timeText);
+    //     currPreview.crn = courseDiv.attr('id');
+
+    //     wavePage.schedule.addCourse(currPreview.days, currPreview.times, currPreview.crn, false);
+    // }, function mouseOut(evt) {
+    //     if (currPreview) {
+    //         wavePage.schedule.removeCourse(currPreview.days, currPreview.times, currPreview.crn, false);
+    //         currPreview = undefined;
+    //     }
+    // });
+
+    $('.course .add').click(function handleCourseOnSchedule(evt) {
+        var crn = $(evt.target).closest('.course').attr('id').replace(/#/, '');
+
+        wavePage.addOrRemoveCourse(crn);
+
+
+        // var $evtTarget = $(evt.target);
+        // $evtTarget.toggleClass('fi-plus fi-minus');
+
+        // var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
+
+        // if (timeText.match(/TBA/)) return;
+
+        // // Display that the course is currently actively 'saved'
+        // $evtTarget.closest('.course').toggleClass('saved');
+
+        // var currAdded = wavePage.schedule.extractDaysAndTimes(timeText);
+        // currAdded.crn = $evtTarget.closest('.course').attr('id');
+
+        // wavePage.schedule.handleCourse(currAdded.days, currAdded.times, currAdded.crn, true, $evtTarget.hasClass('fi-minus'));
+    });
+}
+
+var loadingContents;
+var originalSchedule, originalCart;
+function getAndSetupWaveData() {
+    wavePage.cart = {};
+    for (var key in cartData) {
+        wavePage.cart[key] = new Set(cartData[key]);
+    }
+
+    wavePage.currentSemester = $('input#semester').val();
+    var semester = wavePage.currentSemester;
+
+    // If first time, grabs placeholder "while loading" contents
+    loadingContents = loadingContents || $('.dataContainer').html();
+    // Set up loading contents
+    $('.dataContainer').html(loadingContents);
+
+    return get('/wave/data?semester=' + semester, updateProgress)
+        .then(function appendToPage(html) {
+            $('.dataContainer #loading-placeholder').remove();
+            $('.dataContainer').html(html);
+            $('.dataContainer a').attr('target', '_blank');
+        })
+        .then(setUpWaveCourseCallbacks)
+        .then(function triggerFilters() {
+            $('select[name=department]').change();
+            $('select[name=foundation], select[name=division], select[name=area]').change();
+        })
+        .then(function everythingElse() {
+            var semester = wavePage.currentSemester;
+            if (!(semester in wavePage.cart)) {
+                wavePage.cart[semester] = new Set();
+            }
+
+            // Grab schedule and cart div
+            var $schedule = $('#schedule');
+            var $cart = $('#cart');
+
+            // Cache original schedule and cart
+            originalSchedule = originalSchedule || $schedule.html();
+            originalCart = originalCart || $cart.html();
+
+            console.log('originalCart');
+            console.log(originalCart);
+
+            // Reset the schedule and cart
+            $schedule.html(originalSchedule);
+            $cart.html(originalCart);
+
+            for (var crn of wavePage.cart[semester]) {
+                wavePage.setCourseStatus(crn, true);
+            }
+        })
+        .catch(function handleError(err) {
+            console.log(err.stack);
+        });
+}
+
+function setUpWavePage() {
+    getAndSetupWaveData();
+
+    $(document).click(function handleClick(evt) {
+        var $evtTarget = $(evt.target);
+        // Clicked on the "more info" element with an non-expanded info div
+        if ( $evtTarget.is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
+            openCollapsedInfo($evtTarget.parent().parent());
+        }
+        // Clicked on div containing "more info" element with a non-expanded info div
+        else if ( $evtTarget.children('.exp').length && !$evtTarget.closest('.course').is('.expanded') ) {
+            openCollapsedInfo($evtTarget.parent());
+        }
+        // Test if clicked thing, or one of its ancestors, is the info div
+        else if ( $evtTarget.closest('div').is('.expanded > div:last-child') || $evtTarget.is('i.add') ) {
+            // Do nothing
+        }
+        else {
+            closeExpandedInfo();
+        }
+    });
+
+    $('select[name=semester]').val($('input#semester').val());
+
+    $('select[name=semester]').change(function() {
+        $('input#semester').val($(this).val());
+
+        getAndSetupWaveData();
+    });
+
+    $('select[name=department]').change(function() {
+        var name = $(this).attr('name');
+        var selector = $(this).val();
+        toggleContainer('.' + name + 'Container', selector);
+    });
+
+    $('select[name=foundation], select[name=division], select[name=area]').change(function() {
+        var name = $(this).attr('name');
+        var selector = $(this).val();
+        toggleIndividuals(name, selector);
+    });
+}
+
+// ============================= Cart Stuff ====================================
+
+window.onbeforeunload = function saveData(e) {
+    post('save', { cart: setStringify(wavePage.cart), sessionId: sessionId }); // TODO: Fix serialization of Set()
+
+    return null; // We want no confirmation popup dialog
+}
+
+// ============================= Schedule Stuff ================================
 
 function Schedule($div, data) {
     this.$div = $div;
@@ -202,186 +371,56 @@ Schedule.prototype.extractDaysAndTimes = function extractDaysAndTimes(timeText) 
 
 Schedule.prototype.decodeTime = function decodeTime(strTime) {
     // parse out the time, and mod by 1200 to remove issue with 12:30 PM becoming 2430. Add 1200 if PM.
-    return (parseInt(strTime.replace(/:| /g, '')) % 1200) + (strTime.slice(-2) == "PM" ? 1200 : 0);
+    return ( parseInt(strTime.replace(/:| /g, '')) % 1200 ) + ( strTime.slice(-2) == "PM" ? 1200 : 0 );
 }
 
-var currPreview;
-function setUpWaveCourseCallbacks() {
-    $('.dataContainer a').attr('target', '_blank');
+// ============================= Global Stuff ==================================
 
-    $('.course').hover(function mouseIn(evt) {
-        var courseDiv = $(evt.target).closest('.course');
-        var timeText = courseDiv.find('div:nth-child(3)').text();
-        if (timeText.match(/TBA/)) return;
+var wavePage = wavePage || {};
 
-        currPreview = wavePage.schedule.extractDaysAndTimes(timeText);
-        currPreview.crn = courseDiv.attr('id');
+wavePage.addOrRemoveCourse = function(crn) {
+    var alreadyPresent = wavePage.cart[wavePage.currentSemester].has(crn);
 
-        wavePage.schedule.addCourse(currPreview.days, currPreview.times, currPreview.crn, false);
-    }, function mouseOut(evt) {
-        if (currPreview) {
-            wavePage.schedule.removeCourse(currPreview.days, currPreview.times, currPreview.crn, false);
-            currPreview = undefined;
-        }
-    });
-
-    $('.add').click(function handleCourseOnSchedule(evt) {
-        var $evtTarget = $(evt.target);
-        $evtTarget.toggleClass('fi-plus fi-minus');
-
-        var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
-
-        if (timeText.match(/TBA/)) return;
-
-        // Display that the course is currently actively 'saved'
-        $evtTarget.closest('.course').toggleClass('saved');
-
-        var currAdded = wavePage.schedule.extractDaysAndTimes(timeText);
-        currAdded.crn = $evtTarget.closest('.course').attr('id');
-
-        wavePage.schedule.handleCourse(currAdded.days, currAdded.times, currAdded.crn, true, $evtTarget.hasClass('fi-minus'));
-    });
+    wavePage.setCourseStatus(crn, !alreadyPresent)
 }
 
-var closedIconClass = 'fi-plus';
-var openedIconClass = 'fi-minus';
-function closeExpandedInfo() {
-    $('div.expanded').removeClass('expanded');//.find('i.exp').removeClass(openedIconClass).addClass(closedIconClass);
-}
-function openCollapsedInfo(collapsedCourseDiv) {
-    closeExpandedInfo();
-    collapsedCourseDiv.addClass('expanded');//.find('i.exp').removeClass(closedIconClass).addClass(openedIconClass);
+wavePage.setCourseStatus = function(crn, status) {
+    wavePage.setStatusInCart(crn, status);
+    wavePage.setCourseDivStatus(crn, status);
+    wavePage.setScheduleStatus(crn, status);
+
 }
 
-var loadingContents;
-function getAndSetupWaveData() {
-    var semester = $('input#semester').val();
+wavePage.setStatusInCart = function(crn, adding) {
+    var cartIdPrefix = 'cart-';
 
-    // If first time, grab placeholder "while loading" contents
-    loadingContents = loadingContents || $('.dataContainer').html();
-    // Set up loading contents
-    $('.dataContainer').html(loadingContents);
-
-    return get('/wave/data?semester=' + semester, updateProgress).then(function appendToPage(html) {
-        $('.dataContainer #loading-placeholder').remove();
-        $('.dataContainer').html(html);
-        $('.dataContainer a').attr('target', '_blank');
-    }).then(setUpWaveCourseCallbacks)
-    .then(function triggerFilters() {
-        // console.log('Triggering filters');
-        $('select[name=department]').change();
-        $('select[name=foundation], select[name=division], select[name=area]').change();
-    }).catch(function handleError(err) {
-        console.error(err);
-    });
+    if (adding) {
+        $('#cart').append($('<div/>', { id: cartIdPrefix + crn, html: crn }));
+        wavePage.cart[wavePage.currentSemester].add(crn);
+    }
+    else {
+        wavePage.cart[wavePage.currentSemester].delete(crn);
+        $('#cart').find('#' + cartIdPrefix + crn).remove();
+    }
 }
 
-function setUpWavePage() {
-    getAndSetupWaveData().then(function() {
-        wavePage.schedule = new Schedule($('#schedule'), scheduleData);
-    });
+wavePage.setCourseDivStatus = function(crn, adding) {
+    var $courseDiv = $('#' + crn);
 
-    $(document).click(function handleClick(evt) {
-        var $evtTarget = $(evt.target);
-        // Clicked on the "more info" element with an non-expanded info div
-        if ( $evtTarget.is('.exp') && !$evtTarget.closest('.course').is('.expanded') ) {
-            openCollapsedInfo($evtTarget.parent().parent());
-        }
-        // Clicked on div containing "more info" element with a non-expanded info div
-        else if ( $evtTarget.children('.exp').length && !$evtTarget.closest('.course').is('.expanded') ) {
-            openCollapsedInfo($evtTarget.parent());
-        }
-        // Test if clicked thing, or one of its ancestors, is the info div
-        else if ( $evtTarget.closest('div').is('.expanded > div:last-child') || $evtTarget.is('i.add') ) {
-            // Do nothing
-        }
-        else {
-            closeExpandedInfo();
-        }
-    });
-
-    $('select[name=semester]').change(function() {
-        $('input#semester').val($(this).val());
-
-        getAndSetupWaveData();
-    });
-
-    $('select[name=department]').change(function() {
-        var name = $(this).attr('name');
-        var selector = $(this).val();
-        toggleContainer('.' + name + 'Container', selector);
-    });
-
-    $('select[name=foundation], select[name=division], select[name=area]').change(function() {
-        var name = $(this).attr('name');
-        var selector = $(this).val();
-        toggleIndividuals(name, selector);
-    });
-
-    $('select[name=semester]').val($('input#semester').val());
-
-    // var timer;
-
-    // var filtersStuck = false;
-
-    // var navBar = $('nav');
-    // var filters = $('#filters');
-    // var header = $('header');
-
-    // $(window).scroll(function(){
-    //     // Timer stuff
-    //     if (timer) {
-    //         clearTimeout(timer);
-    //     }
-    //     // Timer to throttle the scroll event so it doesn't happen too often
-    //     timer = setTimeout(function fixOrUnfixFilters() {
-    //         // var scrollBottom = $(window).scrollTop() + $(window).height();
-    //         var scrollTop = $(window).scrollTop();
-    //         var navBarBottom = navBar.offset().top + navBar.height();
-
-    //         var headerBottom = header.offset().top + header.height();
-
-    //         // var optionsBottom = (navBar.height()+navBar.offset().top);
-    //         var filtersTop = filters.offset().top;
-
-    //         if (!filtersStuck && filtersTop < navBarBottom) {
-    //             console.log('Yay')
-    //             filters.addClass('stuck');
-    //             filtersStuck = true;
-    //             // console.log('Yay');
-    //         }
-    //         if (filtersStuck && headerBottom > navBarBottom) {
-    //             console.log('Nope')
-    //             filters.removeClass('stuck');
-    //             filtersStuck = false;
-    //         }
-
-    //         // // if bottom of scroll window at the footer, allow buttons to rejoin page as it goes by
-    //         // if (filtersStuck && (scrollBottom >= ($('footer').offset().top))) {
-    //         //     // console.log("Scroll bottom hit footer! On the way down");
-    //         //     filters.removeClass("fixed");
-    //         //     filtersStuck = false;
-    //         // }
-
-    //         // // if bottom of scroll window at the footer, fix button to the screen
-    //         // if (!filtersStuck && (scrollBottom < ($('footer').offset().top))) {
-    //         //     // console.log("Scroll bottom hit footer! On the way up");
-    //         //     filters.addClass("fixed");
-    //         //     filtersStuck = true;
-    //         // }
-    //     }, 10);
-    // });
-
-    // $(window).scroll(); // Call a dummy scroll event after everything is loaded.
+    if (adding) {
+        $courseDiv.addClass('saved');
+        $courseDiv.find('.add').removeClass('fi-plus').addClass('fi-minus');
+    }
+    else {
+        $courseDiv.removeClass('saved');
+        $courseDiv.find('.add').removeClass('fi-minus').addClass('fi-plus');
+    }
 }
 
-window.onbeforeunload = function saveData(e) {
-    post('save', { schedule: JSON.stringify(wavePage.schedule.sched), sessionId: sessionId });
-
-    return null; // We want no confirmation popup dialog
+wavePage.setScheduleStatus = function(crn, adding) {
+    // TODO: The logic of highlighting the schedule
 }
 
 // ============================= OnLoad ========================================
-
 
 setUpWavePage();

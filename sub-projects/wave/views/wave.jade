@@ -16,7 +16,7 @@ block contents
   input#semester(type='hidden' value=semester)
 
   script.
-    var scheduleData = !{scheduleData || 'null'};
+    var cartData = !{cartData || 'null'};
     var sessionId = '#{sessionId}';
 
   .row= errorMessage
@@ -29,6 +29,8 @@ block contents
 
       include ../data/course-data/compiled/filters.html
 
+      .row#cart
+        |Your cart:
 
       .row#schedule
         .column.small-12

@@ -7,7 +7,6 @@
 
   .columns.small-12
     select(name='semester')
-      option(value='all') - Semester -
       each semester in filterData.semester
         option(value=semester.val)= semester.display
       //- option(value='fall') Fall

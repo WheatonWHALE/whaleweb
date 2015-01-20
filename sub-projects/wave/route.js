@@ -24,18 +24,18 @@ app.set('views', basePath + 'views/');
 
 app.get('/', function(req, res) {
     fs.readFile(userScheduleDataDir + req.session.id + '.json', function(err, data) {
-        var scheduleData = err ? null : data;
-        res.render('wave.jade', { semester: req.query.semester || '201620', scheduleData: scheduleData, sessionId: req.session.id });
+        var cartData = err ? null : data;
+        res.render('wave.jade', { semester: req.query.semester || '201620', cartData: cartData, sessionId: req.session.id });
     });
 });
 
 app.post('/save', function(req, res) {
     var sessId = req.body.sessionId;
-    var sessSchedData = JSON.parse(req.body.schedule);
+    var sessionCart = JSON.parse(req.body.cart);
 
-    console.log('Saving ' + JSON.stringify(sessSchedData) + ' under ' + sessId);
+    // console.log('Saving ' + JSON.stringify(sessionCart) + ' under ' + sessId);
 
-    fs.writeFile(userScheduleDataDir + sessId + '.json', JSON.stringify(sessSchedData));
+    fs.writeFile(userScheduleDataDir + sessId + '.json', JSON.stringify(sessionCart));
 
     res.send(true);
 });
