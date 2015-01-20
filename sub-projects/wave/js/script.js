@@ -17,6 +17,16 @@ function get(url, progressFunc) {
     );
 }
 
+function post(url, data) {
+    return Promise.resolve(
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: data
+        })
+    );
+}
+
 // ============================= Wave ==========================================
 
 var wavePage = wavePage || {};
@@ -53,92 +63,84 @@ function updateProgress(oEvent) {
     }
 }
 
-function Schedule($div) {
+function Schedule($div, data) {
     this.$div = $div;
 
-    // Initialize schedule data structure
-    this.sched = {};
     var _this = this;
 
-    this.$div.find('.sched-col').each(function handleColumn(index, entry) {
-        if (this.id == 'label-col') return;
+    // Initialize schedule data structure
+    if (data) {
+        this.sched = data;
 
-        var dayId = this.id;
+        for (var dayKey in this.sched) {
+            var $dayCol = $('#' + dayKey);
 
-        _this.sched[dayId] = {};
-
-        $(this).find('.sched-row').each(function handleRow(index, entry) {
-            _this.sched[dayId][parseInt($(entry).data('timeslot'))] = {};
-        });
-    });
-}
-
-function setCourseOnSchedule(days, times, permanent, crn) {
-    var className = permanent ? 'added' : 'previewing';
-    for (key in days) {
-        if (days[key]) {
-            var $day = $('#' + key);
-
-            $day.find('.sched-row').each(function eachTime(index, entry) {
-                var timeslot = parseInt($(entry).data('timeslot'));
-
-                if (timeslot >= times.start && timeslot <= times.end) {
-                    var $entry = $(entry);
-                    // console.log(entry);
-                    // console.log(crn);
-                    // console.log($entry);
-                    // console.log($entry.is('.' + crn));
-                    if ($entry.is('.' + crn)) $entry.removeClass(className).removeClass(crn);
-                    else if ($entry.is('.' + crn + ':not(.' + className + ')')) $entry.toggleClass('conflicted');
-                    else $entry.addClass(className).addClass(crn);
-                    // if ($entry.is('.' + className)) $entry.toggleClass('conflicted');
-                    // else $entry.toggleClass(className);
+            for (var timeslotKey in this.sched[dayKey]) {
+                for (var crnKey in this.sched[dayKey][timeslotKey]) {
+                    _this.handleLogic(dayKey, timeslotKey, $dayCol.find('[data-timeslot=' + timeslotKey + ']'), crnKey, true, true);
+                    $('#' + crnKey).addClass('saved');
                 }
-            });
+            }
         }
+    }
+    else {
+        this.sched = {};
+        var _this = this;
+
+        this.$div.find('.sched-col').each(function handleColumn(index, entry) {
+            if (this.id == 'label-col') return;
+
+            var dayId = this.id;
+
+            _this.sched[dayId] = {};
+
+            $(this).find('.sched-row').each(function handleRow(index, entry) {
+                _this.sched[dayId][parseInt($(entry).data('timeslot'))] = {};
+            });
+        });
     }
 }
 
-Schedule.prototype.handleLogic = function handleLogic(day, timeslot, $entry, className, crn, permanent, adding) {
+Schedule.prototype.handleLogic = function handleLogic(day, timeslot, $entry, crn, permanent, adding) {
     var removing = !adding;
+    var className = permanent ? 'added' : 'previewing';
 
-    var thisTimeslot = this.sched[day][timeslot];
+    var thisTimeslotObj = this.sched[day][timeslot];
 
     if (permanent) {
-        // console.log('adding: ' + adding);
         if (adding) {
             $entry.addClass('added');
-            if (crn in thisTimeslot)
-                thisTimeslot[crn] += 1;
+            if (crn in thisTimeslotObj)
+                thisTimeslotObj[crn] += 1;
             else
-                thisTimeslot[crn] = 1;
+                thisTimeslotObj[crn] = 1;
         }
         else {
-            if (Object.keys(thisTimeslot).length <= 1)
+            if (Object.keys(thisTimeslotObj).length <= 1)
                 $entry.removeClass('added');
-            thisTimeslot[crn] -= 1;
+            thisTimeslotObj[crn] -= 1;
         }
     }
     else {
         if (adding) {
             $entry.addClass('previewing');
-            if (crn in thisTimeslot)
-                thisTimeslot[crn] += 1;
+            if (crn in thisTimeslotObj)
+                thisTimeslotObj[crn] += 1;
             else
-                thisTimeslot[crn] = 1;
+                thisTimeslotObj[crn] = 1;
         }
         else {
             $entry.removeClass('previewing');
-            thisTimeslot[crn] -= 1;
+            thisTimeslotObj[crn] -= 1;
         }
     }
 
-    if (thisTimeslot[crn] == 0)
-        delete thisTimeslot[crn];
+    if (thisTimeslotObj[crn] == 0)
+        delete thisTimeslotObj[crn];
 
-    // console.log('Showing: ' + day + ' - ' + timeslot + ': ' + JSON.stringify(thisTimeslot));
+    // console.log('Showing: ' + day + ' - ' + timeslot + ': ' + JSON.stringify(thisTimeslotObj));
 
-    if (Object.keys(thisTimeslot).length > 1) {
+    if (Object.keys(thisTimeslotObj).length > 1) {
         $entry.addClass('conflicted');
     }
     else {
@@ -147,10 +149,7 @@ Schedule.prototype.handleLogic = function handleLogic(day, timeslot, $entry, cla
 }
 
 Schedule.prototype.handleCourse = function handleCourse(days, times, crn, permanent, adding) {
-    var className = permanent ? 'added' : 'previewing';
     var _this = this;
-
-    // console.log((adding ? 'Adding: ' : 'Removing: ') + crn + ' - ' + className);
 
     for (day in days) {
         if (!days[day]) continue;
@@ -161,7 +160,7 @@ Schedule.prototype.handleCourse = function handleCourse(days, times, crn, perman
             $entry = $(entry);
             var timeslot = parseInt($entry.data('timeslot'));
             if (timeslot >= times.start && timeslot <= times.end) {
-                _this.handleLogic(day, timeslot, $entry, className, crn, permanent, adding);
+                _this.handleLogic(day, timeslot, $entry, crn, permanent, adding);
             }
         });
     }
@@ -198,7 +197,7 @@ Schedule.prototype.extractDaysAndTimes = function extractDaysAndTimes(timeText) 
             start: this.decodeTime(timeText.match(startTimeMatch)[1]),
             end: this.decodeTime(timeText.match(endTimeMatch)[1])
         }
-    }
+    };
 }
 
 Schedule.prototype.decodeTime = function decodeTime(strTime) {
@@ -278,7 +277,9 @@ function getAndSetupWaveData() {
 }
 
 function setUpWavePage() {
-    getAndSetupWaveData();
+    getAndSetupWaveData().then(function() {
+        wavePage.schedule = new Schedule($('#schedule'), scheduleData);
+    });
 
     $(document).click(function handleClick(evt) {
         var $evtTarget = $(evt.target);
@@ -374,7 +375,13 @@ function setUpWavePage() {
     // $(window).scroll(); // Call a dummy scroll event after everything is loaded.
 }
 
+window.onbeforeunload = function saveData(e) {
+    post('save', { schedule: JSON.stringify(wavePage.schedule.sched), sessionId: sessionId });
+
+    return null; // We want no confirmation popup dialog
+}
+
 // ============================= OnLoad ========================================
 
-wavePage.schedule = new Schedule($('#schedule'));
+
 setUpWavePage();

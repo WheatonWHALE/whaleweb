@@ -14,7 +14,14 @@ block header
 
 block contents
   input#semester(type='hidden' value=semester)
-  = errorMessage
+
+  script.
+    var scheduleData = !{scheduleData || 'null'};
+    var sessionId = '#{sessionId}';
+
+  .row= errorMessage
+  .row= sessionId
+
   .row
     #filters.columns.small-11.large-4.small-centered.medium-uncentered
       .row#heads-up All changes are applied immediately.
