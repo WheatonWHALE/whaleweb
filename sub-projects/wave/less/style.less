@@ -314,22 +314,25 @@
         background-color: @conflicted-color;
       }
 
-      &:hover:after {
+      &.added:hover {
+        cursor: default;
+      }
+
+      &.added:hover:after {
         display: block;
         position: absolute;
         top: 0;
         right: 0;
 
-        font-size: 20px;
+        content: attr(data-ttip);
 
+        font-size: 20px;
         padding: 10px 10px;
 
         background-color: black;
         color: white;
 
         z-index: 11;
-
-        content: attr(data-ttip);
       }
     }
   }

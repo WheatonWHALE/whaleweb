@@ -5,6 +5,7 @@ var bodyParser  = require('body-parser')
 
 var basePath = './sub-projects/wave/';
 var userScheduleDataDir = './sub-projects/wave/data/schedule-data/'
+var defaultSemester = '201510'; // Update as needed
 
 var app = express();
 
@@ -26,7 +27,7 @@ app.get('/', function(req, res) {
     fs.readFile(userScheduleDataDir + req.session.id + '.json', function(err, data) {
         var cartData = err ? null : data;
         res.render('wave.jade', {
-            semester: (req.query.semester || req.session.semester || '201620'),
+            semester: (req.query.semester || req.session.semester || defaultSemester),
             cartData: cartData,
             sessionId: req.session.id
         });
@@ -45,7 +46,7 @@ app.post('/save', function(req, res) {
 
 // URL for fetching data for the wave page. 
 app.get('/data', function(req, res) {
-    var semester = req.query.semester || '201510';
+    var semester = req.query.semester || defaultSemester;
     var errorMessage = '';
 
     var expectedFilePath = basePath + 'data/course-data/compiled/' + semester + '.html';

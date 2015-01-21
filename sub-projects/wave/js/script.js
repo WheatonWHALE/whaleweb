@@ -400,6 +400,9 @@ wavePage.schedule.setDisplay = function(crn, adding) {
 
     var dayTime = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').text());
 
+    if (dayTime === null)
+        return;
+
     var $scheduleDiv = wavePage.schedule.$div;
 
     for (var day in dayTime.days) {
