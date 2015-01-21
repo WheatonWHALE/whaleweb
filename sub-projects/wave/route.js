@@ -17,7 +17,7 @@ app.use(session({
   secret: 'cyclical secrets',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 3600000 } // one hour
+  cookie: { maxAge: 86400000 } // one day
 }));
 
 app.set('views', basePath + 'views/');
@@ -25,15 +25,18 @@ app.set('views', basePath + 'views/');
 app.get('/', function(req, res) {
     fs.readFile(userScheduleDataDir + req.session.id + '.json', function(err, data) {
         var cartData = err ? null : data;
-        res.render('wave.jade', { semester: req.query.semester || '201620', cartData: cartData, sessionId: req.session.id });
+        res.render('wave.jade', {
+            semester: (req.query.semester || req.session.semester || '201620'),
+            cartData: cartData,
+            sessionId: req.session.id
+        });
     });
 });
 
 app.post('/save', function(req, res) {
     var sessId = req.body.sessionId;
     var sessionCart = JSON.parse(req.body.cart);
-
-    // console.log('Saving ' + JSON.stringify(sessionCart) + ' under ' + sessId);
+    req.session.semester = req.body.semester;
 
     fs.writeFile(userScheduleDataDir + sessId + '.json', JSON.stringify(sessionCart));
 

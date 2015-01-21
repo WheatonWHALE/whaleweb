@@ -37,6 +37,13 @@ function setStringify(es6SetObj) {
     return JSON.stringify(buffObj);
 }
 
+// ============================= Global Variables ==============================
+
+var wavePage = wavePage || {};
+
+wavePage.cart = {};
+wavePage.schedule = {};
+
 // ============================= General stuff =================================
 
 function closeExpandedInfo() {
@@ -105,6 +112,9 @@ function setUpWaveCourseCallbacks() {
         wavePage.addOrRemoveCourse(crn);
 
 
+        console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
+
+
         // var $evtTarget = $(evt.target);
         // $evtTarget.toggleClass('fi-plus fi-minus');
 
@@ -124,12 +134,7 @@ function setUpWaveCourseCallbacks() {
 
 var loadingContents;
 var originalSchedule, originalCart;
-function getAndSetupWaveData() {
-    wavePage.cart = {};
-    for (var key in cartData) {
-        wavePage.cart[key] = new Set(cartData[key]);
-    }
-
+function fetchAndShowWaveHtml() {
     wavePage.currentSemester = $('input#semester').val();
     var semester = wavePage.currentSemester;
 
@@ -144,16 +149,18 @@ function getAndSetupWaveData() {
             $('.dataContainer').html(html);
             $('.dataContainer a').attr('target', '_blank');
         })
-        .then(setUpWaveCourseCallbacks)
         .then(function triggerFilters() {
             $('select[name=department]').change();
             $('select[name=foundation], select[name=division], select[name=area]').change();
         })
-        .then(function everythingElse() {
+        .then(setUpWaveCourseCallbacks)
+        .then(function refreshPageContents() {
             var semester = wavePage.currentSemester;
             if (!(semester in wavePage.cart)) {
                 wavePage.cart[semester] = new Set();
             }
+
+            console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
 
             // Grab schedule and cart div
             var $schedule = $('#schedule');
@@ -163,14 +170,11 @@ function getAndSetupWaveData() {
             originalSchedule = originalSchedule || $schedule.html();
             originalCart = originalCart || $cart.html();
 
-            console.log('originalCart');
-            console.log(originalCart);
-
             // Reset the schedule and cart
             $schedule.html(originalSchedule);
             $cart.html(originalCart);
 
-            for (var crn of wavePage.cart[semester]) {
+            for (var crn of wavePage.cart[semester]) { // Set iteration syntax
                 wavePage.setCourseStatus(crn, true);
             }
         })
@@ -179,8 +183,18 @@ function getAndSetupWaveData() {
         });
 }
 
-function setUpWavePage() {
-    getAndSetupWaveData();
+function initializeWavePage() {
+    for (var key in cartData) {
+        wavePage.cart[key] = new Set(cartData[key]);
+    }
+    
+    fetchAndShowWaveHtml();
+
+    var dummyColumn = $('#schedule').find('.sched-col');
+    wavePage.schedule.timeStep = $(dummyColumn.find('.sched-row').get(1)).data('timeslot') -
+                                $(dummyColumn.find('.sched-row').get(0)).data('timeslot');
+
+    wavePage.schedule.$div = $('#schedule');
 
     $(document).click(function handleClick(evt) {
         var $evtTarget = $(evt.target);
@@ -206,7 +220,7 @@ function setUpWavePage() {
     $('select[name=semester]').change(function() {
         $('input#semester').val($(this).val());
 
-        getAndSetupWaveData();
+        fetchAndShowWaveHtml();
     });
 
     $('select[name=department]').change(function() {
@@ -225,125 +239,131 @@ function setUpWavePage() {
 // ============================= Cart Stuff ====================================
 
 window.onbeforeunload = function saveData(e) {
-    post('save', { cart: setStringify(wavePage.cart), sessionId: sessionId }); // TODO: Fix serialization of Set()
+    post('save', { cart: setStringify(wavePage.cart), sessionId: sessionId, semester: $('input#semester').val() });
 
     return null; // We want no confirmation popup dialog
 }
 
 // ============================= Schedule Stuff ================================
 
-function Schedule($div, data) {
-    this.$div = $div;
+wavePage.schedule = {};
 
-    var _this = this;
+// function Schedule() {
+//     this.$div = $div;
 
-    // Initialize schedule data structure
-    if (data) {
-        this.sched = data;
+//     var _this = this;
 
-        for (var dayKey in this.sched) {
-            var $dayCol = $('#' + dayKey);
+//     // Initialize schedule data structure
+//     if (data) {
+//         this.sched = data;
 
-            for (var timeslotKey in this.sched[dayKey]) {
-                for (var crnKey in this.sched[dayKey][timeslotKey]) {
-                    _this.handleLogic(dayKey, timeslotKey, $dayCol.find('[data-timeslot=' + timeslotKey + ']'), crnKey, true, true);
-                    $('#' + crnKey).addClass('saved');
-                }
-            }
-        }
-    }
-    else {
-        this.sched = {};
-        var _this = this;
+//         for (var dayKey in this.sched) {
+//             var $dayCol = $('#' + dayKey);
 
-        this.$div.find('.sched-col').each(function handleColumn(index, entry) {
-            if (this.id == 'label-col') return;
+//             for (var timeslotKey in this.sched[dayKey]) {
+//                 for (var crnKey in this.sched[dayKey][timeslotKey]) {
+//                     _this.handleLogic(dayKey, timeslotKey, $dayCol.find('[data-timeslot=' + timeslotKey + ']'), crnKey, true, true);
+//                     $('#' + crnKey).addClass('saved');
+//                 }
+//             }
+//         }
+//     }
+//     else {
+//         this.sched = {};
+//         var _this = this;
 
-            var dayId = this.id;
+//         this.$div.find('.sched-col').each(function handleColumn(index, entry) {
+//             if (this.id == 'label-col') return;
 
-            _this.sched[dayId] = {};
+//             var dayId = this.id;
 
-            $(this).find('.sched-row').each(function handleRow(index, entry) {
-                _this.sched[dayId][parseInt($(entry).data('timeslot'))] = {};
-            });
-        });
-    }
-}
+//             _this.sched[dayId] = {};
 
-Schedule.prototype.handleLogic = function handleLogic(day, timeslot, $entry, crn, permanent, adding) {
-    var removing = !adding;
-    var className = permanent ? 'added' : 'previewing';
+//             $(this).find('.sched-row').each(function handleRow(index, entry) {
+//                 _this.sched[dayId][parseInt($(entry).data('timeslot'))] = {};
+//             });
+//         });
+//     }
+// }
 
-    var thisTimeslotObj = this.sched[day][timeslot];
+// wavePage.schedule.handleLogic = function(day, timeslot, $entry, crn, permanent, adding) {
+//     var removing = !adding;
+//     var className = permanent ? 'added' : 'previewing';
 
-    if (permanent) {
-        if (adding) {
-            $entry.addClass('added');
-            if (crn in thisTimeslotObj)
-                thisTimeslotObj[crn] += 1;
-            else
-                thisTimeslotObj[crn] = 1;
-        }
-        else {
-            if (Object.keys(thisTimeslotObj).length <= 1)
-                $entry.removeClass('added');
-            thisTimeslotObj[crn] -= 1;
-        }
-    }
-    else {
-        if (adding) {
-            $entry.addClass('previewing');
-            if (crn in thisTimeslotObj)
-                thisTimeslotObj[crn] += 1;
-            else
-                thisTimeslotObj[crn] = 1;
-        }
-        else {
-            $entry.removeClass('previewing');
-            thisTimeslotObj[crn] -= 1;
-        }
-    }
+//     var thisTimeslotObj = this.sched[day][timeslot];
 
-    if (thisTimeslotObj[crn] == 0)
-        delete thisTimeslotObj[crn];
+//     if (permanent) {
+//         if (adding) {
+//             $entry.addClass('added');
+//             if (crn in thisTimeslotObj)
+//                 thisTimeslotObj[crn] += 1;
+//             else
+//                 thisTimeslotObj[crn] = 1;
+//         }
+//         else {
+//             if (Object.keys(thisTimeslotObj).length <= 1)
+//                 $entry.removeClass('added');
+//             thisTimeslotObj[crn] -= 1;
+//         }
+//     }
+//     else {
+//         if (adding) {
+//             $entry.addClass('previewing');
+//             if (crn in thisTimeslotObj)
+//                 thisTimeslotObj[crn] += 1;
+//             else
+//                 thisTimeslotObj[crn] = 1;
+//         }
+//         else {
+//             $entry.removeClass('previewing');
+//             thisTimeslotObj[crn] -= 1;
+//         }
+//     }
 
-    // console.log('Showing: ' + day + ' - ' + timeslot + ': ' + JSON.stringify(thisTimeslotObj));
+//     if (thisTimeslotObj[crn] == 0)
+//         delete thisTimeslotObj[crn];
 
-    if (Object.keys(thisTimeslotObj).length > 1) {
-        $entry.addClass('conflicted');
-    }
-    else {
-        $entry.removeClass('conflicted');
-    }
-}
+//     // console.log('Showing: ' + day + ' - ' + timeslot + ': ' + JSON.stringify(thisTimeslotObj));
 
-Schedule.prototype.handleCourse = function handleCourse(days, times, crn, permanent, adding) {
-    var _this = this;
+//     if (Object.keys(thisTimeslotObj).length > 1) {
+//         $entry.addClass('conflicted');
+//     }
+//     else {
+//         $entry.removeClass('conflicted');
+//     }
+// }
 
-    for (day in days) {
-        if (!days[day]) continue;
+// wavePage.schedule.handleCourse = function(days, times, crn, permanent, adding) {
+//     var _this = this;
+
+//     for (day in days) {
+//         if (!days[day]) continue;
     
-        var $day = $('#' + day);
+//         var $day = $('#' + day);
 
-        $day.find('.sched-row').each(function eachTime(index, entry) {
-            $entry = $(entry);
-            var timeslot = parseInt($entry.data('timeslot'));
-            if (timeslot >= times.start && timeslot <= times.end) {
-                _this.handleLogic(day, timeslot, $entry, crn, permanent, adding);
-            }
-        });
+//         $day.find('.sched-row').each(function eachTime(index, entry) {
+//             $entry = $(entry);
+//             var timeslot = parseInt($entry.data('timeslot'));
+//             if (timeslot >= times.start && timeslot <= times.end) {
+//                 _this.handleLogic(day, timeslot, $entry, crn, permanent, adding);
+//             }
+//         });
+//     }
+// }
+
+// wavePage.schedule.addCourse = function addCourse(days, times, crn, permanent) {
+//     this.handleCourse(days, times, crn, permanent, true);
+// }
+
+// wavePage.schedule.removeCourse = function removeCourse(days, times, crn, permanent) {
+//     this.handleCourse(days, times, crn, permanent, false);
+// }
+
+wavePage.schedule.extractDaysAndTimes = function(timeText) {
+    if (timeText.match(/TBA/)) {
+        return null;
     }
-}
 
-Schedule.prototype.addCourse = function addCourse(days, times, crn, permanent) {
-    this.handleCourse(days, times, crn, permanent, true);
-}
-
-Schedule.prototype.removeCourse = function removeCourse(days, times, crn, permanent) {
-    this.handleCourse(days, times, crn, permanent, false);
-}
-
-Schedule.prototype.extractDaysAndTimes = function extractDaysAndTimes(timeText) {
     var monMatch = /^\s*M\s*T?\s*W?\s*R?\s*F?/,
         tueMatch = /^\s*M?\s*T\s*W?\s*R?\s*F?/,
         wedMatch = /^\s*M?\s*T?\s*W\s*R?\s*F?/,
@@ -363,20 +383,51 @@ Schedule.prototype.extractDaysAndTimes = function extractDaysAndTimes(timeText) 
         },
 
         times: {
-            start: this.decodeTime(timeText.match(startTimeMatch)[1]),
-            end: this.decodeTime(timeText.match(endTimeMatch)[1])
+            start: wavePage.schedule.decodeTime(timeText.match(startTimeMatch)[1]),
+            end: wavePage.schedule.decodeTime(timeText.match(endTimeMatch)[1])
         }
     };
 }
 
-Schedule.prototype.decodeTime = function decodeTime(strTime) {
+wavePage.schedule.decodeTime = function(strTime) {
     // parse out the time, and mod by 1200 to remove issue with 12:30 PM becoming 2430. Add 1200 if PM.
     return ( parseInt(strTime.replace(/:| /g, '')) % 1200 ) + ( strTime.slice(-2) == "PM" ? 1200 : 0 );
 }
 
-// ============================= Global Stuff ==================================
+wavePage.schedule.setDisplay = function(crn, adding) {
+    var $courseDiv = $('#' + crn);
+    var courseCode = $courseDiv.find('div:nth-child(1)').text().split(/ /)[0];
 
-var wavePage = wavePage || {};
+    var dayTime = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').text());
+
+    var $scheduleDiv = wavePage.schedule.$div;
+
+    for (var day in dayTime.days) {
+        if (!dayTime.days[day]) continue;
+
+        var dayCol = $scheduleDiv.find('#' + day);
+
+        for (var currTime = dayTime.times.start; currTime <= dayTime.times.end; currTime += wavePage.schedule.timeStep) {
+            if ((currTime % 100) === 60) // Addresses issue with using base-60 (hours on a clock) in base-100 (because logic)
+                currTime += 40;
+
+            var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
+
+            if (adding) {
+                timeslot.addClass('added');
+                timeslot.html(courseCode);
+                timeslot.attr('data-ttip', courseCode);
+            }
+            else {
+                timeslot.removeClass('added');
+                timeslot.html('');
+                timeslot.attr('data-ttip', '');
+            }
+        }
+    }
+}
+
+// ============================= Global Stuff ==================================
 
 wavePage.addOrRemoveCourse = function(crn) {
     var alreadyPresent = wavePage.cart[wavePage.currentSemester].has(crn);
@@ -393,9 +444,17 @@ wavePage.setCourseStatus = function(crn, status) {
 
 wavePage.setStatusInCart = function(crn, adding) {
     var cartIdPrefix = 'cart-';
+    var courseCode = $('#' + crn).find('div:nth-child(1)').text().split(/ /)[0];
 
     if (adding) {
-        $('#cart').append($('<div/>', { id: cartIdPrefix + crn, html: crn }));
+        var newCartEntry = $('<div/>', { id: cartIdPrefix + crn });
+
+        newCartEntry.append($('<a/>', {
+            text: courseCode,
+            href: '#' + crn
+        }));
+
+        $('#cart').append(newCartEntry);
         wavePage.cart[wavePage.currentSemester].add(crn);
     }
     else {
@@ -418,9 +477,9 @@ wavePage.setCourseDivStatus = function(crn, adding) {
 }
 
 wavePage.setScheduleStatus = function(crn, adding) {
-    // TODO: The logic of highlighting the schedule
+    wavePage.schedule.setDisplay(crn, adding);
 }
 
 // ============================= OnLoad ========================================
 
-setUpWavePage();
+initializeWavePage();

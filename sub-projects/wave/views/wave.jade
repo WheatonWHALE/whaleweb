@@ -19,8 +19,7 @@ block contents
     var cartData = !{cartData || 'null'};
     var sessionId = '#{sessionId}';
 
-  .row= errorMessage
-  .row= sessionId
+  .row#error-message= errorMessage
 
   .row
     #filters.columns.small-11.large-4.small-centered.medium-uncentered
@@ -29,13 +28,10 @@ block contents
 
       include ../data/course-data/compiled/filters.html
 
-      .row#cart
-        |Your cart:
-
       .row#schedule
         .column.small-12
           //- include ../static/jade-includes/week-schedule.jade
-          - var trans = { 'label-col': 'Time', 'mon': 'Monday', 'tue': 'Tuesday', 'wed': 'Wednesday', 'thu': 'Thursday', 'fri': 'Friday' }
+          - var trans = { 'label-col': 'Times', 'mon': 'Monday', 'tue': 'Tuesday', 'wed': 'Wednesday', 'thu': 'Thursday', 'fri': 'Friday' }
           each day in ['label-col', 'mon', 'tue', 'wed', 'thu', 'fri']
             //- Saving: class= (time % 100) ? 'underlined' : ''
             .sched-col(id=day)
@@ -46,6 +42,9 @@ block contents
                     - var time = (time % 1200 >= 100) ? (time % 1200) : time
                     - time += 30
                     p= time.toString().slice(0, -2) + ':' + time.toString().slice(-2)
+
+      .row#cart
+        |Your saved courses:
 
 
 
