@@ -5,7 +5,7 @@ var bodyParser  = require('body-parser')
 
 var basePath = './sub-projects/wave/';
 var userScheduleDataDir = './sub-projects/wave/data/schedule-data/'
-var defaultSemester = '201510'; // Update as needed
+var defaultSemester = '201520'; // Update as needed
 
 var app = express();
 
