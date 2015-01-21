@@ -27,6 +27,15 @@ function post(url, data) {
     );
 }
 
+function postSync(url, data) {
+    return $.ajax({
+        type: 'POST',
+        url: url,
+        data: data,
+        async: false
+    });
+}
+
 function setStringify(es6SetObj) {
     var buffObj = {};
 
@@ -237,7 +246,8 @@ function initializeWavePage() {
 // ============================= Cart Stuff ====================================
 
 window.onbeforeunload = function saveData(e) {
-    post('save', { cart: setStringify(wavePage.cart), sessionId: sessionId, semester: $('input#semester').val() });
+    var result = postSync('save', { cart: setStringify(wavePage.cart), sessionId: sessionId, semester: $('input#semester').val() });
+    console.log('Successful: ' + result.responseText);
 
     return null; // We want no confirmation popup dialog
 }

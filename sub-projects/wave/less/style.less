@@ -87,14 +87,115 @@
       border-bottom: none;
     }
   }
+}
 
-  #cart {
-    #cart-title {
-      text-align: center;
+#schedule {
+  .cf;
+  
+  font-size: 12px;
+  line-height: 1em;
+  text-align: center;
+
+  .sched-col {
+    float: left;
+    width: calc(~"100% / 6");
+
+    &#label-col {
+      div {
+        border: 1px solid white; // Keep the spacing but show no border
+      }
+
+      & div:not(.col-title) {
+        text-align: right;
+
+        p {
+          display: block;
+          position: relative;
+          // top: -3px;
+          z-index: 10;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .col-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .sched-row {
+      width: 100%;
+      height: 11px;
+      white-space: nowrap;
+
+      border: 1px dotted #E7E7E7;
+
+      @transition-speed: 0.15s;
+
+      // position: relative; // For the tooltip absolute-relative position
+      font-size: 10px;
+
+      transition: background-color @transition-speed ease-in,
+                  border-color @transition-speed ease-in;
+
+      a {
+        color: white;
+        text-decoration: none;
+      }
+
+      &.previewing {
+        @previewing-color: rgba(43, 166, 203, 0.5);
+        border: 1px solid @previewing-color;
+        background-color: @previewing-color;
+      }
+
+      &.added {
+        @added-color: rgba(43, 166, 203, 0.8);
+        border: 1px solid @added-color;
+        background-color: @added-color;
+      }
+
+      &.added.previewing.conflicted {
+        @conflicted-color: rgba(255, 165, 0, 0.8);
+        border: 1px solid @conflicted-color;
+        background-color: @conflicted-color;
+      }
+
+      &.added:not(.previewing).conflicted {
+        @conflicted-color: rgba(255, 0, 0, 0.5);
+        border: 1px solid @conflicted-color;
+        background-color: @conflicted-color;
+      }
+
+      &.added:hover {
+        cursor: default;
+      }
+
+      &.added:hover:after {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+
+        content: attr(data-ttip);
+
+        font-size: 20px;
+        padding: 10px 10px;
+
+        background-color: black;
+        color: white;
+
+        z-index: 11;
+      }
     }
   }
 }
 
+#cart {
+  #cart-title {
+    text-align: center;
+  }
+}
 
 .semesterContainer.hidden,
 .departmentContainer.hidden {
@@ -240,106 +341,5 @@
 
   &:not(.expanded) > div:last-child {
     display: none;
-  }
-}
-
-#schedule {
-  .cf;
-  
-  font-size: 12px;
-  line-height: 1em;
-  text-align: center;
-
-  .sched-col {
-    float: left;
-    width: calc(~"100% / 6");
-
-    &#label-col {
-      div {
-        border: 1px solid white; // Keep the spacing but show no border
-      }
-
-      & div:not(.col-title) {
-        text-align: right;
-
-        p {
-          display: block;
-          position: relative;
-          // top: -3px;
-          z-index: 10;
-          font-size: 12px;
-        }
-      }
-    }
-
-    .col-title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .sched-row {
-      width: 100%;
-      height: 11px;
-
-      border: 1px dotted #E7E7E7;
-
-      @transition-speed: 0.15s;
-
-      // position: relative; // For the tooltip absolute-relative position
-      font-size: 10px;
-
-      transition: background-color @transition-speed ease-in,
-                  border-color @transition-speed ease-in;
-
-      a {
-        color: white;
-        text-decoration: none;
-      }
-
-      &.previewing {
-        @previewing-color: rgba(43, 166, 203, 0.5);
-        border: 1px solid @previewing-color;
-        background-color: @previewing-color;
-      }
-
-      &.added {
-        @added-color: rgba(43, 166, 203, 0.8);
-        border: 1px solid @added-color;
-        background-color: @added-color;
-      }
-
-      &.added.previewing.conflicted {
-        @conflicted-color: rgba(255, 165, 0, 0.8);
-        border: 1px solid @conflicted-color;
-        background-color: @conflicted-color;
-      }
-
-      &.added:not(.previewing).conflicted {
-        @conflicted-color: rgba(255, 0, 0, 0.5);
-        border: 1px solid @conflicted-color;
-        background-color: @conflicted-color;
-      }
-
-      &.added:hover {
-        cursor: default;
-      }
-
-      &.added:hover:after {
-        display: block;
-        position: absolute;
-        top: 0;
-        right: 0;
-
-        content: attr(data-ttip);
-
-        font-size: 20px;
-        padding: 10px 10px;
-
-        background-color: black;
-        color: white;
-
-        z-index: 11;
-      }
-    }
   }
 }

@@ -39,9 +39,10 @@ app.post('/save', function(req, res) {
     var sessionCart = JSON.parse(req.body.cart);
     req.session.semester = req.body.semester;
 
-    fs.writeFile(userScheduleDataDir + sessId + '.json', JSON.stringify(sessionCart));
-
-    res.send(true);
+    fs.writeFile(userScheduleDataDir + sessId + '.json', JSON.stringify(sessionCart), function onceFinished(err) {
+        if (err) res.send(false);
+        else res.send(true);
+    });
 });
 
 // URL for fetching data for the wave page. 
