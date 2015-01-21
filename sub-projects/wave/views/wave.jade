@@ -18,11 +18,12 @@ block contents
   script.
     var cartData = !{cartData || 'null'};
     var sessionId = '#{sessionId}';
+    var semester = '!{semester}';
 
   .row#error-message= errorMessage
 
   .row
-    #filters.columns.small-11.large-4.small-centered.medium-uncentered
+    #secondary-info.columns.small-11.large-4.small-centered.medium-uncentered
       .row#heads-up All changes are applied immediately.
 
 
@@ -44,11 +45,11 @@ block contents
                     p= time.toString().slice(0, -2) + ':' + time.toString().slice(-2)
 
       .row#cart
-        |Your saved courses:
+        #cart-title
+          |Your saved courses:
+        #cart-contents
 
-
-
-    .column.small-12.large-7.dataContainer
+    #course-container.column.small-12.large-7
       #loading-placeholder
         #progress-value
         img(src='/images/spinner.gif')

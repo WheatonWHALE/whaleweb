@@ -88,7 +88,7 @@ function updateProgress(oEvent) {
 
 var currPreview;
 function setUpWaveCourseCallbacks() {
-    $('.dataContainer a').attr('target', '_blank');
+    $('.course a').attr('target', '_blank');
 
     // $('.course').hover(function mouseIn(evt) {
     //     var courseDiv = $(evt.target).closest('.course');
@@ -112,7 +112,7 @@ function setUpWaveCourseCallbacks() {
         wavePage.addOrRemoveCourse(crn);
 
 
-        console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
+        // console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
 
 
         // var $evtTarget = $(evt.target);
@@ -136,18 +136,17 @@ var loadingContents;
 var originalSchedule, originalCart;
 function fetchAndShowWaveHtml() {
     wavePage.currentSemester = $('input#semester').val();
-    var semester = wavePage.currentSemester;
 
     // If first time, grabs placeholder "while loading" contents
-    loadingContents = loadingContents || $('.dataContainer').html();
+    loadingContents = loadingContents || $('#course-container').html();
     // Set up loading contents
-    $('.dataContainer').html(loadingContents);
+    $('#course-container').html(loadingContents);
 
-    return get('/wave/data?semester=' + semester, updateProgress)
+    return get('/wave/data?semester=' + wavePage.currentSemester, updateProgress)
         .then(function appendToPage(html) {
-            $('.dataContainer #loading-placeholder').remove();
-            $('.dataContainer').html(html);
-            $('.dataContainer a').attr('target', '_blank');
+            $('#course-container #loading-placeholder').remove();
+            $('#course-container').html(html);
+            $('#course-container a').attr('target', '_blank');
         })
         .then(function triggerFilters() {
             $('select[name=department]').change();
@@ -155,12 +154,11 @@ function fetchAndShowWaveHtml() {
         })
         .then(setUpWaveCourseCallbacks)
         .then(function refreshPageContents() {
-            var semester = wavePage.currentSemester;
-            if (!(semester in wavePage.cart)) {
-                wavePage.cart[semester] = new Set();
+            if (!(wavePage.currentSemester in wavePage.cart)) {
+                wavePage.cart[wavePage.currentSemester] = new Set();
             }
 
-            console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
+            // console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
 
             // Grab schedule and cart div
             var $schedule = $('#schedule');
@@ -174,7 +172,7 @@ function fetchAndShowWaveHtml() {
             $schedule.html(originalSchedule);
             $cart.html(originalCart);
 
-            for (var crn of wavePage.cart[semester]) { // Set iteration syntax
+            for (var crn of wavePage.cart[wavePage.currentSemester]) { // Set iteration syntax
                 wavePage.setCourseStatus(crn, true);
             }
         })
@@ -184,6 +182,8 @@ function fetchAndShowWaveHtml() {
 }
 
 function initializeWavePage() {
+    $('select[name=semester]').val(semester);
+
     for (var key in cartData) {
         wavePage.cart[key] = new Set(cartData[key]);
     }
@@ -214,8 +214,6 @@ function initializeWavePage() {
             closeExpandedInfo();
         }
     });
-
-    $('select[name=semester]').val($('input#semester').val());
 
     $('select[name=semester]').change(function() {
         $('input#semester').val($(this).val());
@@ -457,12 +455,12 @@ wavePage.setStatusInCart = function(crn, adding) {
             href: '#' + crn
         }));
 
-        $('#cart').append(newCartEntry);
+        $('#cart-contents').append(newCartEntry);
         wavePage.cart[wavePage.currentSemester].add(crn);
     }
     else {
         wavePage.cart[wavePage.currentSemester].delete(crn);
-        $('#cart').find('#' + cartIdPrefix + crn).remove();
+        $('#cart-contents').find('#' + cartIdPrefix + crn).remove();
     }
 }
 

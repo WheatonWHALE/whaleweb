@@ -1,26 +1,15 @@
-.row
-  //- .columns.small-12
-  //-   select(name='year')
-  //-     each year in filterData['year']
-  //-       option(value=year.val)= year.display
-
-
+#filters.row
   .columns.small-12
     select(name='semester')
       each semester in filterData.semester
         option(value=semester.val)= semester.display
-      //- option(value='fall') Fall
-      //- option(value='winter') Winter
-      //- option(value='spring') Spring
-      //- option(value='summer') Summer
-    i.fi-info.has-tip(data-tooltip title='Summer belongs with the Spring of the year before. This means that Summer 2014 is in the \'Fall 2013 - Spring 2014\' year')
 
   .columns.small-6
     select(name='department')
       option(value='all') - Department -
       each department in filterData['department']
         option(value=department.val)= department.display
-    i.fi-info.has-tip(data-tooltip title='Please let me know if any are missing.')
+    i.fi-info.has-tip(data-tooltip title='Please let us know if any are missing.')
 
 
   .columns.small-6

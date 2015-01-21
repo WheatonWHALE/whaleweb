@@ -18,7 +18,7 @@ app.use(session({
   secret: 'cyclical secrets',
   resave: false,
   saveUninitialized: true,
-  cookie: { maxAge: 86400000 } // one day
+  cookie: { maxAge: 604800000 } // one week
 }));
 
 app.set('views', basePath + 'views/');
