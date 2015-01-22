@@ -62,6 +62,10 @@ function displayError(errorMessage) {
     }, visibilityLength + fadeOutLength + 50);
 }
 
+function findCourseCode($courseDiv) {
+    return $courseDiv.find('div:nth-child(1)').text()/*.split(/ /)[0]*/;
+}
+
 // ============================= Global Variables ==============================
 
 var wavePage = wavePage || {};
@@ -401,7 +405,7 @@ wavePage.schedule.decodeTime = function(strTime) {
 
 wavePage.schedule.setDisplay = function(crn, adding) {
     var $courseDiv = $('#' + crn);
-    var courseCode = $courseDiv.find('div:nth-child(1)').text().split(/ /)[0];
+    var courseCode = findCourseCode($courseDiv);
 
     var dayTime = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').text());
 
@@ -463,7 +467,7 @@ wavePage.setCourseStatus = function(crn, status) {
 
 wavePage.setStatusInCart = function(crn, adding) {
     var cartIdPrefix = 'cart-';
-    var courseCode = $('#' + crn).find('div:nth-child(1)').text().split(/ /)[0];
+    var courseCode = findCourseCode($('#' + crn));
 
     if (adding) {
         var newCartEntry = $('<div/>', { id: cartIdPrefix + crn });

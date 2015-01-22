@@ -39,12 +39,22 @@ app.use(function(req, res, next) {
     next();
 });
 
+function enforceTrailingSlash(req, res, next) {
+    if(req.url.substr(-1) != '/' && !(req.url.length - req.url.indexOf('.') <= 5) && (req.url.indexOf('?') == -1)) {
+        console.log(req.url);
+        console.log(req.url.length - req.url.indexOf('.'));
+        res.redirect(301, req.url + '/');
+    }
+    else 
+        next();
+}
+
 // Sub-applications
-app.use('/',            require('./sub-projects/main-page/route.js'));
-app.use('/github',      require('./sub-projects/github/route.js'));
-app.use('/feedback',    require('./sub-projects/feedback/route.js'));
-app.use('/wave',        require('./sub-projects/wave/route.js'));
-app.use('/members',     require('./sub-projects/members/route.js'));
+app.use(enforceTrailingSlash).use('/',            require('./sub-projects/main-page/route.js'));
+app.use(enforceTrailingSlash).use('/github',      require('./sub-projects/github/route.js'));
+app.use(enforceTrailingSlash).use('/feedback',    require('./sub-projects/feedback/route.js'));
+app.use(enforceTrailingSlash).use('/wave', require('./sub-projects/wave/route.js'));
+app.use(enforceTrailingSlash).use('/members',     require('./sub-projects/members/route.js'));
 
 // Catch-all for 404
 app.get('*', function(req, res){
