@@ -3,4 +3,4 @@ data/course-data/compiled/
 data/course-data/*.json
 
 # Schedule Data from Sessions
-data/schedule-data/* 
+data/schedule-data/*.json
