@@ -41,8 +41,6 @@ app.use(function(req, res, next) {
 
 function enforceTrailingSlash(req, res, next) {
     if(req.url.substr(-1) != '/' && !(req.url.length - req.url.indexOf('.') <= 5) && (req.url.indexOf('?') == -1)) {
-        console.log(req.url);
-        console.log(req.url.length - req.url.indexOf('.'));
         res.redirect(301, req.url + '/');
     }
     else 
