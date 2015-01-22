@@ -250,123 +250,12 @@ window.onbeforeunload = function saveData(e) {
     var result = postSync('save', { cart: setStringify(wavePage.cart), sessionId: sessionId, semester: $('input#semester').val() });
     console.log('Successful: ' + result.responseText);
 
-    return null; // We want no confirmation popup dialog
+    return result.responseText; // We want no confirmation popup dialog
 }
 
 // ============================= Schedule Stuff ================================
 
 wavePage.schedule = {};
-
-// function Schedule() {
-//     this.$div = $div;
-
-//     var _this = this;
-
-//     // Initialize schedule data structure
-//     if (data) {
-//         this.sched = data;
-
-//         for (var dayKey in this.sched) {
-//             var $dayCol = $('#' + dayKey);
-
-//             for (var timeslotKey in this.sched[dayKey]) {
-//                 for (var crnKey in this.sched[dayKey][timeslotKey]) {
-//                     _this.handleLogic(dayKey, timeslotKey, $dayCol.find('[data-timeslot=' + timeslotKey + ']'), crnKey, true, true);
-//                     $('#' + crnKey).addClass('saved');
-//                 }
-//             }
-//         }
-//     }
-//     else {
-//         this.sched = {};
-//         var _this = this;
-
-//         this.$div.find('.sched-col').each(function handleColumn(index, entry) {
-//             if (this.id == 'label-col') return;
-
-//             var dayId = this.id;
-
-//             _this.sched[dayId] = {};
-
-//             $(this).find('.sched-row').each(function handleRow(index, entry) {
-//                 _this.sched[dayId][parseInt($(entry).data('timeslot'))] = {};
-//             });
-//         });
-//     }
-// }
-
-// wavePage.schedule.handleLogic = function(day, timeslot, $entry, crn, permanent, adding) {
-//     var removing = !adding;
-//     var className = permanent ? 'added' : 'previewing';
-
-//     var thisTimeslotObj = this.sched[day][timeslot];
-
-//     if (permanent) {
-//         if (adding) {
-//             $entry.addClass('added');
-//             if (crn in thisTimeslotObj)
-//                 thisTimeslotObj[crn] += 1;
-//             else
-//                 thisTimeslotObj[crn] = 1;
-//         }
-//         else {
-//             if (Object.keys(thisTimeslotObj).length <= 1)
-//                 $entry.removeClass('added');
-//             thisTimeslotObj[crn] -= 1;
-//         }
-//     }
-//     else {
-//         if (adding) {
-//             $entry.addClass('previewing');
-//             if (crn in thisTimeslotObj)
-//                 thisTimeslotObj[crn] += 1;
-//             else
-//                 thisTimeslotObj[crn] = 1;
-//         }
-//         else {
-//             $entry.removeClass('previewing');
-//             thisTimeslotObj[crn] -= 1;
-//         }
-//     }
-
-//     if (thisTimeslotObj[crn] == 0)
-//         delete thisTimeslotObj[crn];
-
-//     // console.log('Showing: ' + day + ' - ' + timeslot + ': ' + JSON.stringify(thisTimeslotObj));
-
-//     if (Object.keys(thisTimeslotObj).length > 1) {
-//         $entry.addClass('conflicted');
-//     }
-//     else {
-//         $entry.removeClass('conflicted');
-//     }
-// }
-
-// wavePage.schedule.handleCourse = function(days, times, crn, permanent, adding) {
-//     var _this = this;
-
-//     for (day in days) {
-//         if (!days[day]) continue;
-    
-//         var $day = $('#' + day);
-
-//         $day.find('.sched-row').each(function eachTime(index, entry) {
-//             $entry = $(entry);
-//             var timeslot = parseInt($entry.data('timeslot'));
-//             if (timeslot >= times.start && timeslot <= times.end) {
-//                 _this.handleLogic(day, timeslot, $entry, crn, permanent, adding);
-//             }
-//         });
-//     }
-// }
-
-// wavePage.schedule.addCourse = function addCourse(days, times, crn, permanent) {
-//     this.handleCourse(days, times, crn, permanent, true);
-// }
-
-// wavePage.schedule.removeCourse = function removeCourse(days, times, crn, permanent) {
-//     this.handleCourse(days, times, crn, permanent, false);
-// }
 
 wavePage.schedule.extractDaysAndTimes = function(timeText) {
     if (timeText.match(/TBA/)) {
