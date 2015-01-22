@@ -250,7 +250,7 @@ window.onbeforeunload = function saveData(e) {
     var result = postSync('save', { cart: setStringify(wavePage.cart), sessionId: sessionId, semester: $('input#semester').val() });
     console.log('Successful: ' + result.responseText);
 
-    return result.responseText; // We want no confirmation popup dialog
+    return null; // We want no confirmation popup dialog
 }
 
 // ============================= Schedule Stuff ================================
