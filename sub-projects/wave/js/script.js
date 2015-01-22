@@ -46,6 +46,22 @@ function setStringify(es6SetObj) {
     return JSON.stringify(buffObj);
 }
 
+function displayError(errorMessage) {
+    var $msgDiv = $('#error-message');
+    var oldContents = $msgDiv.html();
+
+    var visibilityLength = 1000,
+        fadeOutLength = 1000;
+
+    $msgDiv.html(errorMessage).show().delay(visibilityLength).fadeOut(fadeOutLength);
+
+    setTimeout(function() {
+        console.log('here');
+        $msgDiv.html(oldContents).show();
+        // $msgDiv.attr('style', '');
+    }, visibilityLength + fadeOutLength + 50);
+}
+
 // ============================= Global Variables ==============================
 
 var wavePage = wavePage || {};
@@ -119,25 +135,6 @@ function setUpWaveCourseCallbacks() {
         var crn = $(evt.target).closest('.course').attr('id').replace(/#/, '');
 
         wavePage.addOrRemoveCourse(crn);
-
-
-        // console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
-
-
-        // var $evtTarget = $(evt.target);
-        // $evtTarget.toggleClass('fi-plus fi-minus');
-
-        // var timeText = $evtTarget.closest('.course').find('div:nth-child(3)').text();
-
-        // if (timeText.match(/TBA/)) return;
-
-        // // Display that the course is currently actively 'saved'
-        // $evtTarget.closest('.course').toggleClass('saved');
-
-        // var currAdded = wavePage.schedule.extractDaysAndTimes(timeText);
-        // currAdded.crn = $evtTarget.closest('.course').attr('id');
-
-        // wavePage.schedule.handleCourse(currAdded.days, currAdded.times, currAdded.crn, true, $evtTarget.hasClass('fi-minus'));
     });
 }
 
@@ -425,6 +422,10 @@ wavePage.schedule.setDisplay = function(crn, adding) {
             var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
 
             if (adding) {
+                if (timeslot.hasClass('added')) {
+                    return { conflict: timeslot.data('ttip') }; // Exit immediately, returning that a conflict happened
+                }
+
                 timeslot.addClass('added');
                 timeslot.html(courseCode);
                 timeslot.attr('data-ttip', courseCode);
@@ -436,6 +437,8 @@ wavePage.schedule.setDisplay = function(crn, adding) {
             }
         }
     }
+
+    return null;
 }
 
 // ============================= Global Stuff ==================================
@@ -447,10 +450,15 @@ wavePage.addOrRemoveCourse = function(crn) {
 }
 
 wavePage.setCourseStatus = function(crn, status) {
-    wavePage.setStatusInCart(crn, status);
-    wavePage.setCourseDivStatus(crn, status);
-    wavePage.setScheduleStatus(crn, status);
+    var scheduleConflict = wavePage.setScheduleStatus(crn, status);
 
+    if (!scheduleConflict) {
+        wavePage.setStatusInCart(crn, status);
+        wavePage.setCourseDivStatus(crn, status);
+    }
+    else {
+        displayError('Course conflicts with another already in schedule: ' + scheduleConflict.conflict);
+    }
 }
 
 wavePage.setStatusInCart = function(crn, adding) {
@@ -488,7 +496,7 @@ wavePage.setCourseDivStatus = function(crn, adding) {
 }
 
 wavePage.setScheduleStatus = function(crn, adding) {
-    wavePage.schedule.setDisplay(crn, adding);
+    return wavePage.schedule.setDisplay(crn, adding);
 }
 
 // ============================= OnLoad ========================================

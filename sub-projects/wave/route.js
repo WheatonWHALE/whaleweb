@@ -29,7 +29,8 @@ app.get('/', function(req, res) {
         res.render('wave.jade', {
             semester: (req.query.semester || req.session.semester || defaultSemester),
             cartData: cartData,
-            sessionId: req.session.id
+            sessionId: req.session.id//,
+            // errorMessage: 'This is a long ass error message... This is a long ass error message... This is a long ass error message... This is a long ass error message... '
         });
     });
 });
