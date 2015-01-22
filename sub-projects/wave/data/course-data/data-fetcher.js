@@ -110,8 +110,8 @@ function formatConvertYear(intYear) {
 }
 
 function handlePromiseError(err) {
-    console.error('Errored in a Promise');
-    console.error(err.stack);
+    console.log('Errored in a Promise');
+    console.log(err.stack);
     throw err;
 }
 
@@ -199,25 +199,21 @@ function saveFilters(filterObj) {
             }
         });
     }).then(function saveRenderedTemplate(html) {
+        // Save pre-compiled HTML files (for viewing on site)
         fs.writeFile(courseDataDir + 'compiled/filters.html', html, function handleFileWriteResponse(err) {
-            if (err) {
-                console.error(err);
-            }
-            else {
+            if (err)
+                console.log(err);
+            else
                 console.log('The filters html file was saved!');
-            }
         });
 
-        if (debug) {
-            fs.writeFile(courseDataDir + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
-                if (err) {
-                    console.error(err);
-                }
-                else {
-                    console.log('The filters json file was saved!');
-                }
-            });
-        }
+        // Save raw JSON files (for API)
+        fs.writeFile(courseDataDir + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
+            if (err)
+                console.log(err);
+            else
+                console.log('The filters json file was saved!');
+        });
     }).catch(handlePromiseError);
 }
 
@@ -459,31 +455,29 @@ function getParseAndSaveScheduleData(semesterCodes) {
     );
 }
 
+var compiledDir = 'compiled/';
+var rawDir = 'raw-data/';
 function saveSemesterData(semesterObj) {
     promiseRead(courseDataDir + 'courses.jade')
         .then(function renderUsingTemplateFile(template) {
             var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
             var html = func({ courseData: semesterObj.data, prettifyDivAreaFound: prettifyDivAreaFound });
 
-            fs.writeFile(courseDataDir + 'compiled/' + semesterObj.code + '.html', html, function handleFileWriteResponse(err) {
-                if (err) {
-                    console.error(err);
-                }
-                else {
+            // Save pre-compiled HTML files (for viewing on site)
+            fs.writeFile(courseDataDir + compiledDir + semesterObj.code + '.html', html, function handleFileWriteResponse(err) {
+                if (err)
+                    console.log(err);
+                else
                     console.log('The courses ' + semesterObj.code + ' html file was saved!');
-                }
             });
 
-            if (debug) {
-                fs.writeFile(courseDataDir + seemster.code + '.json', JSON.stringify(semesterObj.data, null, 2), function handleFileWriteResponse(err) {
-                    if (err) {
-                        console.error(err);
-                    }
-                    else {
-                        console.log('The courses ' + semesterObj.code + ' json file was saved!');
-                    }
-                });
-            }
+            // Save raw JSON files (for API)
+            fs.writeFile(courseDataDir + rawDir + semesterObj.code + '.json', JSON.stringify(semesterObj.data, null, 2), function handleFileWriteResponse(err) {
+                if (err)
+                    console.log(err);
+                else
+                    console.log('The courses ' + semesterObj.code + ' json file was saved!');
+            });
         });
 }
 
