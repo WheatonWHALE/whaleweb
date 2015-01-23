@@ -21,6 +21,30 @@ app.use(session({
   cookie: { maxAge: 604800000 } // one week
 }));
 
+function readSemesterData(semesterList) {
+    return Promise.all(
+        semesterList.map(function(semesterCode) {
+            return new Promise(function(resolve, reject) {
+                fs.readFile(basePath + 'data/course-data/raw-data/' + semesterCode + '.json', function(err, data) {
+                    if (err)
+                        reject(Error(err));
+                    else
+                        resolve({ code: semesterCode, data: JSON.parse(data) });
+                });
+            })
+        })
+    )
+    .then(function convertToObject(semesterArray) {
+        var semesterObj = {};
+
+        semesterArray.forEach(function(entry) {
+            semesterObj[entry.code] = entry.data;
+        });
+
+        return semesterObj;
+    });
+}
+
 app.set('views', basePath + 'views/');
 
 app.get('/', function(req, res) {
@@ -49,11 +73,8 @@ app.post('/save', function(req, res) {
 // URL for fetching data for the wave page. 
 app.get('/data', function(req, res) {
     var semester = req.query.semester || defaultSemester;
-    var errorMessage = '';
 
-    var expectedFilePath = basePath + 'data/course-data/compiled/' + semester + '.html';
-
-    fs.readFile(expectedFilePath, function(err, data) {
+    fs.readFile(basePath + 'data/course-data/compiled/' + semester + '.html', function(err, data) {
         if (err) {
             console.log(err);
             res.send({}); // TODO: Improve this temp solution
@@ -62,6 +83,36 @@ app.get('/data', function(req, res) {
             res.send(data);
         }
     });
+});
+
+// URL for fetching data for the wave page. 
+app.get('/api', function(req, res) {
+    var semester = req.query.semester;
+
+    console.log(semester);
+
+    if (!semester) {
+        fs.readFile(basePath + 'data/course-data/raw-data/filters.json', function(err, data) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+            else {
+                data = JSON.parse(data);
+                res.send(data.semester);
+            }
+        });
+    }
+    else {
+        if (typeof semester == 'string') {
+            semester = [semester];
+        }
+
+        readSemesterData(semester)
+            .then(function(dataObj) {
+                res.send(dataObj);
+            });
+    }
 });
 
 module.exports = app;

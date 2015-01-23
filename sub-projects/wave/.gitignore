@@ -1,6 +1,6 @@
 # Ignore some course-data stuff
-data/course-data/compiled/
-data/course-data/*.json
+data/course-data/compiled/*.html
+data/course-data/raw-data/*.json
 
 # Schedule Data from Sessions
 data/schedule-data/*.json

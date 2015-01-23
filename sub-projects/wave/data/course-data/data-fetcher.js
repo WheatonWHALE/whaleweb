@@ -4,6 +4,8 @@ var request = require('request'),
     jade    = require('jade');
 
 var courseDataDir = 'sub-projects/wave/data/course-data/';
+var compiledDir = 'compiled/';
+var rawDir = 'raw-data/';
 
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
 
@@ -200,7 +202,7 @@ function saveFilters(filterObj) {
         });
     }).then(function saveRenderedTemplate(html) {
         // Save pre-compiled HTML files (for viewing on site)
-        fs.writeFile(courseDataDir + 'compiled/filters.html', html, function handleFileWriteResponse(err) {
+        fs.writeFile(courseDataDir + compiledDir + 'filters.html', html, function handleFileWriteResponse(err) {
             if (err)
                 console.log(err);
             else
@@ -208,7 +210,7 @@ function saveFilters(filterObj) {
         });
 
         // Save raw JSON files (for API)
-        fs.writeFile(courseDataDir + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
+        fs.writeFile(courseDataDir + rawDir + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
             if (err)
                 console.log(err);
             else
@@ -455,8 +457,6 @@ function getParseAndSaveScheduleData(semesterCodes) {
     );
 }
 
-var compiledDir = 'compiled/';
-var rawDir = 'raw-data/';
 function saveSemesterData(semesterObj) {
     promiseRead(courseDataDir + 'courses.jade')
         .then(function renderUsingTemplateFile(template) {
