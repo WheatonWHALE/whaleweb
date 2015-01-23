@@ -4,7 +4,7 @@ var Firebase = require('firebase'),
 
 var listOfPeople = Array(
     { id: 'akuisara',       name: 'Sara', 		year: '\'16' },
-    { id: 'bawjensen',      name: 'Bryan', 		year: '\'16' },
+    { id: 'bawjensen',      name: 'Bryan', 		year: '\'15' },
     { id: 'cjrieck',        name: 'Clayton', 	year: '\'14' },
     { id: 'dshelts',        name: 'Drew', 		year: '\'15' },
     { id: 'devindelfino',   name: 'Devin', 		year: '\'15' },
