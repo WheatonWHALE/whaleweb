@@ -50,11 +50,11 @@ function markStreakless(element) {
     /*
     Function to mark everyone without an active streak.
     */
-    element.find('.score').each(function addClassToStreakless() {
+    element.find('.current').each(function addClassToStreakless() {
         var that = $(this);
 
-        if (that.html() == '0 days')
-            that.parents('.entrant').addClass('streakless');
+        if (that.text() == '0')
+            that.closest('.entrant').addClass('streakless');
     });
 }
 
