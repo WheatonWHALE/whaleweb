@@ -56,7 +56,8 @@ app.use('/wave',        require('./sub-projects/wave/route.js'));
 app.use('/members',     require('./sub-projects/members/route.js'));
 
 // Catch-all for 404
-app.get('*', function(req, res){
+app.get('*', function(req, res) {
+    console.log('404 for the route=' + req.url);
     res.render('404.jade');
 });
 
