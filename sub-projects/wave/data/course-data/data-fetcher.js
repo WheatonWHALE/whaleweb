@@ -6,6 +6,7 @@ var request = require('request'),
 var courseDataDir = 'sub-projects/wave/data/course-data/';
 var compiledDir = 'compiled/';
 var rawDir = 'raw-data/';
+var templateDir = 'templates/';
 
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
 
@@ -190,7 +191,7 @@ function parseOutFilters(searchPageBody) {
 
 function saveFilters(filterObj) {
     var promise = new Promise(function getFiltersTemplate(resolve, reject) {
-        fs.readFile(courseDataDir + 'filters.jade', function renderUsingTemplateFile(err, data) {
+        fs.readFile(courseDataDir + templateDir + 'filters.jade', function renderUsingTemplateFile(err, data) {
             if (err) {
                 reject(Error(err));
             }
@@ -458,7 +459,7 @@ function getParseAndSaveScheduleData(semesterCodes) {
 }
 
 function saveSemesterData(semesterObj) {
-    promiseRead(courseDataDir + 'courses.jade')
+    promiseRead(courseDataDir + templateDir + 'courses.jade')
         .then(function renderUsingTemplateFile(template) {
             var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
             var html = func({ courseData: semesterObj.data, prettifyDivAreaFound: prettifyDivAreaFound });
