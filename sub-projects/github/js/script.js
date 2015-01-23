@@ -19,11 +19,11 @@ function get(url, progressFunc) {
 
 // ============================= GitHub ========================================
 
-function sortByKeyAndSubkey(a, b, key, otherKey) {
+function sortByKeyAndSubkey(a, b, key, secondaryKey) {
     var aVal = parseInt(a[key]), bVal = parseInt(b[key]);
 
     if (aVal == bVal) {
-        comparison = parseInt(b[otherKey]) - parseInt(a[otherKey]);
+        comparison = parseInt(b[secondaryKey]) - parseInt(a[secondaryKey]);
     }
     else {
         comparison = bVal - aVal;
@@ -36,56 +36,11 @@ function sortByCurrentStreak(a, b) {
     return sortByKeyAndSubkey(a, b, 'current', 'max');
 }
 
-function sortByMaxStreak(a, b) {
-    return sortByKeyAndSubkey(a, b, 'max', 'current');
-}
-
-function sortByYearData(a, b) {
-    return sortByKeyAndSubkey(a, b, 'total', 'max');
-}
-
-function extractData(entrants, key) {
-    var processedEntrants = [];
-
-    entrants.forEach(function extractAndPushEntrant(entry, index) {
-        entry.streakVal = entry[key];
-        processedEntrants.push(entry);
-    });
-
-    if (key == 'current') {
-        processedEntrants.sort(sortByCurrentStreak);
-    }
-    else if (key == 'max') {
-        processedEntrants.sort(sortByMaxStreak);
-    }
-    else if (key == 'total') {
-        processedEntrants.sort(sortByYearData);
-    }
-    else {
-        console.error('Unrecognized key');
-    }
-
-    return processedEntrants;
-}
-
-function extractMaxStreak(entrants) {
-    return extractData(entrants, 'max');
-}
-
-function extractCurrentStreak(entrants) {
-    return extractData(entrants, 'current');
-}
-
-function extractYearData(entrants) {
-    return extractData(entrants, 'total');
-}
-
 function markTopThree(element) {
     /*
-    Function to mark the top three people as being in the lead. Used in styling them differently.
+    Function to mark the top three people as being in the lead. Used in css.
     */
 
-    // Note: 2, 3, 4 because the first child is the title
     element.find('.entrant:nth-child(1)').addClass('leader').addClass('first');
     element.find('.entrant:nth-child(2)').addClass('leader').addClass('second');
     element.find('.entrant:nth-child(3)').addClass('leader').addClass('third');
@@ -136,18 +91,10 @@ function setUpGitHubPage() {
         snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
             var changedEntrant = snapshot.val();
 
-            $('.' + changedEntrant.id).each(function(index) {
-                var entrantElement = $(this);
+            var $entrantDiv = $('#' + changedEntrant.id);
 
-                if (entrantElement.parents('.competition#max').length) {
-                    entrantElement.find('.score').html(changedEntrant.max + ' days');
-                }
-                else if (entrantElement.parents('.competition#current').length) {
-                    entrantElement.find('.score').html(changedEntrant.current + ' days');
-                }
-                else if (entrantElement.parents('.competition#total').length) {
-                    entrantElement.find('.score').html(changedEntrant.total + ' total');
-                }
+            (['current', 'max', 'total']).forEach(function(key) {
+                $entrantDiv.find('.' + key).html(changedEntrant[key]);
             });
         });
     });

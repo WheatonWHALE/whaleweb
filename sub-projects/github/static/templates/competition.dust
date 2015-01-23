@@ -1,10 +1,10 @@
 <div class="column large-12 competition">
 	{#entrants}
-	<div class="row entrant {id}">
+	<div id="{id}" class="row entrant">
 		<div class="column large-3 name"><a class="has-ttip" href="https://github.com/{id}" data-tooltip={id}>{name} {year}</a></div>
-        <div class="column large-3 score">{current} days</div>
-        <div class="column large-3 score">{max} days</div>
-		<div class="column large-3 score">{total} total</div>
+        <div class="column large-3 score"><span class="current">{current}</span> days</div>
+        <div class="column large-3 score"><span class="max">{max}</span> days</div>
+		<div class="column large-3 score"><span class="total">{total}</span> total</div>
 	</div>{~n}
 	{/entrants}
 </div>
