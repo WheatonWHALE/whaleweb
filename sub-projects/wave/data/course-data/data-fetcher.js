@@ -298,23 +298,12 @@ function parseCourseData(allRows, i) {
 
     var enrollmentRow;
 
-    if (thirdRow.find('td').length > 3) {
-        classHasPrereqs = true;
-    }
-    else {
-        classHasPrereqs = false;
-    }
+    var classHasPrereqs = (thirdRow.find('td').length > 3);
 
-    if (classHasPrereqs) {
-        enrollmentRow = thirdRow;
-    }
-    else {
-        enrollmentRow = secondRow;
-    }
+    var enrollmentRow = classHasPrereqs ? thirdRow : secondRow;
 
     firstRowElements      = firstRow.find('td');
     enrollmentRowElements = enrollmentRow.find('td');
-    // Testing for prereqs row
 
 
     // Special handling for times
@@ -335,7 +324,7 @@ function parseCourseData(allRows, i) {
         timePlaceSplit = ['', ''];
     }
 
-    
+    // Special handling for 
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
