@@ -1,38 +1,35 @@
 - var semesterData = courseData
 
 //- Print out header title no matter what
-.semesterContainer(class=semesterName)
-  h1= semesterName
-  if semesterData
-    each departmentData, departmentName in semesterData
-      .departmentContainer(class=departmentName)
-        h4= departmentName
-        each course in departmentData
-          div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
-            div
-              a(href=course.courseLink)= course.courseCode
-            div
-              = course.courseTitle
-            div
-              != course.meetingTime.join('<br>') || 'TBA'
-            div
-              i.add.fi-plus
-              .exp more
-            div
-              ul
-                li= course.crn
-                li= course.meetingPlace
-                li= course.professors
-                li= prettifyDivAreaFound(course.foundation)
-                li= prettifyDivAreaFound(course.division)
-                li= prettifyDivAreaFound(course.area)
-                li
-                  each connection in course.connections
-                    a(href=connection.link)= connection.display
-                    |, 
-                li: a(href=course.examSlotLink)= course.examSlot
-                li: a(href=course.textbookLink) here
-                //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
-                li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
-                if course.courseNotes
-                  li= course.courseNotes
+each departmentData, departmentName in semesterData
+  .departmentContainer(class=departmentName)
+    h4= departmentName
+    each course in departmentData
+      div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
+        div
+          a(href=course.courseLink)= course.courseCode
+        div
+          = course.courseTitle
+        div
+          != course.meetingTime.join('<br>') || 'TBA'
+        div
+          i.add.fi-plus
+          .exp more
+        div
+          ul
+            li= course.crn
+            li= course.meetingPlace
+            li= course.professors
+            li= prettifyDivAreaFound(course.foundation)
+            li= prettifyDivAreaFound(course.division)
+            li= prettifyDivAreaFound(course.area)
+            li
+              each connection in course.connections
+                a(href=connection.link)= connection.display
+                |, 
+            li: a(href=course.examSlotLink)= course.examSlot
+            li: a(href=course.textbookLink) here
+            //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
+            li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'
+            if course.courseNotes
+              li= course.courseNotes

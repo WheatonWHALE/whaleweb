@@ -8,6 +8,7 @@ var COURSE_DATA_DIR = 'sub-projects/wave/data/course-data/';
 var COMPILED_DIR = 'compiled/';
 var RAW_DIR = 'raw-data/';
 var TEMPLATE_DIR = 'templates/';
+var FILTER_TRANSLATOR;
 
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
 
@@ -92,8 +93,6 @@ function tinyGet(url, key) {
 
 // Slightly specialized for use in posting for semester data
 function semesterPost(url, formData) {
-    // Have to perform a deep copy for the variable to not be overwritten by the time the callback is used.
-    // var copiedFormData = JSON.parse(JSON.stringify(formData));
     var semesterCode = formData.schedule_beginterm;
 
     return new Promise(function requestPost(resolve, reject) {
@@ -205,18 +204,14 @@ function saveFilters(filterObj) {
     }).then(function saveRenderedTemplate(html) {
         // Save pre-compiled HTML files (for viewing on site)
         fs.writeFile(COURSE_DATA_DIR + COMPILED_DIR + 'filters.html', html, function handleFileWriteResponse(err) {
-            if (err)
-                console.log(err);
-            else
-                console.log('The filters html file was saved!');
+            console.log(err ? err : 'The filters html file was saved!');
         });
 
         // Save raw JSON files (for API)
-        fs.writeFile(COURSE_DATA_DIR + RAW_DIR + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
-            if (err)
-                console.log(err);
-            else
-                console.log('The filters json file was saved!');
+        var rawDataString = debug ? JSON.stringify(filterObj, null, 2) : JSON.stringify(filterObj);
+
+        fs.writeFile(COURSE_DATA_DIR + RAW_DIR + 'filters.json', rawDataString, function handleFileWriteResponse(err) {
+            console.log(err ? err : 'The filters json file was saved!');
         });
     }).catch(handlePromiseError);
 }
@@ -236,6 +231,17 @@ function preprocessFilters(filterObj) {
     });
 
     return filterObj;
+}
+
+function createTranslatorFrom(filterObj) {
+    var translator = {};
+
+    for (var index in filterObj.department) {
+        var entry = filterObj.department[index];
+        translator[entry.val] = entry.display;
+    }
+
+    return translator;
 }
 
 // =========================== Course Stuff ===========================
@@ -455,18 +461,14 @@ function saveSemesterData(semesterObj) {
 
             // Save pre-compiled HTML files (for viewing on site)
             fs.writeFile(COURSE_DATA_DIR + COMPILED_DIR + semesterObj.code + '.html', html, function handleFileWriteResponse(err) {
-                if (err)
-                    console.log(err);
-                else
-                    console.log('The courses ' + semesterObj.code + ' html file was saved!');
+                console.log(err ? err : 'The courses ' + semesterObj.code + ' html file was saved!');
             });
 
             // Save raw JSON files (for API)
-            fs.writeFile(COURSE_DATA_DIR + RAW_DIR + semesterObj.code + '.json', JSON.stringify(semesterObj.data, null, 2), function handleFileWriteResponse(err) {
-                if (err)
-                    console.log(err);
-                else
-                    console.log('The courses ' + semesterObj.code + ' json file was saved!');
+            var rawDataString = debug ? JSON.stringify(semesterObj.data, null, 2) : JSON.stringify(semesterObj.data);
+
+            fs.writeFile(COURSE_DATA_DIR + RAW_DIR + semesterObj.code + '.json', rawDataString, function handleFileWriteResponse(err) {
+                console.log(err ? err : 'The courses ' + semesterObj.code + ' json file was saved!');
             });
         });
 }
@@ -478,6 +480,8 @@ function fetchAndParseAll() {
         .then(preprocessFilters)
         .then(function saveFiltersAndStartScheduleGet(filterObj) {
             saveFilters(filterObj); // Fire off async call, don't care when it finishes
+
+            FILTER_TRANSLATOR = createTranslatorFrom(filterObj);
 
             // If debugging, limit the number of semesters used
             return debug ? filterObj.semester.slice(0, semesterNumLimit) : filterObj.semester;
