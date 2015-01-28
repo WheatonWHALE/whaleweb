@@ -316,6 +316,8 @@ function parseCourseData(allRows, i) {
     enrollmentRowElements = enrollmentRow.find('td');
     // Testing for prereqs row
 
+
+    // Special handling for times
     var timePlace = $(firstRowElements[4]).text();
     var timePlaceSplit;
     var times = [],
@@ -333,11 +335,7 @@ function parseCourseData(allRows, i) {
         timePlaceSplit = ['', ''];
     }
 
-    for (var key in courseData) {
-        if (typeof courseData[key] === 'string') {
-            courseData[key] = courseData[key].trim().replace(/\n/g, '');
-        }
-    }
+    
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
@@ -369,7 +367,7 @@ function parseCourseData(allRows, i) {
         courseLink:         $(firstRowElements[0]).find('a').attr('href')
     };
 
-    for (key in courseData) {
+    for (var key in courseData) {
         if (typeof courseData[key] == 'string')
             courseData[key] = courseData[key].replace(/\s+/g, ' ').trim();
     }
