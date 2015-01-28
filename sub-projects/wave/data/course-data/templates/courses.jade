@@ -26,7 +26,7 @@ each departmentData, departmentName in semesterData
             li
               each connection in course.connections
                 a(href=connection.link)= connection.display
-                |, 
+                | 
             li: a(href=course.examSlotLink)= course.examSlot
             li: a(href=course.textbookLink) here
             //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
