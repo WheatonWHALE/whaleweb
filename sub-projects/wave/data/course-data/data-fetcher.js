@@ -411,10 +411,12 @@ function parseSemesterData(semesterObj) {
             var department = courseData.courseCode.split(/-/)[0];
 
             if (!(department in semesterCourses)) {
-                semesterCourses[department] = [];
+                semesterCourses[department] = {};
+                semesterCourses[department].displayName = FILTER_TRANSLATOR[department];
+                semesterCourses[department].data = [];
             }
 
-            semesterCourses[department].push(courseData);
+            semesterCourses[department].data.push(courseData);
         });
     }, Promise.resolve())
     .then(function finishUp() {

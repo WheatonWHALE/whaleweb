@@ -3,8 +3,8 @@
 //- Print out header title no matter what
 each departmentData, departmentName in semesterData
   .departmentContainer(class=departmentName)
-    h4= departmentName
-    each course in departmentData
+    h4= departmentData.displayName
+    each course in departmentData.data
       div.course(class=course.foundation + ' ' + course.area + ' ' + course.division id=course.crn)
         div
           a(href=course.courseLink)= course.courseCode
