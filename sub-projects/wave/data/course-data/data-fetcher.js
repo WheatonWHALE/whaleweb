@@ -306,7 +306,7 @@ function parseCourseData(allRows, i) {
     enrollmentRowElements = enrollmentRow.find('td');
 
 
-    // Special handling for times
+    // Special handling for (possibly multiple) times
     var timePlace = $(firstRowElements[4]).text();
     var timePlaceSplit;
     var times = [],
@@ -324,7 +324,15 @@ function parseCourseData(allRows, i) {
         timePlaceSplit = ['', ''];
     }
 
-    // Special handling for 
+    // Special handling for(possibly multiple) connections
+
+    var connections = $(firstRowElements[9]);
+    var connectionsArray = [];
+
+    connections.find('a').each(function(index, entry) {
+        var $entry = $(entry);
+        connectionsArray.push({ display: $entry.text(), link: $entry.attr('href') });
+    });
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
@@ -337,8 +345,7 @@ function parseCourseData(allRows, i) {
         foundation:         $(firstRowElements[6]).text(),
         division:           $(firstRowElements[7]).text(),
         area:               $(firstRowElements[8]).text(),
-        connections:        $(firstRowElements[9]).text(),
-        connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
+        connections:        connectionsArray,
         examSlot:           $(firstRowElements[1]).text().replace(/\./, ''),
         examSlotLink:       'https://weblprod1.wheatonma.edu/' + $(firstRowElements[1]).find('a').attr('href'),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
