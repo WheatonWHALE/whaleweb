@@ -3,10 +3,11 @@ var request = require('request'),
     fs      = require('fs'),
     jade    = require('jade');
 
-var courseDataDir = 'sub-projects/wave/data/course-data/';
-var compiledDir = 'compiled/';
-var rawDir = 'raw-data/';
-var templateDir = 'templates/';
+// Globals
+var COURSE_DATA_DIR = 'sub-projects/wave/data/course-data/';
+var COMPILED_DIR = 'compiled/';
+var RAW_DIR = 'raw-data/';
+var TEMPLATE_DIR = 'templates/';
 
 var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
 
@@ -191,7 +192,7 @@ function parseOutFilters(searchPageBody) {
 
 function saveFilters(filterObj) {
     var promise = new Promise(function getFiltersTemplate(resolve, reject) {
-        fs.readFile(courseDataDir + templateDir + 'filters.jade', function renderUsingTemplateFile(err, data) {
+        fs.readFile(COURSE_DATA_DIR + TEMPLATE_DIR + 'filters.jade', function renderUsingTemplateFile(err, data) {
             if (err) {
                 reject(Error(err));
             }
@@ -203,7 +204,7 @@ function saveFilters(filterObj) {
         });
     }).then(function saveRenderedTemplate(html) {
         // Save pre-compiled HTML files (for viewing on site)
-        fs.writeFile(courseDataDir + compiledDir + 'filters.html', html, function handleFileWriteResponse(err) {
+        fs.writeFile(COURSE_DATA_DIR + COMPILED_DIR + 'filters.html', html, function handleFileWriteResponse(err) {
             if (err)
                 console.log(err);
             else
@@ -211,7 +212,7 @@ function saveFilters(filterObj) {
         });
 
         // Save raw JSON files (for API)
-        fs.writeFile(courseDataDir + rawDir + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
+        fs.writeFile(COURSE_DATA_DIR + RAW_DIR + 'filters.json', JSON.stringify(filterObj, null, 2), function handleFileWriteResponse(err) {
             if (err)
                 console.log(err);
             else
@@ -315,10 +316,18 @@ function parseCourseData(allRows, i) {
     enrollmentRowElements = enrollmentRow.find('td');
     // Testing for prereqs row
 
-    var timePlace = $(firstRowElements[4]).text().trim();
+    var timePlace = $(firstRowElements[4]).text();
     var timePlaceSplit;
+    var times = [],
+        places = [];
+
     if (timePlace !== '') {
         timePlaceSplit = timePlace.split(/\n/).clean('');
+
+        for (var i = 0; i < timePlaceSplit.length; i += 2) {
+            times.push(timePlaceSplit[i].replace(/\s+/g, ' ').trim());
+            places.push(timePlaceSplit[i+1].replace(/\s+/g, ' ').trim());
+        }
     }
     else {
         timePlaceSplit = ['', ''];
@@ -335,8 +344,8 @@ function parseCourseData(allRows, i) {
         courseLink:         $(firstRowElements[0]).find('a').attr('href'),
         courseTitle:        $(firstRowElements[2]).text(),
         crn:                $(firstRowElements[3]).text(),
-        meetingTime:        timePlaceSplit[0],
-        meetingPlace:       timePlaceSplit[1],
+        meetingTime:        times,
+        meetingPlace:       places,
         professors:         $(firstRowElements[5]).text(),
         foundation:         $(firstRowElements[6]).text(),
         division:           $(firstRowElements[7]).text(),
@@ -360,24 +369,10 @@ function parseCourseData(allRows, i) {
         courseLink:         $(firstRowElements[0]).find('a').attr('href')
     };
 
-    // Finish off by making async call to TinyURL's API to condense links, and returning that final data
-    // return new Promise(function tinyUrlTheLinks(resolve, reject) {
-    //     Promise.all(
-    //         Object.keys(linksArray).map(function mapLinksToTinyUrlAPI(value, index) {
-    //             return tinyGet('http://tinyurl.com/api-create.php?url=' + linksArray[value], value);
-    //         })
-    //     ).then(function addCondensedLinks(condensedArray) {
-    //         condensedArray.forEach(function handleElement(value) {
-    //             courseData[value.key] = value.newURL;
-    //         });
-
-            for (key in courseData) {
-                courseData[key] = courseData[key].replace(/\s+/g, ' ').trim();
-            }
-
-    //         resolve(courseData);
-    //     }).catch(handlePromiseError);
-    // }).catch(handlePromiseError);
+    for (key in courseData) {
+        if (typeof courseData[key] == 'string')
+            courseData[key] = courseData[key].replace(/\s+/g, ' ').trim();
+    }
 
     return Promise.resolve(courseData);
 }
@@ -459,13 +454,13 @@ function getParseAndSaveScheduleData(semesterCodes) {
 }
 
 function saveSemesterData(semesterObj) {
-    promiseRead(courseDataDir + templateDir + 'courses.jade')
+    promiseRead(COURSE_DATA_DIR + TEMPLATE_DIR + 'courses.jade')
         .then(function renderUsingTemplateFile(template) {
             var func = jade.compile(template, { pretty: /*debug*/false, doctype: 'html' });
             var html = func({ courseData: semesterObj.data, prettifyDivAreaFound: prettifyDivAreaFound });
 
             // Save pre-compiled HTML files (for viewing on site)
-            fs.writeFile(courseDataDir + compiledDir + semesterObj.code + '.html', html, function handleFileWriteResponse(err) {
+            fs.writeFile(COURSE_DATA_DIR + COMPILED_DIR + semesterObj.code + '.html', html, function handleFileWriteResponse(err) {
                 if (err)
                     console.log(err);
                 else
@@ -473,7 +468,7 @@ function saveSemesterData(semesterObj) {
             });
 
             // Save raw JSON files (for API)
-            fs.writeFile(courseDataDir + rawDir + semesterObj.code + '.json', JSON.stringify(semesterObj.data, null, 2), function handleFileWriteResponse(err) {
+            fs.writeFile(COURSE_DATA_DIR + RAW_DIR + semesterObj.code + '.json', JSON.stringify(semesterObj.data, null, 2), function handleFileWriteResponse(err) {
                 if (err)
                     console.log(err);
                 else

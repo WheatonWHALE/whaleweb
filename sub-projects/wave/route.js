@@ -3,14 +3,14 @@ var bodyParser  = require('body-parser')
     fs          = require('fs'),
     session     = require('express-session');
 
-var basePath = './sub-projects/wave/';
-var userScheduleDataDir = './sub-projects/wave/data/schedule-data/'
-var defaultSemester = '201520'; // Update as needed
+var BASE_PATH = './sub-projects/wave/';
+var USER_SCHED_DATA_DIR = './sub-projects/wave/data/schedule-data/'
+var DEFAULT_SEMESTER = '201520'; // Update as needed
 
 var app = express();
 
-app.use('/css',  express.static(basePath + 'css/'));
-app.use('/js',   express.static(basePath + 'js/'));
+app.use('/css',  express.static(BASE_PATH + 'css/'));
+app.use('/js',   express.static(BASE_PATH + 'js/'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,7 +25,7 @@ function readSemesterData(semesterList) {
     return Promise.all(
         semesterList.map(function(semesterCode) {
             return new Promise(function(resolve, reject) {
-                fs.readFile(basePath + 'data/course-data/raw-data/' + semesterCode + '.json', function(err, data) {
+                fs.readFile(BASE_PATH + 'data/course-data/raw-data/' + semesterCode + '.json', function(err, data) {
                     if (err)
                         reject(Error(err));
                     else
@@ -45,13 +45,13 @@ function readSemesterData(semesterList) {
     });
 }
 
-app.set('views', basePath + 'views/');
+app.set('views', BASE_PATH + 'views/');
 
 app.get('/', function(req, res) {
-    fs.readFile(userScheduleDataDir + req.session.id + '.json', function(err, data) {
+    fs.readFile(USER_SCHED_DATA_DIR + req.session.id + '.json', function(err, data) {
         var cartData = err ? null : data;
         res.render('wave.jade', {
-            semester: (req.query.semester || req.session.semester || defaultSemester),
+            semester: (req.query.semester || req.session.semester || DEFAULT_SEMESTER),
             cartData: cartData,
             sessionId: req.session.id//,
             // errorMessage: 'This is a long ass error message... This is a long ass error message... This is a long ass error message... This is a long ass error message... '
@@ -64,7 +64,7 @@ app.post('/save', function(req, res) {
     var sessionCart = JSON.parse(req.body.cart);
     req.session.semester = req.body.semester;
 
-    fs.writeFile(userScheduleDataDir + sessId + '.json', JSON.stringify(sessionCart), function onceFinished(err) {
+    fs.writeFile(USER_SCHED_DATA_DIR + sessId + '.json', JSON.stringify(sessionCart), function onceFinished(err) {
         if (err) res.send(false);
         else res.send(true);
     });
@@ -72,9 +72,9 @@ app.post('/save', function(req, res) {
 
 // URL for fetching data for the wave page. 
 app.get('/data', function(req, res) {
-    var semester = req.query.semester || defaultSemester;
+    var semester = req.query.semester || DEFAULT_SEMESTER;
 
-    fs.readFile(basePath + 'data/course-data/compiled/' + semester + '.html', function(err, data) {
+    fs.readFile(BASE_PATH + 'data/course-data/compiled/' + semester + '.html', function(err, data) {
         if (err) {
             console.log(err);
             res.send({}); // TODO: Improve this temp solution
@@ -92,7 +92,7 @@ app.get('/api', function(req, res) {
     console.log(semester);
 
     if (!semester) {
-        fs.readFile(basePath + 'data/course-data/raw-data/filters.json', function(err, data) {
+        fs.readFile(BASE_PATH + 'data/course-data/raw-data/filters.json', function(err, data) {
             if (err) {
                 console.log(err);
                 res.send(err);

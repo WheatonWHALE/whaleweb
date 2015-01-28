@@ -46,19 +46,26 @@ function setStringify(es6SetObj) {
     return JSON.stringify(buffObj);
 }
 
+var inProgress = false;
 function displayError(errorMessage) {
+    if (inProgress) return; // Don't try two error messages at once...
+
     var $msgDiv = $('#error-message');
     var oldContents = $msgDiv.html();
 
     var visibilityLength = 1000,
-        fadeOutLength = 1000;
+        fadeOutLength = 375;
 
+    inProgress = true;
     $msgDiv.html(errorMessage).show().delay(visibilityLength).fadeOut(fadeOutLength);
 
     setTimeout(function() {
-        console.log('here');
-        $msgDiv.html(oldContents).show();
-        // $msgDiv.attr('style', '');
+        if (oldContents)
+            $msgDiv.html(oldContents).show();
+        else
+            $msgDiv.html('');
+
+        inProgress = false;
     }, visibilityLength + fadeOutLength + 50);
 }
 
@@ -192,6 +199,11 @@ function fetchAndShowWaveHtml() {
 }
 
 function initializeWavePage() {
+    var $errorMessage = $('#error-message');
+    if ($errorMessage.html()) {
+        $errorMessage.show();
+    }
+
     $('select[name=semester]').val(semester);
 
     for (var key in cartData) {
@@ -257,10 +269,12 @@ window.onbeforeunload = function saveData(e) {
 
 wavePage.schedule = {};
 
-wavePage.schedule.extractDaysAndTimes = function(timeText) {
-    if (timeText.match(/TBA/)) {
+wavePage.schedule.extractDaysAndTimes = function(plainTimeText) {
+    if (plainTimeText.match(/TBA/)) {
         return null;
     }
+
+    var timeTexts = plainTimeText.split('<br>');
 
     var monMatch = /^\s*M\s*T?\s*W?\s*R?\s*F?/,
         tueMatch = /^\s*M?\s*T\s*W?\s*R?\s*F?/,
@@ -271,20 +285,28 @@ wavePage.schedule.extractDaysAndTimes = function(timeText) {
     var startTimeMatch = /(\d?\d\:\d\d\s+[A|P]M)\s+\-/,
         endTimeMatch = /\-\s+(\d?\d\:\d\d\s+[A|P]M)/;
 
-    return {
-        days: {
-            mon: !!(timeText.match(monMatch)),
-            tue: !!(timeText.match(tueMatch)),
-            wed: !!(timeText.match(wedMatch)),
-            thu: !!(timeText.match(thuMatch)),
-            fri: !!(timeText.match(friMatch))
-        },
+    var timeSets = [];
 
-        times: {
-            start: wavePage.schedule.decodeTime(timeText.match(startTimeMatch)[1]),
-            end: wavePage.schedule.decodeTime(timeText.match(endTimeMatch)[1])
-        }
-    };
+    for (var index in timeTexts) {
+        var timeText = timeTexts[index];
+
+        timeSets.push({
+            days: {
+                mon: !!(timeText.match(monMatch)),
+                tue: !!(timeText.match(tueMatch)),
+                wed: !!(timeText.match(wedMatch)),
+                thu: !!(timeText.match(thuMatch)),
+                fri: !!(timeText.match(friMatch))
+            },
+
+            times: {
+                start: wavePage.schedule.decodeTime(timeText.match(startTimeMatch)[1]),
+                end: wavePage.schedule.decodeTime(timeText.match(endTimeMatch)[1])
+            }
+        });
+    }
+
+    return timeSets;
 }
 
 wavePage.schedule.decodeTime = function(strTime) {
@@ -296,40 +318,59 @@ wavePage.schedule.setDisplay = function(crn, adding) {
     var $courseDiv = $('#' + crn);
     var courseCode = findCourseCode($courseDiv);
 
-    var dayTime = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').text());
+    var dayTimes = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').html());
 
-    if (dayTime === null)
+    if (dayTimes === null)
         return;
 
     var $scheduleDiv = wavePage.schedule.$div;
 
-    for (var day in dayTime.days) {
-        if (!dayTime.days[day]) continue;
+    var newlyAdded = [];
 
-        var dayCol = $scheduleDiv.find('#' + day);
+    for (var index in dayTimes) {
+        var dayTime = dayTimes[index];
 
-        for (var currTime = dayTime.times.start; currTime <= dayTime.times.end; currTime += wavePage.schedule.timeStep) {
-            if ((currTime % 100) === 60) // Addresses issue with using base-60 (hours on a clock) in base-100 (because logic)
-                currTime += 40;
+        for (var day in dayTime.days) {
+            if (!dayTime.days[day]) continue;
 
-            var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
+            var dayCol = $scheduleDiv.find('#' + day);
 
-            if (adding) {
-                if (timeslot.hasClass('added')) {
-                    return { conflict: timeslot.data('ttip') }; // Exit immediately, returning that a conflict happened
+            for (var currTime = dayTime.times.start; currTime <= dayTime.times.end; currTime += wavePage.schedule.timeStep) {
+                if ((currTime % 100) === 60) // Addresses issue with using base-60 (hours on a clock) in base-100 (because logic)
+                    currTime += 40;
+
+                var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
+
+                if (adding && timeslot.hasClass('added')) {
+                    var conflictCrn = timeslot.data('ttip');
+                    var err = new Error('Conflict with ' + conflictCrn);
+                    err.conflictWith = conflictCrn;
+                    // return { conflict:  }; // Exit immediately, returning that a conflict happened
+                    throw err;
                 }
 
-                timeslot.addClass('added');
-                timeslot.html(courseCode);
-                timeslot.attr('data-ttip', courseCode);
-            }
-            else {
-                timeslot.removeClass('added');
-                timeslot.html('');
-                timeslot.attr('data-ttip', '');
+                newlyAdded.push({ day: day, time: currTime });
             }
         }
     }
+
+    for (var index in newlyAdded) {
+        var newDayTime = newlyAdded[index];
+
+        var newAdditionDiv = $scheduleDiv.find('#' + newDayTime.day).find('[data-timeslot=' + newDayTime.time + ']');
+
+        if (adding) {
+            newAdditionDiv.addClass('added');
+            newAdditionDiv.html(courseCode);
+            newAdditionDiv.attr('data-ttip', courseCode);
+        }
+        else {
+            newAdditionDiv.removeClass('added');
+            newAdditionDiv.html('');
+            newAdditionDiv.attr('data-ttip', '');
+        }
+    }
+
 
     return null;
 }
@@ -343,14 +384,20 @@ wavePage.addOrRemoveCourse = function(crn) {
 }
 
 wavePage.setCourseStatus = function(crn, status) {
-    var scheduleConflict = wavePage.setScheduleStatus(crn, status);
+    var scheduleConflict;
+    try {
+        wavePage.setScheduleStatus(crn, status);
+    }
+    catch (err) {
+        scheduleConflict = err.conflictWith;
+    }
 
     if (!scheduleConflict) {
         wavePage.setStatusInCart(crn, status);
         wavePage.setCourseDivStatus(crn, status);
     }
     else {
-        displayError('Course conflicts with another already in schedule: ' + scheduleConflict.conflict);
+        displayError('Course conflicts with another already in schedule: ' + scheduleConflict);
     }
 }
 
