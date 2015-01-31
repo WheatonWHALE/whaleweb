@@ -409,7 +409,7 @@ wavePage.setStatusInCart = function(crn, adding) {
         var newCartEntry = $('<div/>', { id: cartIdPrefix + crn });
 
         newCartEntry.append($('<a/>', {
-            text: courseCode,
+            text: courseCode + ' (' + crn + ')',
             href: '#' + crn
         }));
 
