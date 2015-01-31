@@ -131,77 +131,9 @@ function setUpWaveCourseCallbacks() {
     $('.course a').attr('target', '_blank');
 
     $('.course').hover(function mouseIn(evt) {
-        var $courseDiv = $(evt.target).closest('.course');
-
-        var crn = $courseDiv.attr('id');
-
-        if (wavePage.cart[wavePage.currentSemester].has(crn))
-            return; // Don't preview a course that's already added
-        else {
-            console.log(crn);
-            console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
-        }
-
-        var meetingTimes = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').html());
-
-        if (meetingTimes === null)
-            return; // Don't preview something that has no meeting times
-
-        CURRENT_PREVIEW = {};
-        CURRENT_PREVIEW.times = meetingTimes;
-        CURRENT_PREVIEW.crn = crn;
-
-        var $scheduleDiv = wavePage.schedule.$div;
-
-        for (var index in meetingTimes) {
-            var meetingTime = meetingTimes[index];
-
-            for (var day in meetingTime.days) {
-                if (!meetingTime.days[day]) continue;
-
-                var dayCol = $scheduleDiv.find('#' + day);
-
-                for (var currTime = meetingTime.times.start; currTime <= meetingTime.times.end; currTime += wavePage.schedule.timeStep) {
-                    if ((currTime % 100) === 60) // Addresses issue with using base-60 (hours on a clock) in base-100 (because logic)
-                        currTime += 40;
-
-                    var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
-
-                    timeslot.addClass('previewing');
-                    // timeslot.html(courseCode);
-                    // timeslot.attr('data-ttip', courseCode);
-                }
-            }
-        }
+        wavePage.schedule.setPreview(evt, true);
     }, function mouseOut(evt) {
-        if (CURRENT_PREVIEW) {
-            var $courseDiv = $('#' + CURRENT_PREVIEW.crn);
-            var meetingTimes = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').html());
-
-            var $scheduleDiv = wavePage.schedule.$div;
-
-            for (var index in meetingTimes) {
-                var meetingTime = meetingTimes[index];
-
-                for (var day in meetingTime.days) {
-                    if (!meetingTime.days[day]) continue;
-
-                    var dayCol = $scheduleDiv.find('#' + day);
-
-                    for (var currTime = meetingTime.times.start; currTime <= meetingTime.times.end; currTime += wavePage.schedule.timeStep) {
-                        if ((currTime % 100) >= 60) // Addresses issue with using base-60 (hours on a clock) in base-100 (because logic)
-                            currTime += 40;
-
-                        var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
-
-                        timeslot.removeClass('previewing');
-                        // timeslot.html('');
-                        // timeslot.attr('data-ttip', '');
-                    }
-                }
-            }
-            CURRENT_PREVIEW = undefined;
-        }
+        wavePage.schedule.setPreview(evt, false);
     });
 
     $('.course .add').click(function handleCourseOnSchedule(evt) {
@@ -384,6 +316,74 @@ wavePage.schedule.extractDaysAndTimes = function(plainTimeText) {
 wavePage.schedule.decodeTime = function(strTime) {
     // parse out the time, and mod by 1200 to remove issue with 12:30 PM becoming 2430. Add 1200 if PM.
     return ( parseInt(strTime.replace(/:| /g, '')) % 1200 ) + ( strTime.slice(-2) == "PM" ? 1200 : 0 );
+}
+
+function loopAndSet(meetingTimes, $scheduleDiv, adding) {
+    for (var index in meetingTimes) {
+        var meetingTime = meetingTimes[index];
+
+        for (var day in meetingTime.days) {
+            if (!meetingTime.days[day]) continue;
+
+            var dayCol = $scheduleDiv.find('#' + day);
+
+            for (var currTime = meetingTime.times.start; currTime <= meetingTime.times.end; currTime += wavePage.schedule.timeStep) {
+                if ((currTime % 100) === 60) // Addresses issue with using base-60 (hours on a clock) in base-100 (because logic)
+                    currTime += 40;
+
+                var timeslot = dayCol.find('[data-timeslot=' + currTime + ']');
+
+                if (adding){
+                    timeslot.addClass('previewing');
+                    // timeslot.html(courseCode);
+                }
+                else{
+                    timeslot.removeClass('previewing');
+                    // timeslot.html('');
+                }
+            }
+        }
+    }
+}
+
+wavePage.schedule.setPreview = function(evt, adding) {
+    if (adding) {
+        var $courseDiv = $(evt.target).closest('.course');
+
+        var crn = $courseDiv.attr('id');
+
+        if (wavePage.cart[wavePage.currentSemester].has(crn))
+            return; // Don't preview a course that's already added
+        else {
+            console.log(crn);
+            console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
+        }
+
+        var meetingTimes = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').html());
+
+        if (meetingTimes === null)
+            return; // Don't preview something that has no meeting times
+
+        CURRENT_PREVIEW = {};
+        CURRENT_PREVIEW.times = meetingTimes;
+        CURRENT_PREVIEW.crn = crn;
+
+        var $scheduleDiv = wavePage.schedule.$div;
+
+        loopAndSet(meetingTimes, $scheduleDiv, adding);
+    }
+    else {
+        if (CURRENT_PREVIEW) {
+            var $courseDiv = $('#' + CURRENT_PREVIEW.crn);
+            var meetingTimes = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').html());
+
+            var $scheduleDiv = wavePage.schedule.$div;
+
+            loopAndSet(meetingTimes, $scheduleDiv, adding);
+
+            CURRENT_PREVIEW = undefined;
+        }
+    }
 }
 
 wavePage.schedule.setDisplay = function(crn, adding) {
