@@ -175,14 +175,8 @@
         background-color: @added-color;
       }
 
-      &.added.previewing.conflicted {
-        @conflicted-color: rgba(255, 165, 0, 0.8);
-        border: 1px solid @conflicted-color;
-        background-color: @conflicted-color;
-      }
-
-      &.added:not(.previewing).conflicted {
-        @conflicted-color: rgba(255, 0, 0, 0.5);
+      &.added.previewing {
+        @conflicted-color: rgba(255, 165, 0, 0.5);
         border: 1px solid @conflicted-color;
         background-color: @conflicted-color;
       }
