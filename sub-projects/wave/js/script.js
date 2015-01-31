@@ -151,8 +151,9 @@ function setUpWaveCourseCallbacks() {
 
 var loadingContents;
 var originalSchedule, originalCart;
-function fetchAndShowWaveHtml() {
-    wavePage.currentSemester = $('input#semester').val();
+function fetchAndShowWaveHtml(newTerm) {
+    if (!newTerm)
+        wavePage.currentSemester = window.location.hash.slice(1); // Omit the prepended #
 
     // If first time, grabs placeholder "while loading" contents
     loadingContents = loadingContents || $('#course-container').html();
@@ -238,10 +239,19 @@ function initializeWavePage() {
     });
 
     $('select[name=semester]').change(function() {
-        $('input#semester').val($(this).val());
-
-        fetchAndShowWaveHtml();
+        window.location.hash = $(this).val();
     });
+
+    window.onhashchange = function() {
+        var newTerm = window.location.hash.slice(1);
+
+        if (newTerm)
+            $('select[name=semester]').val(newTerm);
+        else
+            $('select[name=semester]').val(semester);
+
+        fetchAndShowWaveHtml(newTerm);
+    }
 
     $('select[name=department]').change(function() {
         var name = $(this).attr('name');
