@@ -154,6 +154,8 @@ var originalSchedule, originalCart;
 function fetchAndShowWaveHtml(newTerm) {
     if (!newTerm)
         wavePage.currentSemester = window.location.hash.slice(1); // Omit the prepended #
+    else
+        wavePage.currentSemester = newTerm
 
     // If first time, grabs placeholder "while loading" contents
     loadingContents = loadingContents || $('#course-container').html();
@@ -175,8 +177,6 @@ function fetchAndShowWaveHtml(newTerm) {
             if (!(wavePage.currentSemester in wavePage.cart)) {
                 wavePage.cart[wavePage.currentSemester] = new Set();
             }
-
-            // console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
 
             // Grab schedule and cart div
             var $schedule = $('#schedule');
