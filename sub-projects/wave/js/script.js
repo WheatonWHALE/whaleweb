@@ -86,6 +86,21 @@ wavePage.schedule = {};
 
 // ============================= General stuff =================================
 
+// Altering relative links to not interfere with hash-based navigation of terms
+$(document).on('click', 'a', function(evt) {
+    var href = $(this).attr('href');
+    if (href.startsWith('#')) {
+        evt.preventDefault();
+
+        var destId = href.slice(1); // Remove '#'
+        $('html, body').animate({
+            scrollTop: $('#' + destId).offset().top - 45 // Subtract the navbar height
+        }, 250);
+    }
+});
+
+// ============================= Course Data stuff =============================
+
 function closeExpandedInfo() {
     $('div.expanded').removeClass('expanded');
 }
@@ -358,10 +373,6 @@ wavePage.schedule.setPreview = function(evt, adding) {
 
         if (wavePage.cart[wavePage.currentSemester].has(crn))
             return; // Don't preview a course that's already added
-        else {
-            console.log(crn);
-            console.log(Array.from(wavePage.cart[wavePage.currentSemester]));
-        }
 
         var meetingTimes = wavePage.schedule.extractDaysAndTimes($courseDiv.find('div:nth-child(3)').html());
 
