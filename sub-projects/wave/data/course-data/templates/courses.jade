@@ -18,7 +18,7 @@ each departmentData, departmentName in semesterData
         div
           ul
             li= course.crn
-            li= course.meetingPlace
+            li= course.meetingPlace.join('<br>')
             li= course.professors
             li= prettifyDivAreaFound(course.foundation)
             li= prettifyDivAreaFound(course.division)
@@ -27,7 +27,7 @@ each departmentData, departmentName in semesterData
               each connection in course.connections
                 a(href=connection.link)= connection.display
                 | 
-            li: a(href=course.examSlotLink)= course.examSlot
+            li= course.examTime ? (course.examTime + ' at ' + course.examLocation) : 'TBA'
             li: a(href=course.textbookLink) here
             //- li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.seatsAvailable + ') - ' + course.waitList
             li= course.currentEnroll + ' / ' + course.maxEnroll + ' (' + course.waitList + ')'

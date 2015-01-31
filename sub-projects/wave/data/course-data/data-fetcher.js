@@ -4,20 +4,22 @@ var request = require('request'),
     jade    = require('jade');
 
 // Globals
+var CURRENT_TERM_CODE = '201520'; // TODO: Use the calendar to find this
 var COURSE_DATA_DIR = 'sub-projects/wave/data/course-data/';
 var COMPILED_DIR = 'compiled/';
 var RAW_DIR = 'raw-data/';
 var TEMPLATE_DIR = 'templates/';
-var FILTER_TRANSLATOR;
+var FILTER_TRANSLATOR = {},
+    EXAM_SLOT_TRANSLATOR = {};
 
-var debug = process.argv[2] == 'debug' || process.argv[2] == '-d' ? true : false;
+var debug = process.argv[2] === 'debug' || process.argv[2] === '-d' ? true : false;
 
 var semesterNumLimit = debug ? (process.argv[3] || 4) : Infinity;
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function clean(deleteValue) {
     for (var i = 0; i < this.length; i++) {
-        if (this[i] == deleteValue) {
+        if (this[i] === deleteValue) {
             this.splice(i, 1);
             i--;
         }
@@ -66,26 +68,15 @@ function promiseRead(filePath) {
 function promiseGet(url) {
     return new Promise(function requestGet(resolve, reject) {
         request.get(url, /*{ pool: poolForRequests },*/ function handleGetResponse(err, resp, body) {
-            if (err || resp.statusCode != 200) {
-                reject(Error(err || ('(' + url + ') Status Code was ' + resp.statusCode)));
+            if (err) {
+                console.log(JSON.stringify(err));
+                reject(Error(err.message + '(' + url + ')'));
+            }
+            else if (resp.statusCode != 200) {
+                reject(Error(('(' + url + ') Status Code was ' + resp.statusCode)));
             }
             else {
                 resolve(body);
-            }
-        });
-    });
-}
-
-// Slightly specialized for use in getting for TinyURL API
-function tinyGet(url, key) {
-    // Return a new promise.
-    return new Promise(function requestGet(resolve, reject) {
-        request.get(url, /*{ pool: poolForRequests }, */function handleGetResponse(err, resp, newURL) {
-            if (err || resp.statusCode != 200) {
-                reject(Error(err || ('TinyURL unhappy: ' + resp.statusCode)));
-            }
-            else {
-                resolve({ key: key, newURL: newURL });
             }
         });
     });
@@ -113,9 +104,68 @@ function formatConvertYear(intYear) {
 }
 
 function handlePromiseError(err) {
-    console.log('Errored in a Promise');
     console.log(err.stack);
-    throw err;
+    process.exit(1);
+}
+
+
+// =========================== Exam Slot Stuff ========================
+
+var EXAM_SLOT_CODES = ['A.', 'B.', 'C.', 'D.', 'E.', 'F.', 'G.', 'H.', 'I.', 'J.', 'K.', 'L.', 'M.',
+                       'N.', 'O.', 'P.', 'Q.', 'R.', 'S.', 'T.', 'U.', 'V.', 'W.', 'X.', 'Y.', 'Z.'];
+var EXAM_BASE_URL = 'https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_DispExamInfo';
+function fetchExamSlotTimes(filterObj) {
+    var currTermIndex;
+    var invalidTermErrorMessage = 'Invalid term';
+
+    filterObj.semester.every(function(entry, index) {
+        if (entry.val === CURRENT_TERM_CODE) {
+            currTermIndex = index;
+            return false;
+        }
+
+        return true;
+    });
+
+    console.log('Starting exam slot fetching');
+    return Promise.all(
+        filterObj.semester.slice(currTermIndex - 1, currTermIndex + 2).map(function mapTerm(entry) {
+            var termCode = entry.val;
+            console.log('Getting exam slots for ' + termCode);
+
+            return Promise.all(
+                EXAM_SLOT_CODES.map(function mapExam(examCode) {
+                    return promiseGet(EXAM_BASE_URL + '?exam_code=' + examCode + '&term_code=' + termCode)
+                        .then(function addToTranslator(html) {
+                            var $ = cheerio.load(html);
+                            var split = $('.pagebodydiv').text().split(/\n/);
+
+                            var timePlace;
+
+                            if (split.length < 9) {
+                                throw new Error(invalidTermErrorMessage); // Short-circuit the Promise.all() loop
+                            }
+                            else {
+                                timePlace = { time: split[5].trim(), location: split[8].trim() };
+                            }
+
+                            if (!(termCode in EXAM_SLOT_TRANSLATOR))
+                                EXAM_SLOT_TRANSLATOR[termCode] = {};
+
+                            EXAM_SLOT_TRANSLATOR[termCode][examCode] = timePlace;
+                        })
+                        .catch(function possiblyRecover(err) {
+                            if (err.message !== invalidTermErrorMessage)
+                                throw err; // Re-throw all non-custom errors
+                        });
+                })
+            )
+            .catch(handlePromiseError);
+        })
+    )
+    .then(function ignoreResult(result) {
+        return filterObj;
+    });
 }
 
 
@@ -190,30 +240,23 @@ function parseOutFilters(searchPageBody) {
 }
 
 function saveFilters(filterObj) {
-    var promise = new Promise(function getFiltersTemplate(resolve, reject) {
-        fs.readFile(COURSE_DATA_DIR + TEMPLATE_DIR + 'filters.jade', function renderUsingTemplateFile(err, data) {
-            if (err) {
-                reject(Error(err));
-            }
-            else {
-                var func = jade.compile(data, { pretty: /*debug*/false, doctype: 'html' });
-                var html = func({ filterData: filterObj });
-                resolve(html);
-            }
-        });
-    }).then(function saveRenderedTemplate(html) {
-        // Save pre-compiled HTML files (for viewing on site)
-        fs.writeFile(COURSE_DATA_DIR + COMPILED_DIR + 'filters.html', html, function handleFileWriteResponse(err) {
-            console.log(err ? err : 'The filters html file was saved!');
-        });
+    return promiseRead(COURSE_DATA_DIR + TEMPLATE_DIR + 'filters.jade')
+        .then(function useTemplateWithData(data) {
+            var func = jade.compile(data, { pretty: /*debug*/false, doctype: 'html' });
+            var html = func({ filterData: filterObj });
 
-        // Save raw JSON files (for API)
-        var rawDataString = debug ? JSON.stringify(filterObj, null, 2) : JSON.stringify(filterObj);
+            fs.writeFile(COURSE_DATA_DIR + COMPILED_DIR + 'filters.html', html, function handleFileWriteResponse(err) {
+                console.log(err ? err : 'The filters html file was saved!');
+            });
 
-        fs.writeFile(COURSE_DATA_DIR + RAW_DIR + 'filters.json', rawDataString, function handleFileWriteResponse(err) {
-            console.log(err ? err : 'The filters json file was saved!');
-        });
-    }).catch(handlePromiseError);
+            // Save raw JSON files (for API)
+            var rawDataString = debug ? JSON.stringify(filterObj, null, 2) : JSON.stringify(filterObj);
+
+            fs.writeFile(COURSE_DATA_DIR + RAW_DIR + 'filters.json', rawDataString, function handleFileWriteResponse(err) {
+                console.log(err ? err : 'The filters json file was saved!');
+            });
+        })
+        .catch(handlePromiseError);
 }
 
 function getSearchFilters() {
@@ -292,10 +335,10 @@ function prettifyDivAreaFound(raw) {
 }
 
 // Parses one course's data out from the given list of rows
-function parseCourseData(allRows, i) {
-        // 2 Types of formats:
-        //      W/o prereqs: 5 lines long, info on lines 0,    2
-        //      Prereqs:     6 lines long, info on lines 0, 1, 3
+function parseCourseData($, allRows, i, termCode) {
+    // 2 Types of formats:
+    //      W/o prereqs: 5 lines long, info on lines 0,    2
+    //      Prereqs:     6 lines long, info on lines 0, 1, 3
 
     var firstRow  = $(allRows[i]);
     var secondRow = $(allRows[i+1]);
@@ -312,7 +355,7 @@ function parseCourseData(allRows, i) {
     enrollmentRowElements = enrollmentRow.find('td');
 
 
-    // Special handling for (possibly multiple) times
+    // Special handling for (possibly multiple) meeting times times
     var timePlace = $(firstRowElements[4]).text();
     var timePlaceSplit;
     var times = [],
@@ -330,8 +373,8 @@ function parseCourseData(allRows, i) {
         timePlaceSplit = ['', ''];
     }
 
-    // Special handling for(possibly multiple) connections
 
+    // Special handling for (possibly multiple) connections
     var connections = $(firstRowElements[9]);
     var connectionsArray = [];
 
@@ -339,6 +382,15 @@ function parseCourseData(allRows, i) {
         var $entry = $(entry);
         connectionsArray.push({ display: $entry.text(), link: $entry.attr('href') });
     });
+
+    // Special handling for exam slot
+    var examCode = $(firstRowElements[1]).text().trim();
+
+    var examSlot;
+    if (!(termCode in EXAM_SLOT_TRANSLATOR) || examCode === '')
+        examSlot = { time: null, location: null };
+    else
+        examSlot = EXAM_SLOT_TRANSLATOR[termCode][examCode];
 
     var courseData = {
         courseCode:         $(firstRowElements[0]).text(),
@@ -352,8 +404,9 @@ function parseCourseData(allRows, i) {
         division:           $(firstRowElements[7]).text(),
         area:               $(firstRowElements[8]).text(),
         connections:        connectionsArray,
-        examSlot:           $(firstRowElements[1]).text().replace(/\./, ''),
-        examSlotLink:       'https://weblprod1.wheatonma.edu/' + $(firstRowElements[1]).find('a').attr('href'),
+        examTime:           examSlot.time,
+        examLocation:       examSlot.location,
+        // examSlotLink:       'https://weblprod1.wheatonma.edu/' + $(firstRowElements[1]).find('a').attr('href'),
         textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
         maxEnroll:          $(enrollmentRowElements[1]).text().replace(/Max Enroll:/, ''),
         currentEnroll:      $(enrollmentRowElements[2]).text().replace(/Seats Taken:/, ''),
@@ -362,25 +415,18 @@ function parseCourseData(allRows, i) {
         courseNotes:        (classHasPrereqs ? $(secondRow.find('td')[1]).text() : '')
     };
 
-    var linksArray = {
-        connectionsLink:    $(firstRowElements[9]).find('a').attr('href') || '',
-        examSlotLink:       'https://weblprod1.wheatonma.edu/' + $(firstRowElements[1]).find('a').attr('href'),
-        textbookLink:       $(firstRowElements[10]).find('a').attr('href'),
-        courseLink:         $(firstRowElements[0]).find('a').attr('href')
-    };
-
     for (var key in courseData) {
         if (typeof courseData[key] == 'string')
             courseData[key] = courseData[key].replace(/\s+/g, ' ').trim();
     }
 
-    return Promise.resolve(courseData);
+    return courseData;
 }
 
 function parseSemesterData(semesterObj) {
     console.log('Queuing parsing for ' + semesterObj.code);
 
-    $ = cheerio.load(semesterObj.body);
+    var $ = cheerio.load(semesterObj.body);
 
     var semesterCourses = {};
 
@@ -402,7 +448,7 @@ function parseSemesterData(semesterObj) {
 
     return courseRowIndices.map(
         function mapIndexToPromise(courseRowIndex) {
-            return parseCourseData(allRows, courseRowIndex);
+            return parseCourseData($, allRows, courseRowIndex, semesterObj.code);
         }
     ).reduce(function(sequenceSoFar, coursePromise) {
         return sequenceSoFar.then(function dummyReturn() {
@@ -442,17 +488,15 @@ var dataValues = {
     'crse_numb' : '%',
 };
 function getParseAndSaveScheduleData(semesterCodes) {
-    return Promise.all(
-        semesterCodes.map(function mapSemesterCodeToPromise(semesterCode, i, array) {
-            var tempFormData = dataValues; // Load up template data
-            tempFormData.schedule_beginterm = semesterCode.val; // Fill in important field of template
+    semesterCodes.map(function mapSemesterCodeToPromise(semesterCode, i, array) {
+        var tempFormData = dataValues; // Load up template data
+        tempFormData.schedule_beginterm = semesterCode.val; // Fill in important field of template
 
-            return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData)
-                .then(parseSemesterData)
-                .then(saveSemesterData)
-                .catch(handlePromiseError);
-        })
-    );
+        return semesterPost('https://weblprod1.wheatonma.edu/PROD/bzcrschd.P_OpenDoor', tempFormData)
+            .then(parseSemesterData)
+            .then(saveSemesterData)
+            .catch(handlePromiseError);
+    });
 }
 
 function saveSemesterData(semesterObj) {
@@ -480,6 +524,7 @@ function saveSemesterData(semesterObj) {
 function fetchAndParseAll() {
     getSearchFilters()
         .then(preprocessFilters)
+        .then(fetchExamSlotTimes)
         .then(function saveFiltersAndStartScheduleGet(filterObj) {
             saveFilters(filterObj); // Fire off async call, don't care when it finishes
 
