@@ -149,7 +149,7 @@ function fetchAndShowWaveHtml(newTerm) {
     if (!newTerm)
         wavePage.currentSemester = window.location.hash.slice(1); // Omit the prepended #
     else
-        wavePage.currentSemester = newTerm
+        wavePage.currentSemester = newTerm;
 
     // If first time, grabs placeholder "while loading" contents
     loadingContents = loadingContents || $('#course-container').html();
@@ -159,7 +159,7 @@ function fetchAndShowWaveHtml(newTerm) {
     return get('/wave/data?semester=' + wavePage.currentSemester, updateProgress)
         .then(function appendToPage(html) {
             $('#course-container #loading-placeholder').remove();
-            $('#course-container').html(html);
+            $('#course-container').html(html || 'No course data available yet for this semester');
             $('#course-container a').attr('target', '_blank');
         })
         .then(function triggerFilters() {
@@ -193,19 +193,26 @@ function fetchAndShowWaveHtml(newTerm) {
         });
 }
 
+function hashChangeCallback() {
+    var newTerm = window.location.hash.slice(1);
+
+    if (newTerm)
+        $('select[name=semester]').val(newTerm);
+    else
+        $('select[name=semester]').val(SEMESTER);
+
+    fetchAndShowWaveHtml(newTerm);
+}
+
 function initializeWavePage() {
     var $errorMessage = $('#error-message');
     if ($errorMessage.html()) {
         $errorMessage.show();
     }
 
-    $('select[name=semester]').val(semester);
-
-    for (var key in cartData) {
-        wavePage.cart[key] = new Set(cartData[key]);
+    for (var key in CART_DATA) {
+        wavePage.cart[key] = new Set(CART_DATA[key]);
     }
-    
-    fetchAndShowWaveHtml();
 
     var dummyColumn = $('#schedule').find('.sched-col');
     wavePage.schedule.timeStep = $(dummyColumn.find('.sched-row').get(1)).data('timeslot') -
@@ -236,16 +243,7 @@ function initializeWavePage() {
         window.location.hash = $(this).val();
     });
 
-    window.onhashchange = function() {
-        var newTerm = window.location.hash.slice(1);
-
-        if (newTerm)
-            $('select[name=semester]').val(newTerm);
-        else
-            $('select[name=semester]').val(semester);
-
-        fetchAndShowWaveHtml(newTerm);
-    }
+    window.onhashchange = hashChangeCallback;
 
     $('select[name=department]').change(function() {
         var name = $(this).attr('name');
@@ -258,12 +256,18 @@ function initializeWavePage() {
         var selector = $(this).val();
         toggleIndividuals(name, selector);
     });
+
+    // $('select[name=semester]').val(SEMESTER);
+    window.location.hash = SEMESTER;
+    hashChangeCallback(); // Manually trigger because a reload *doesn't change* the hash
+    
+    fetchAndShowWaveHtml();
 }
 
 // ============================= Cart Stuff ====================================
 
 window.onbeforeunload = function saveData(e) {
-    var result = postSync('save', { cart: setStringify(wavePage.cart), sessionId: sessionId, semester: $('input#semester').val() });
+    var result = postSync('save', { cart: setStringify(wavePage.cart), sessionId: SESSION_ID, semester: window.location.hash.slice(1) });
     console.log('Successful: ' + result.responseText);
 
     return null; // We want no confirmation popup dialog

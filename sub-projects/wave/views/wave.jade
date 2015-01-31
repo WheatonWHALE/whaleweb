@@ -16,9 +16,9 @@ block contents
   //- input#semester(type='hidden' value=semester)
 
   script.
-    var cartData = !{cartData || 'null'};
-    var sessionId = '#{sessionId}';
-    var semester = '!{semester}';
+    var CART_DATA = !{cartData || 'null'};
+    var SESSION_ID = '#{sessionId}';
+    var SEMESTER = '!{semester}';
 
   #error-message= errorMessage
 
