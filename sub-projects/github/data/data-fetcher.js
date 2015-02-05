@@ -56,11 +56,11 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
         var maxStreak    = $(contributionColumns[1])
             .find('.contrib-number')
             .text()
-            .replace(/ days/, '');
+            .replace(/ days?/, '');
         var currStreak   = $(contributionColumns[2])
             .find('.contrib-number')
             .text()
-            .replace(/ days/, '');
+            .replace(/ days?/, '');
 
         return {
             currStreak:     currStreak,
