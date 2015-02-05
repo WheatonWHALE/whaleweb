@@ -82,7 +82,6 @@ function setUpGitHubPage() {
 
         dust.render("competition", 
             {
-                label: 'days',
                 entrants: entrants
             },
             postProcessAndAppend);
