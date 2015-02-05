@@ -3,6 +3,7 @@ var Firebase = require('firebase'),
     request = require('request');
 
 var listOfPeople = Array(
+    { id: 'aavila320',      name: 'Aimee',      year: '\'15' },
     { id: 'akuisara',       name: 'Sara',       year: '\'16' },
     { id: 'angelm25',       name: 'Angel',      year: '\'15' },
     { id: 'bawjensen',      name: 'Bryan',      year: '\'15' },
@@ -12,10 +13,10 @@ var listOfPeople = Array(
     { id: 'devindelfino',   name: 'Devin',      year: '\'15' },
     { id: 'evan1590',       name: 'Evan',       year: '\'15' },
     { id: 'employedtitan',  name: 'Sven',       year: '\'15' },
+    { id: 'guti15',         name: 'Robert',     year: '\'15' },
     { id: 'iopaluch',       name: 'Ian',        year: '\'18' },
     { id: 'jge94',          name: 'Jinnan',     year: '\'16' },
     { id: 'jmorneau',       name: 'Julia',      year: '\'16' },
-    // { id: 'kimballan',      name: '(?)',         year: '\'' },
     { id: 'lithiah',        name: 'Lithia',     year: '\'16' },
     { id: 'MichaelKristy',  name: 'Michael',    year: '\'18' },
     { id: 'nbelliot',       name: 'Nicholas',   year: '\'15' },
