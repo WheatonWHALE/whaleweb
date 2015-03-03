@@ -33,27 +33,39 @@ app.use(function(req, res, next) {
         // { href: '/makerspaces', , display: 'About Makerspaces' },
         { href: '/github/',       display: 'GitHub Competition' },
         { href: '/members/',      display: 'About Us' },
-        { href: '/feedback/',     display: 'Feedback/Bugs' }
+        { href: '/feedback/',     display: 'Feedback/Bugs' },
+        { href: '/vigenere/',     display: 'Vigenere Cipher' }
     ];
 
     next();
 });
 
+var allProjects = [
+    { route: '/',           routerPath: './sub-projects/main-page/route.js' },
+    { route: '/github',     routerPath: './sub-projects/github/route.js' },
+    { route: '/feedback',   routerPath: './sub-projects/feedback/route.js' },
+    { route: '/wave',       routerPath: './sub-projects/wave/route.js' },
+    { route: '/members',    routerPath: './sub-projects/members/route.js' },
+    { route: '/vigenere',   routerPath: './sub-projects/vigenere-cipher/route.js' }
+];
+
 app.use(function(req, res, next) {
-    if (req.path.match(/^\/(wave|github|feedback|members)$/)) {
+    var projectRoutes = allProjects.map(function(entry) { return entry.route; });
+    var projectMatcher = new RegExp('^\\/(' + projectRoutes.join('|') + ')$');
+
+    // if (req.path.match(/^\/(wave|github|feedback|members)$/)) {
+    if (req.path.match(projectMatcher)) {
         res.redirect(301, req.url + '/');
     }
-    else 
+    else {
         next();
+    }
 });
 
-
-// Sub-applications
-app.use('/',            require('./sub-projects/main-page/route.js'));
-app.use('/github',      require('./sub-projects/github/route.js'));
-app.use('/feedback',    require('./sub-projects/feedback/route.js'));
-app.use('/wave',        require('./sub-projects/wave/route.js'));
-app.use('/members',     require('./sub-projects/members/route.js'));
+// Assign/register all the sub projects in allProjects
+allProjects.forEach(function registerRouter(subApp) {
+    app.use(subApp.route, require(subApp.routerPath));
+});
 
 // Catch-all for 404
 app.get('*', function(req, res) {

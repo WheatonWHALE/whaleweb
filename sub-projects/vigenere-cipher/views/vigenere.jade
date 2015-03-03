@@ -1,0 +1,28 @@
+extends skeleton_general
+
+//- block scripts
+
+block page-title
+  |Vigenere Solver Tool
+
+block header
+  div Plaintext Word Guesser
+
+block contents
+  .row
+    .column.small-12
+      textarea#cipher(placeholder='Ciphertext here').
+        DIFIZ TKAEF WUUQV MZDBE COWTR JVCTM
+        SRREL QRFWW PVLXW UHGVU RHOLD SYRAO 
+        QGGVH YUVWE ECYMR LROZR LBFPG AUFNW 
+        ZCMCB DXMSE BKLDU VXULW HQRNW NVMJ
+      input#guess(type='text' placeholder='Guess a word that may be in the plaintext')
+      button#solve Solve
+
+    .column.small-12
+      #output
+        .explain
+          |Format: &lt;key fragment&gt; &mdash; &lt;corresponding plaintext&gt;
+          br
+          |(Scroll right to see full plaintext)
+        #text
