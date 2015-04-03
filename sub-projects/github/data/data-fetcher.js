@@ -96,7 +96,10 @@ Promise.all(listOfPeople.map(function mapPersonToPromise(person, i) {
             throw err;
         });
     });
-})).finally(function forceExit() {
+})).then(function forceExit() {
+    // TODO: Actually fix why the process doesn't close on its own. Best guess: Firebase
+    process.exit(0);
+}).catch(function forceExit() {
     // TODO: Actually fix why the process doesn't close on its own. Best guess: Firebase
     process.exit(0);
 });
