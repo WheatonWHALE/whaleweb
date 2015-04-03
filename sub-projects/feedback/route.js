@@ -2,6 +2,7 @@ var express     = require('express'),
     githubAPI   = require("github");
 
 var basePath = './sub-projects/feedback/';
+var GITHUB_OAUTH = process.env.ISSUES_KEY;
 
 var app = express();
 
@@ -30,7 +31,7 @@ app.route('/').get(function(req, res) {
         github.authenticate({
             type: "basic",
             username: 'bawjensen',
-            password: 'a3db061e48f534e35b620e6bb8b5abb0800e0618'
+            password: GITHUB_OAUTH
         });
 
         github.issues.create({
