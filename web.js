@@ -4,9 +4,10 @@ var bodyParser  = require("body-parser"),
 
 var app = express();
 
+// Directory for all site-wide resource files (images, css, javascript, etc.)
 var siteWideDir = 'site-wide-resources/';
 
-// Static serving files from specific folders
+// Static serving files from specific folders (uses the site-wide resource dir)
 app.use('/foundation',  express.static(__dirname + '/' + siteWideDir + 'foundation'));
 app.use('/css',         express.static(__dirname + '/' + siteWideDir + 'css'));
 app.use('/js',          express.static(__dirname + '/' + siteWideDir + 'js'));
@@ -16,9 +17,9 @@ app.use('/static',      express.static(__dirname + '/' + siteWideDir + 'static')
 app.set('views',        siteWideDir + 'views');
 
 // Other stuff to use
-app.use(logfmt.requestLogger());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(logfmt.requestLogger()); // Logs the activity to the console
+app.use(bodyParser.urlencoded({ extended: true })); // Allows for data to be passed through POST requests
+app.use(bodyParser.json()); // Allows for data to be passed as JSON through POST requests
 
 // General middleware for all routes
 app.use(function(req, res, next) {
@@ -39,6 +40,8 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Redirecting behavior for top-level routes (the first route of a sub-project)
+// Makes sure that every url has a trailing slash, so all assets are 
 app.use(function(req, res, next) {
     if (req.path.match(/^\/(wave|github|feedback|members)$/)) {
         res.redirect(301, req.url + '/');
@@ -48,21 +51,22 @@ app.use(function(req, res, next) {
 });
 
 
-// Sub-applications
+// Sub-applications and their corresponding router files
 app.use('/',            require('./sub-projects/main-page/route.js'));
-app.use('/github',      require('./sub-projects/github/route.js'));
-app.use('/feedback',    require('./sub-projects/feedback/route.js'));
-app.use('/wave',        require('./sub-projects/wave/route.js'));
-app.use('/members',     require('./sub-projects/members/route.js'));
+app.use('/github/',      require('./sub-projects/github/route.js'));
+app.use('/feedback/',    require('./sub-projects/feedback/route.js'));
+app.use('/wave/',        require('./sub-projects/wave/route.js'));
+app.use('/members/',     require('./sub-projects/members/route.js'));
 
-// Catch-all for 404
+// Finally, a catch-all for 404
 app.get('*', function(req, res) {
-    console.log('404 for the route=' + req.url);
+    console.log('404 for the route:', req.url);
     res.render('404.jade');
 });
 
-// Server on port 7500
+// Server on port or defaults to 7500
 var port = (process.argv[2] != "undefined" ? process.argv[2] : undefined) || 7500;
+
 // Start up the server
 app.listen(port, function() {
     console.log("Listening on " + port);
