@@ -7,8 +7,48 @@ var bodyParser  = require('body-parser')
 var BASE_PATH = './sub-projects/wave/';
 // Directory for a user's schedule
 var USER_SCHED_DATA_DIR = BASE_PATH + 'data/schedule-data/'
+
+// ---------------- Figuring the default semester to show ----------------
+
+/*
+Wheaton internal system uses a YYYYSS system for Y = Year, S = Semester
+For example:
+ - Fall 2015: 201610. The fall is always '10', and the year is always the year of the graduating class
+ - Spring 2016: 201620. The spring is always '20'.
+ - Fall 2016: 201710. As you might expect.
+ - Winter 2017: 201715. Winter belongs to the following year. This is the winter between Fall 2016 and Spring 2017.
+ - Spring 2017: 201720. Fairly straightforward.
+ - Summer 2017: 201735. For some reason this is 15 above the spring value, not the usual 5.
+*/
+
 // The default semester to show for new connections
-var DEFAULT_SEMESTER = '201620'; // Update as needed
+var DEFAULT_SEMESTER;
+
+var now = new Date();
+// var currentYear = now.getFullYear(); // i.e. 2016
+var currentYear = 2016; // Testing
+// var currentMonth = now.getMonth(); // 0-11 for Jan-Dec
+var currentMonth = 9; // Testing
+
+// Spring classes begin:    end of January
+// Spring advising happens  beginning of April
+// Fall classes begin:      beginning of September
+// Fall advising happens:   end of October
+
+// Inclusive of January - February
+if (currentMonth >= 0 && currentMonth <= 1) {       
+    DEFAULT_SEMESTER = currentYear.toString() + '20'; // Same 'calendar' year, Spring semester
+}
+// Inclusive of March - September
+else if (currentMonth >= 2 && currentMonth <= 8) {
+    DEFAULT_SEMESTER = (currentYear + 1).toString() + '10'; // Next 'calendar' year, Fall semester
+}
+// Inclusive of October - December
+else {
+    DEFAULT_SEMESTER = (currentYear + 1).toString() + '20'; // Next 'calendar' year, Spring semester
+}
+
+// ---------------- Rest of the app --------------------------------------
 
 // Create the sub-module
 var app = express();
@@ -24,7 +64,7 @@ app.use(bodyParser.json());
 // Allows use of session data storage
 app.use(session({
   secret: 'cyclical secrets',   // Some random salt (doesn't matter what it is)
-  resave: false,                // DON'T Always resave the session, even if nothing's been changed
+  resave: false,                // DON'T always resave the session, even if nothing's been changed
   saveUninitialized: true,      // Save empty sessions, even if they have no data
   cookie: { maxAge: 604800000 } // Save for *one week* of no changes
 }));
