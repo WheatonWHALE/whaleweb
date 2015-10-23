@@ -114,7 +114,10 @@ app.get('/', function(req, res) {
 app.post('/save', function(req, res) {
     var sessId = req.body.sessionId;
     var sessionCart = JSON.parse(req.body.cart);
-    req.session.semester = req.body.semester;
+
+    if (req.body.semester.length === 6) { // Only store valid semesters into session
+        req.session.semester = req.body.semester;
+    }
 
     fs.writeFile(USER_SCHED_DATA_DIR + sessId + '.json', JSON.stringify(sessionCart), function onceFinished(err) {
         if (err) res.send(false);
@@ -129,7 +132,8 @@ app.get('/data', function(req, res) {
     fs.readFile(BASE_PATH + 'data/course-data/compiled/' + semester + '.html', function(err, data) {
         if (err) {
             console.log(err);
-            res.send({}); // TODO: Improve this temp solution
+            // res.send({}); // TODO: Improve this temp solution
+            res.status(404).send();
         }
         else {
             res.send(data);

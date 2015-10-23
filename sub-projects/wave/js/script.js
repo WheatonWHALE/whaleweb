@@ -172,6 +172,9 @@ function fetchAndShowWaveHtml(newTerm) {
     $('#course-container').html(loadingContents);
 
     return get('/wave/data?semester=' + wavePage.currentSemester, updateProgress)
+        .catch(function(err) {
+            window.location = '/404'
+        })
         .then(function appendToPage(html) {
             $('#course-container #loading-placeholder').remove();
             $('#course-container').html(html || 'No course data available yet for this semester');
