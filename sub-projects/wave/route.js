@@ -8,7 +8,7 @@ var BASE_PATH = './sub-projects/wave/';
 // Directory for a user's schedule
 var USER_SCHED_DATA_DIR = BASE_PATH + 'data/schedule-data/'
 // The default semester to show for new connections
-var DEFAULT_SEMESTER = '201610'; // Update as needed
+var DEFAULT_SEMESTER = '201620'; // Update as needed
 
 // Create the sub-module
 var app = express();
