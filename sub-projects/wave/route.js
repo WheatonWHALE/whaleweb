@@ -25,10 +25,8 @@ For example:
 var DEFAULT_SEMESTER;
 
 var now = new Date();
-// var currentYear = now.getFullYear(); // i.e. 2016
-var currentYear = 2016; // Testing
-// var currentMonth = now.getMonth(); // 0-11 for Jan-Dec
-var currentMonth = 9; // Testing
+var currentYear = now.getFullYear(); // i.e. 2016
+var currentMonth = now.getMonth(); // 0-11 for Jan-Dec
 
 // Spring classes begin:    end of January
 // Spring advising happens  beginning of April
