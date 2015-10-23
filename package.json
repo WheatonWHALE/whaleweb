@@ -9,7 +9,7 @@
     "dusterjs": "~0.3.2",
     "express": "^5.0.0-alpha.1",
     "express-session": "^1.10.1",
-    "firebase": "~1.0.21",
+    "firebase": "^2.3.1",
     "github": "^0.2.2",
     "jade": "~1.1.5",
     "logfmt": "~0.21.0",

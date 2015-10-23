@@ -26,8 +26,8 @@ app.get('/refresh-competitions', function(req, res) {
         else {
             console.log('Updated the competitions');
         }
+        res.send('Success!');
     });
-    res.end('Success!');
 });
 
 module.exports = app;

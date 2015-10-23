@@ -66,28 +66,27 @@ function postProcessAndAppend(err, element) {
 }
 
 function setUpGitHubPage() {
-    var compsRef = new Firebase('https://whalesite.firebaseio.com/Competitions');
+    var firebaseRef = new Firebase('https://whaleweb.firebaseio.com/');
 
-    compsRef.on('child_added', function addChildrenCompetitionsToPage(snapshot) {
+    firebaseRef.on('value', function(snapshot) {
+        var entrantsObj = snapshot.val();
 
-        var entry = snapshot.val();
+        var entrantsArray = [];
+        // // Iterate over object, convert to array
+        for (var key in entrantsObj) {
+            entrantsArray.push(entrantsObj[key]);
+        }
 
-        var entrants = [];
-        // Iterate over object, convert to array
-        $.each(entry.Entrants, function() {
-            entrants.push(this);
-        });
-
-        entrants.sort(sortByCurrentStreak);
+        entrantsArray.sort(sortByCurrentStreak);
 
         dust.render("competition", 
             {
-                entrants: entrants
+                entrants: entrantsArray
             },
             postProcessAndAppend);
 
         // Roundabout method of assigning change listener to every entrant individually
-        snapshot.ref().child('Entrants').on('child_changed', function(snapshot) {
+        snapshot.ref().on('child_changed', function(snapshot) {
             var changedEntrant = snapshot.val();
 
             var $entrantDiv = $('#' + changedEntrant.id);
@@ -101,8 +100,8 @@ function setUpGitHubPage() {
     // ================================================================================
 
     $('header').click(function updateCompetitions() {
-        $.get('refresh-competitions/', function() {
-            console.log('Update request sent!');
+        $.get('refresh-competitions/', function(data) {
+            console.log('Update request sent!', data);
         });
     });
 }
