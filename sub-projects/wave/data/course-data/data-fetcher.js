@@ -4,7 +4,6 @@ var request = require('request'),
     jade    = require('jade');
 
 // Globals
-var CURRENT_TERM_CODE = '201520'; // TODO: Use the calendar to find this
 var COURSE_DATA_DIR = 'sub-projects/wave/data/course-data/';
 var COMPILED_DIR = 'compiled/';
 var RAW_DIR = 'raw-data/';
@@ -15,6 +14,31 @@ var FILTER_TRANSLATOR = {},
 var debug = process.argv[2] === 'debug' || process.argv[2] === '-d' ? true : false;
 
 var semesterNumLimit = debug ? (process.argv[3] || 4) : Infinity;
+
+// Figure out the current term
+var CURRENT_TERM_CODE;
+
+var now = new Date();
+var currentYear = now.getFullYear(); // i.e. 2016
+var currentMonth = now.getMonth(); // 0-11 for Jan-Dec
+
+// Spring classes begin:    end of January
+// Spring advising happens  beginning of April
+// Fall classes begin:      beginning of September
+// Fall advising happens:   end of October
+
+// Inclusive of January - February
+if (currentMonth >= 0 && currentMonth <= 1) {       
+    CURRENT_TERM_CODE = currentYear.toString() + '20'; // Same 'calendar' year, Spring semester
+}
+// Inclusive of March - September
+else if (currentMonth >= 2 && currentMonth <= 8) {
+    CURRENT_TERM_CODE = (currentYear + 1).toString() + '10'; // Next 'calendar' year, Fall semester
+}
+// Inclusive of October - December
+else {
+    CURRENT_TERM_CODE = (currentYear + 1).toString() + '20'; // Next 'calendar' year, Spring semester
+}
 
 // Adding a method to arrays to 'clean' out unwanted values
 Array.prototype.clean = function clean(deleteValue) {
